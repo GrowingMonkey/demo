@@ -43,6 +43,8 @@ export default {
   'menu.profile.serviceset': '配置页面',
   'menu.profile.advanced': '推送管理',
   'menu.profile.pullsend': '推送管理',
+  'menu.profile.activitySend':'活动发布',
+  'menu.profile.activitymanager':'活动管理',
   'menu.profile.moneyprofile': '红包活动',
   'menu.profile.accountflow': '账户详情',
   'menu.result': '结果页',

@@ -308,7 +308,9 @@ class UpdateForm extends PureComponent {
         // }}
         onCancel={() => handleUpdateModalVisible(false, values)}
         afterClose={() => handleUpdateModalVisible()}
-        onOk={() => this.handleNext(modelType,formVals)}
+        onOk={() =>{ if(modelType==2  ){return this.handleNext(modelType,formVals)}else{
+          return handleUpdateModalVisible(false, values);
+        }}}
       >
         {this.renderContent(modelType, formVals)}
       </Modal>

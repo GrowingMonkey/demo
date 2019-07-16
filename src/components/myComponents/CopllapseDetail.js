@@ -6,7 +6,7 @@ import router from 'umi/router';
 import styles from './CopllapseDetail.less';
 import DescriptionList from '@/components/DescriptionList';
 import{imgUrl}from '@/utils/utils'
-
+const {Description }=DescriptionList;
 class CopllapseDetail extends PureComponent {
 
   render() {
@@ -17,6 +17,7 @@ class CopllapseDetail extends PureComponent {
     // const listp=infodata.picList;
     // console.log(infodata);
     const myhtml =datatype==='article'&&article?article.content:'';
+    const bg=datatype==='article'&&article?article.bgpUrl:'';
     const articleTemp = () => (
       <div className={styles.typeContainer}>
         <Row>
@@ -24,7 +25,7 @@ class CopllapseDetail extends PureComponent {
             <span>标题：</span>
           </Col>
           <Col span={22}>
-            <div className={styles.title}>世界安全日</div>
+            <div className={styles.title}>{article?article.title:''}</div>
           </Col>
         </Row>
         <Row>
@@ -34,7 +35,7 @@ class CopllapseDetail extends PureComponent {
           <Col span={22}>
             
             <img
-              src="http://img0.imgtn.bdimg.com/it/u=2738517129,3501424657&fm=26&gp=0.jpg"
+              src={imgUrl+'/'+bg}
               className={styles.cover}
             />
           </Col>

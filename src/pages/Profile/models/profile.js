@@ -1,5 +1,6 @@
 import { queryBasicProfile,queryHostoryPush, addBasicProfile, queryAdvancedProfile } from '@/services/api';
-
+import { message } from 'antd';
+import { addArray } from '@/utils/utils'
 export default {
   namespace: 'profile',
 
@@ -37,12 +38,24 @@ export default {
         payload: response,
       });
     },
-    *submitRegularForm({ payload }, { call, put }) {
+    *submitRegularForm({ payload }, { call, put,select }) {
       const response = yield call(addBasicProfile, payload);
-      yield put({
-        type: 'show',
-        payload: response,
-      });
+      console.log(response);
+      if(response.code!=0){
+        message.error(response.message);
+      }else{
+        message.success('提交成功');
+        const data = yield select(state=>state.profile.datass);
+        const newlist=addArray(data.list,payload);
+        console.log(newlist);
+        yield put({
+          type: 'save',
+          payload: {
+            ...data,
+            list:newlist
+          }
+        });
+      }
     },
   },
 

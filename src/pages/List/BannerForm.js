@@ -64,7 +64,7 @@ class BasicForms extends PureComponent {
         sm: { span: 10, offset: 7 },
       },
     };
-
+    const mode=['time', 'time'];
     return (
       <PageHeaderWrapper title={<FormattedMessage id="app.forms.basic.title" />}>
         <Card bordered={false}>
@@ -147,6 +147,7 @@ class BasicForms extends PureComponent {
               })(
                 <RangePicker
                   style={{ width: '100%' }}
+                  showTime
                   placeholder={[
                     formatMessage({ id: 'form.date.placeholder.start' }),
                     formatMessage({ id: 'form.date.placeholder.end' }),
@@ -154,7 +155,7 @@ class BasicForms extends PureComponent {
                 />
               )}
             </FormItem>
-            <FormItem {...formItemLayout} label={<FormattedMessage id="form.date.label" />}>
+            <FormItem {...formItemLayout} label="投放间断">
               {getFieldDecorator('date', {
                 rules: [
                   {
@@ -163,12 +164,14 @@ class BasicForms extends PureComponent {
                   },
                 ],
               })(
-                <RangePicker
-                  style={{ width: '100%' }}
-                  placeholder={[
-                    formatMessage({ id: 'form.date.placeholder.start' }),
-                    formatMessage({ id: 'form.date.placeholder.end' }),
-                  ]}
+                <TimePicker
+                  open={this.state.open}
+                  onOpenChange={this.handleOpenChange}
+                  addon={() => (
+                    <Button size="small" type="primary" onClick={this.handleClose}>
+                      Ok
+                    </Button>
+                  )}
                 />
               )}
             </FormItem>

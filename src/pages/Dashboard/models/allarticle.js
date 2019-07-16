@@ -6,7 +6,7 @@ import {
   updateRule,
   queryArticle,
 } from '@/services/api';
-
+import {deleteArray} from '@/utils/utils'
 export default {
   namespace: 'allarticle',
 
@@ -44,10 +44,11 @@ export default {
       //   }
       // }
       if (parseInt(response.code) === 0) {
-        const rep = yield call(queryArticle, { result: 'normal'});
+        const data = yield select(state=>state.allarticle);
+        const newComment=deleteArray(data,payload.id);
         yield put({
           type: 'save',
-          payload: rep.data,
+          payload: newComment,
         });
       }
       if (callback) callback();

@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { Card, Badge, Table, Divider } from 'antd';
 import DescriptionList from '@/components/DescriptionList';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import moment from 'moment';
 import styles from './BasicProfile.less';
 
 const { Description } = DescriptionList;
@@ -115,6 +116,7 @@ class BasicProfile extends Component {
         dataIndex: 'createTime',
         key: 'createTime',
         align: 'right',
+        render: val => <span>{moment(parseInt(val)).format('YYYY-MM-DD HH:mm:ss')}</span>,
         // render: (text, row, index) => {
         //   if (index < basicGoods.length) {
         //     return text;

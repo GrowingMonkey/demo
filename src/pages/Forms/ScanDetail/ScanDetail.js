@@ -33,7 +33,7 @@ const TabPane = Tabs.TabPane;
 //     console.log(key);
 //   }
 @connect(({ loading, user, project, list }) => ({
-  listLoading: loading.effects['list/fetch'],
+  listLoading: loading.effects['list/fetch','list/fetchP','list/fetchA','list/fetchV','list/fetchC'],
   currentUser: user.currentUser,
   currentUserLoading: loading.effects['user/fetchCurrent'],
   project,
@@ -117,6 +117,34 @@ class Center extends React.Component {
         type: 'user/fetchInfo',
         payload: {
           user: currentid,
+        },
+      });
+      dispatch({
+        type: 'list/fetchP',
+        payload: {
+          id: user,
+          type: 0,
+        },
+      });
+      dispatch({
+        type: 'list/fetchV',
+        payload: {
+          id: user,
+          type: 2,
+        },
+      });
+      dispatch({
+        type: 'list/fetchA',
+        payload: {
+          id: user,
+          type: 1,
+        },
+      });
+      dispatch({
+        type: 'list/fetchC',
+        payload: {
+          id: user,
+          type: 3,
         },
       });
       dispatch({

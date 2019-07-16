@@ -6,7 +6,7 @@ import {
   updateRule,
   queryComments,
 } from '@/services/api';
-
+import {deleteArray} from '@/utils/utils';
 export default {
   namespace: 'allcomment',
 
@@ -44,10 +44,11 @@ export default {
       //   }
       // }
       if (parseInt(response.code) === 0) {
-        const rep = yield call(queryComments,{ result: 'normal'});
+        const data = yield select(state=>state.allcomment);
+        const newComment=deleteArray(data,payload.id);
         yield put({
           type: 'save',
-          payload: rep.data,
+          payload: newComment,
         });
       }
       if (callback) callback();
@@ -70,10 +71,11 @@ export default {
       //   }
       // }
       if (parseInt(response.code) === 0) {
-        const rep = yield call(queryComments,{ result: 'normal'});
+        const data = yield select(state=>state.allcomment);
+        const newComment=deleteArray(data,payload.id);
         yield put({
           type: 'save',
-          payload: rep.data,
+          payload: newComment,
         });
       }
       if (callback) callback();

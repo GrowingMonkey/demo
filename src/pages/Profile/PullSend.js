@@ -81,6 +81,7 @@ class BasicForms extends PureComponent {
             content: values.content,
           },
         });
+        
       }
     });
   };
@@ -133,6 +134,29 @@ class BasicForms extends PureComponent {
         sm: { span: 10, offset: 7 },
       },
     };
+    const disabledDate=(current)=> {
+      // Can not select days before today and today
+      console.log(moment().endOf('day'));
+      return current < moment().startOf('day');
+      
+    }
+    const disabledDateTime=()=>{
+      const hours=moment().hours();
+      const minutes=moment().minutes();
+      return {
+        disabledHours: () => range(0, 24).splice(0, hours),
+        disabledMinutes: () => range(0, 60).splice(0,minutes+2),
+        // disabledSeconds: () => [55, 56],
+      };
+    }
+    const range=(start, end)=>{
+      const result = [];
+      for (let i = start; i < end; i++) {
+        result.push(i);
+      }
+      return result;
+    }
+    
     return (
       <PageHeaderWrapper title="推送设置">
         <div className={styles.standardList}>
@@ -175,7 +199,16 @@ class BasicForms extends PureComponent {
                         },
                       ],
                     })(
-                      <DatePicker showTime placeholder="请选择推送时间" style={{ width: '100%' }} />
+                      // <DatePicker showTime placeholder="请选择推送时间" style={{ width: '100%' }} />
+                      <DatePicker
+                      format="YYYY-MM-DD HH:mm:ss"
+                      placeholder="请选择推送时间"
+                      style={{ width: '100%' }}
+                      disabledDate={disabledDate}
+                      disabledTime={disabledDateTime}
+                      showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
+                    />
+                      // <DatePicker showTime placeholder="请选择推送时间" style={{ width: '100%' }}  disabledDate={disabledDate} disabledTime={disabledDateTime}/>
                     )}
                   </FormItem>
                   <FormItem {...formItemLayout} label="内容">

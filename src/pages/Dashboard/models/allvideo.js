@@ -7,7 +7,7 @@ import {
   cancleVideo,
   removeVideo,
 } from '@/services/api';
-
+import {deleteArray} from '@/utils/utils'
 export default {
   namespace: 'allvideo',
 
@@ -34,7 +34,8 @@ export default {
       });
       if (callback) callback();
     },
-    *remove({ payload, callback }, { call, put }) {
+    *remove({ payload, callback }, { call, put,select }) {
+      console.log('删除');
       const response = yield call(removeVideo, payload);
       // let data=yield select(state=>state.data);
       // for(let i in data.list){
@@ -43,11 +44,12 @@ export default {
       //     i--;
       //   }
       // }
-      if (parseInt(response.code) === 0) {
-        const rep = yield call(queryVideo, { result: 'normal'});
+      if (parseInt(response.code) == 0) {
+        const data = yield select(state=>state.allvideo);
+        const newComment=deleteArray(data,payload.id);
         yield put({
           type: 'save',
-          payload: rep.data,
+          payload: newComment,
         });
       }
       if (callback) callback();
@@ -62,11 +64,12 @@ export default {
     },
     *cancle({ payload, callback }, { call, put, select }) {
       const response = yield call(cancleVideo, payload);
-      if (parseInt(response.code) === 0) {
-        const rep = yield call(queryVideo, { result: 'normal'});
+      if (parseInt(response.code) == 0) {
+        const data = yield select(state=>state.allvideo);
+        const newComment=deleteArray(data,payload.id);
         yield put({
           type: 'save',
-          payload: rep.data,
+          payload: newComment,
         });
       }
       if (callback) callback();

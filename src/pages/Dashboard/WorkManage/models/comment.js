@@ -6,6 +6,7 @@ import {
   updateRule,
   queryComments,
 } from '@/services/api';
+import {deleteArray} from '@/utils/utils'
 
 export default {
   namespace: 'comment',
@@ -37,18 +38,13 @@ export default {
     },
     *remove({ payload, callback }, { call, put, select }) {
       const response = yield call(removeComment, payload);
-      // let data=yield select(state=>state.data);
-      // for(let i in data.list){
-      //   if(data.list[i].id===action.payload.id){
-      //     data.list.splice(i,1);
-      //     i--;
-      //   }
-      // }
+      //获取当前state的数据
       if (parseInt(response.code) === 0) {
-        const rep = yield call(queryComments);
+        const data = yield select(state=>state.comment);
+        const newComment=deleteArray(data,payload.id);
         yield put({
           type: 'save',
-          payload: rep.data,
+          payload: newComment,
         });
       }
       if (callback) callback();
@@ -63,19 +59,18 @@ export default {
     },
     *cancle({ payload, callback }, { call, put, select }) {
       const response = yield call(cancleComment, payload);
-      // let data=yield select(state=>state.data);
-      // for(let i in data.list){
-      //   if(data.list[i].id===action.payload.id){
-      //     data.list.splice(i,1);
-      //     i--;
-      //   }
-      // }
       if (parseInt(response.code) === 0) {
-        const rep = yield call(queryComments);
+        const data = yield select(state=>state.comment);
+        const newComment=deleteArray(data,payload.id);
         yield put({
           type: 'save',
-          payload: rep.data,
+          payload: newComment,
         });
+        // const rep = yield call(queryComments);
+        // yield put({
+        //   type: 'save',
+        //   payload: rep.data,
+        // });
       }
       if (callback) callback();
     },

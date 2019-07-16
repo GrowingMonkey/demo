@@ -7,6 +7,7 @@ import {
   Row,
   Col,
   Card,
+  Popconfirm,
   Form,
   Input,
   Select,
@@ -373,9 +374,26 @@ class Pictures extends PureComponent {
         <Fragment>
           <a onClick={() => this.handleUpdateModalVisible(record)}>查看</a>
           <Divider type="vertical" />
-          <a onClick={() => this.handleCancle(record)}>撤销</a>
+          <Popconfirm
+            title="你确认撤销这篇被举报文章？"
+            onConfirm={() => this.handleCancle(record)}
+            okText="确认"
+            cancelText="取消"
+            >
+            {/* <a href="#">Delete</a> */}
+            <a href="#">撤销</a>
+          </Popconfirm>
+          {/* <a onClick={() => this.handleCancle(record)}>撤销</a> */}
           <Divider type="vertical" />
-          <a onClick={() => this.handleDelete(record)}>删除</a>
+          <Popconfirm
+            title="你确认删除这篇被举报文章？"
+            onConfirm={() => this.handleDelete(record)}
+            okText="确认"
+            cancelText="取消"
+            >
+            {/* <a href="#">Delete</a> */}
+            <a href="#">删除</a>
+          </Popconfirm>
         </Fragment>
       ),
     },
@@ -599,6 +617,9 @@ class Pictures extends PureComponent {
               </Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
+              </Button>
+              <Button style={{ marginLeft: 8 }} type="primary" htmlType="submit">
+                刷新
               </Button>
               {/* <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
                 展开 <Icon type="down" />

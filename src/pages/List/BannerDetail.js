@@ -235,7 +235,7 @@ class BannerDetail extends Component {
           </div>
           <Suspense fallback={null}>
             <Card style={{ marginTop: 24 }} loading={loading} bordered={false} title="广告页面">
-              <div style={{ margin: '0 auto', display: 'flex', justifyContent: 'center' }}>
+              <div style={{ margin: '0 auto', textAlign:'center' }}>
                 <img src={pageData.content} style={{ width: 300, height: 'auto' }} />
               </div>
             </Card>

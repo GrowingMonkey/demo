@@ -284,6 +284,16 @@ export default [
         routes: [
           // profile
           {
+            path: '/profile/activitymanager',
+            name: 'activitymanager',
+            component: './Profile/ActivityManager',
+          },
+          {
+            path: '/profile/activitysend',
+            name: 'activitySend',
+            component: './Profile/ActivitySend',
+          },
+          {
             path: '/profile/serviceset',
             name: 'serviceset',
             component: './Profile/ServiceSet',

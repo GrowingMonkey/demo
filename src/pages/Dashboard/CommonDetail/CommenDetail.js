@@ -654,6 +654,7 @@ class Articles extends PureComponent {
         },
       },
     } = this.props;
+    console.log(this.props);
     const {
       details: { data,info },
       location:{query},

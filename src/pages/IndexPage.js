@@ -204,11 +204,11 @@ class IndexPage extends Component {
             </Col>
             <Col xl={12} lg={24} md={24} sm={24} xs={24}>
               <Suspense fallback={null}>
-                <div style={{ marginTop: 24,background:'#fff',padding:24 }}>
+                <div style={{ marginTop: 24,background:'#fff',padding:24 }} loading={loading}>
                   <div style={{display:'flex'}}>
                     <div><h1>作品发布量统计</h1></div>
                     <div style={{width:'75%',display:'flex',justifyContent:'space-between',fontSize:12,marginTop:8}}>
-                      <div>当日发布量:{1212}&nbsp;&nbsp;总量:{222}</div>
+                      <div>当日发布量:{opusCount}&nbsp;&nbsp;总量:{opusTotal}</div>
                       <div style={{display:'flex',alignItems:'center'}}>
                         图片&nbsp;<i style={{width:2,height:12,background:'#3DD8A6',display:'inline-block'}}></i>&nbsp;
                         视频&nbsp;<i style={{width:2,height:12,background:'#816DF5 ',display:'inline-block'}}></i>&nbsp;

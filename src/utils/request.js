@@ -33,7 +33,7 @@ const errorHandler = error => {
   const { response = {} } = error;
   const errortext = codeMessage[response.status] || response.statusText;
   const { status, url } = response;
-
+  console.log(response);
   if (status === 401) {
     notification.error({
       message: '未登录或登录已过期，请重新登录。',
@@ -53,6 +53,11 @@ const errorHandler = error => {
       type: 'login/logout',
     });
     return;
+  }
+  if(status === 200&&response.code!=0){
+    notification.error({
+      message: response.message,
+    });
   }
   notification.error({
     message: `请求错误 ${status}: ${url}`,

@@ -7,7 +7,7 @@ import {
   removePicture,
   canclePicture,
 } from '@/services/api';
-
+import {deleteArray} from '@/utils/utils'
 export default {
   namespace: 'picture',
 
@@ -36,10 +36,11 @@ export default {
       //   }
       // }
       if (parseInt(response.code) === 0) {
-        const rep = yield call(queryPicture);
+        const data = yield select(state=>state.picture);
+        const newComment=deleteArray(data,payload.id);
         yield put({
           type: 'save',
-          payload: rep.data,
+          payload: newComment,
         });
       }
       if (callback) callback();
@@ -54,10 +55,11 @@ export default {
       //   }
       // }
       if (parseInt(response.code) === 0) {
-        const rep = yield call(queryPicture);
+        const data = yield select(state=>state.picture);
+        const newComment=deleteArray(data,payload.id);
         yield put({
           type: 'save',
-          payload: rep.data,
+          payload: newComment,
         });
       }
       if (callback) callback();

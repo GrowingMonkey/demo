@@ -200,3 +200,18 @@ export const getToken = () => {
 };
 export const originUrl = 'http://www.imuguang.com';
 export const imgUrl = 'http://file-t.imuguang.com';
+export const deleteArray=(sourceArray,id)=>{
+  let {data}=sourceArray;
+  let {list}=data;
+  console.log(data)
+  console.log(list)
+  list = list.filter(item => item.id !== id);
+  return {
+    ...data,
+    list
+  }
+}
+export const addArray=(sourceArray,eleItem)=>{
+  const list=[eleItem]
+  return list.concat(sourceArray);
+}
