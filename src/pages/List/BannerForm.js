@@ -12,6 +12,7 @@ import {
   Radio,
   Icon,
   Tooltip,
+  TimePicker,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../Forms/style.less';
@@ -155,7 +156,7 @@ class BasicForms extends PureComponent {
                 />
               )}
             </FormItem>
-            <FormItem {...formItemLayout} label="投放间断">
+            {/* <FormItem {...formItemLayout} label="投放间断">
               {getFieldDecorator('date', {
                 rules: [
                   {
@@ -174,7 +175,7 @@ class BasicForms extends PureComponent {
                   )}
                 />
               )}
-            </FormItem>
+            </FormItem> */}
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button type="primary" htmlType="submit" loading={submitting}>
                 <FormattedMessage id="form.submit" />
