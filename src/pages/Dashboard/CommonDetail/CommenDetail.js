@@ -685,12 +685,13 @@ class Articles extends PureComponent {
     };
 
     return (
-      <PageHeaderWrapper title="评论审核">
+      <PageHeaderWrapper title="作品详情">
         <Collapse
           accordion
           bordered={false}
           defaultActiveKey={type === 'comments' ? ['2'] : ['1']}
           onChange={this.callback}
+          expandIconPosition='right'
         >
           <Panel header="查看详情" key="1">
             {<CopllapseDetail infodata={info} datatype={opsType}/>}

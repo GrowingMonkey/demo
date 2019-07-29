@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
+import TimePicker from '@/components/myComponents/TimePicker'
 import {
   Form,
   Input,
@@ -12,7 +13,6 @@ import {
   Radio,
   Icon,
   Tooltip,
-  TimePicker,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../Forms/style.less';
@@ -156,7 +156,7 @@ class BasicForms extends PureComponent {
                 />
               )}
             </FormItem>
-            {/* <FormItem {...formItemLayout} label="投放间断">
+            <FormItem {...formItemLayout} label="投放间断">
               {getFieldDecorator('date', {
                 rules: [
                   {
@@ -165,17 +165,18 @@ class BasicForms extends PureComponent {
                   },
                 ],
               })(
-                <TimePicker
-                  open={this.state.open}
-                  onOpenChange={this.handleOpenChange}
-                  addon={() => (
-                    <Button size="small" type="primary" onClick={this.handleClose}>
-                      Ok
-                    </Button>
-                  )}
-                />
+                // <TimePicker
+                //   open={this.state.open}
+                //   onOpenChange={this.handleOpenChange}
+                //   addon={() => (
+                //     <Button size="small" type="primary" onClick={this.handleClose}>
+                //       Ok
+                //     </Button>
+                //   )}
+                // />
+                <TimePicker />
               )}
-            </FormItem> */}
+            </FormItem>
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button type="primary" htmlType="submit" loading={submitting}>
                 <FormattedMessage id="form.submit" />

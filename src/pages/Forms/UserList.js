@@ -8,6 +8,7 @@ import {
   Col,
   Card,
   Form,
+  Popconfirm,
   Input,
   Select,
   Icon,
@@ -281,17 +282,40 @@ class UserList extends PureComponent {
       title: '操作',
       render: (text, record) => {
         const textStr = record.stat == 0 ? '停用' : '启用';
+        const textMsg=`你确认重${textStr}置这个账号吗？`;
         return (
           <Fragment>
             <a onClick={() => this.handleUpdateModalVisibleRouter(true, record)}>查看</a>
             <Divider type="vertical" />
             <a onClick={() => this.handleUpdateModalVisible(true, record)}>设置</a>
             <Divider type="vertical" />
-            <a onClick={() => this.handleStopStatus(record)}>{textStr}</a>
+            {/* <a onClick={() => this.handleStopStatus(record)}>{textStr}</a> */}
+            <Popconfirm
+            title={textMsg}
+            onConfirm={() => this.handleStopStatus(record)}
+            okText="确认"
+            cancelText="取消"
+            >
+            <a href="#">{textStr}</a>
+          </Popconfirm>
             <Divider type="vertical" />
-            <a onClick={() => this.handleDeleteReset(0, record)}>重置</a>
+            <Popconfirm
+            title="你确认重置这个账号吗？"
+            onConfirm={() => this.handleDeleteReset(0, record)}
+            okText="确认"
+            cancelText="取消"
+            >
+            <a href="#">重置</a>
+          </Popconfirm>
             <Divider type="vertical" />
-            <a onClick={() => this.handleDeleteReset(1, record)}>注销</a>
+            <Popconfirm
+            title="你确认注销这个账号吗？"
+            onConfirm={() => this.handleDeleteReset(1, record)}
+            okText="确认"
+            cancelText="取消"
+            >
+            <a href="#">注销</a>
+          </Popconfirm>
           </Fragment>
         );
       },

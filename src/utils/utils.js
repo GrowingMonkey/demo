@@ -199,7 +199,7 @@ export const getToken = () => {
   return token;
 };
 export const originUrl = 'http://www.imuguang.com';
-export const imgUrl = 'http://file-t.imuguang.com';
+export const imgUrl = 'https://f-bd.imuguang.com';
 export const deleteArray=(sourceArray,id)=>{
   let {data}=sourceArray;
   let {list}=data;

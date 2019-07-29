@@ -157,11 +157,13 @@ export default [
           {
             path: '/form/authormanage',
             name: 'authormanage',
+            hideInMenu:true,
             component: './Forms/AuthorManage/AuthorManage',
             routes: [
               {
                 path: '/form/authormanage',
                 redirect: '/form/authormanage/applylist',
+                // hideInMenu:true,
               },
               {
                 path: '/form/authormanage/applylist',
