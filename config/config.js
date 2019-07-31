@@ -77,10 +77,11 @@ export default {
   },
   proxy: {
     '/api/': {
-      target: 'http://www.imuguang.com/admin',
+      // target: 'http://www.imuguang.com/admin',//正式服
+      target: 'http://test-admin.imuguang.com',
       // target: 'http://192.168.1.107:11111',
       changeOrigin: true,
-      pathRewrite: { '^/api': '' },
+      // pathRewrite: { '^/api': '' },
     },
   },
   ignoreMomentLocale: true,

@@ -277,9 +277,9 @@ class UpdateForm extends PureComponent {
 }
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ activitymanage, loading }) => ({
-  activitymanage,
-  loading: loading.models.activitymanage,
+@connect(({ pointset, loading }) => ({
+    pointset,
+  loading: loading.models.pointset,
 }))
 @Form.create()
 class Comments extends PureComponent {
@@ -294,37 +294,39 @@ class Comments extends PureComponent {
 
   columns = [
     {
-      title: '活动标题',
+      title: '等级',
       dataIndex: 'title',
     },
     {
-      title: '活动内容简述',
+      title: '图片',
       dataIndex: 'detail',
     },
     {
-      title: '当前状态',
+      title: '视频',
       dataIndex: 'stat',
       sorter: true,
       render: val => val==0?<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'red'}}></span>:<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'green'}}></span>,
       // mark to display a total number
     },
     {
-      title: '封面图',
+      title: '文章',
       dataIndex: 'img',
       render: val => <img src={val} style={{width:100}}/>,
     },
     {
-      title: '活动发布时间',
-      dataIndex: 'createTime',
-      sorter: true,
-      render: val => <span>{moment(parseInt(val)).format('YYYY-MM-DD HH:mm:ss')}</span>,
-    },
+        title: '视频拍摄时长',
+        dataIndex: 'img',
+        render: val => <img src={val} style={{width:100}}/>,
+      },
+      {
+        title: '可上传视频长度',
+        dataIndex: 'img',
+        render: val => <img src={val} style={{width:100}}/>,
+      },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {record.stat==0?<a onClick={() => this.handleChangeStat(1, record)}>下架</a>:<a onClick={() => this.handleChangeStat(0, record)}>上架</a>}
-          <Divider type="vertical" />
           <a onClick={() => this.handleScan(record)}>修改</a>
         </Fragment>
       ),
@@ -333,7 +335,7 @@ class Comments extends PureComponent {
   handleChangeStat(stat,record){
     const { dispatch } = this.props;
     dispatch({
-      type: 'activitymanage/stat',
+      type: 'pointset/stat',
       payload: {
         id:record.id,
         stat:stat,
@@ -343,14 +345,14 @@ class Comments extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'activitymanage/fetch',
+      type: 'pointset/fetch',
     });
   }
 
   handleStop(stat, record) {
     const { dispatch } = this.props;
     dispatch({
-      type: 'activitymanage/stop',
+      type: 'pointset/stop',
       payload: {
         oprType: stat,
         id: record.orderId,
@@ -383,7 +385,7 @@ class Comments extends PureComponent {
     }
 
     dispatch({
-      type: 'activitymanage/fetch',
+      type: 'pointset/fetch',
       payload: params,
     });
   };
@@ -399,7 +401,7 @@ class Comments extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'activitymanage/fetch',
+      type: 'pointset/fetch',
       payload: {},
     });
   };
@@ -419,7 +421,7 @@ class Comments extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'activitymanage/remove',
+          type: 'pointset/remove',
           payload: {
             key: selectedRows.map(row => row.key),
           },
@@ -460,7 +462,7 @@ class Comments extends PureComponent {
       });
 
       dispatch({
-        type: 'activitymanage/fetch',
+        type: 'pointset/fetch',
         payload: values,
       });
     });
@@ -481,7 +483,7 @@ class Comments extends PureComponent {
   handleDelete = record => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'activitymanage/remove',
+      type: 'pointset/remove',
       payload: record,
     });
   };
@@ -489,7 +491,7 @@ class Comments extends PureComponent {
   handleCancle = record => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'activitymanage/cancle',
+      type: 'pointset/cancle',
       payload: record,
     });
   };
@@ -497,7 +499,7 @@ class Comments extends PureComponent {
   handleAdd = fields => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'activitymanage/add',
+      type: 'pointset/add',
       payload: {
         desc: fields.desc,
       },
@@ -513,7 +515,7 @@ class Comments extends PureComponent {
     const { dispatch } = this.props;
     const { formValues } = this.state;
     dispatch({
-      type: 'activitymanage/update',
+      type: 'pointset/update',
       payload: {
         query: formValues,
         body: {
@@ -533,34 +535,12 @@ class Comments extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={6} sm={24}>
-            <FormItem label="标题">
-              {getFieldDecorator('name')(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-          <Col md={6} sm={24}>
-            <FormItem label="发布日期">
-              {getFieldDecorator('startDate')(
-                <RangePicker
-                  style={{ width: '100%' }}
-                  format="YYYY-MM-DD"
-                  placeholder={[
-                    formatMessage({ id: 'form.date.placeholder.start' }),
-                    formatMessage({ id: 'form.date.placeholder.end' }),
-                  ]}
-                />
-              )}
-            </FormItem>
-          </Col>
+      <Form onSubmit={this.handleSearch} layout="inline" >
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }} style={{float:'right'}}>
           <Col md={6} sm={24}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
-                查询
-              </Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-                重置
+                积分兑换比例设置
               </Button>
               {/* <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
                 展开 <Icon type="down" />
@@ -654,7 +634,7 @@ class Comments extends PureComponent {
   render() {
     console.log(this.props);
     const {
-      activitymanage: { data },
+        pointset: { data },
       loading,
     } = this.props;
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
@@ -674,11 +654,10 @@ class Comments extends PureComponent {
       handleUpdate: this.handleUpdate,
     };
     return (
-      <PageHeaderWrapper title="红包活动">
+      <PageHeaderWrapper title="等级权限">
         <div>
           <Card bordered={false}>
             <div className={styles.tableList}>
-              <div className={styles.tableListForm}>{this.renderForm()}</div>
               <StandardTable
                 // selectedRows={selectedRows}
                 loading={loading}

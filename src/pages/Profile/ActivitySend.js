@@ -17,6 +17,7 @@ import {
   message,
   Icon
 } from 'antd';
+const { TextArea } = Input;
 const FormItem = Form.Item;
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../Forms/style.less';
@@ -105,9 +106,8 @@ const uuid = () => {
   uuid = uuid.replace(/[-]/g, '');
   return uuid;
 };
-@connect(({ serviceset, loading }) => ({
-  serviceset,
-  submitting: loading.effects['form/submitRegularForm'],
+@connect(({ activitysend, loading }) => ({
+  activitysend,
 }))
 @Form.create()
 class ServiceSet extends PureComponent {
@@ -278,11 +278,11 @@ buildPreviewHtml () {
   `
 
 }
-handleSubmit(){
-  e => {
+handleSubmit = e =>{
+    console.log(1111);
     const { dispatch, form } = this.props;
     const { cover} = this.state;
-    let htmlContent=this.preview();
+    let htmlContent=this.buildPreviewHtml();
     console.log(cover);
     console.log(htmlContent);
     e.preventDefault();
@@ -290,20 +290,18 @@ handleSubmit(){
       console.log(values);
       if (!err) {
         // 提交数据
-        // dispatch({
-        //   type: 'form/submitRegularForm',
-        //   payload: {
-        //     user: values.user,
-        //     name: values.name,
-        //     phone: values.phone,
-        //     companyId: values.companyId,
-        //     type: values.type,
-        //     contractPath: strUrl,
-        //   },
-        // });
+        dispatch({
+          type: 'activitysend/submitAddForm',
+          payload: {
+            title: values.title,
+            path: values.activityUrl,
+            img: cover,
+            content	: htmlContent,
+            detail: values.detail,
+          },
+        });
       }
     });
-  };
 }
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -365,6 +363,26 @@ handleSubmit(){
               }],
             })(
               <Input size="large" placeholder="请输入标题"/>
+            )}
+          </FormItem>
+          <FormItem {...formItemLayout} label="活动详情">
+            {getFieldDecorator('detail', {
+              rules: [{
+                required: true,
+                message: '请输入详情',
+              }],
+            })(
+              <TextArea size="large" placeholder="请输入详情" rows={4} />
+            )}
+          </FormItem>
+          <FormItem {...formItemLayout} label="活动路径">
+            {getFieldDecorator('activityUrl', {
+              rules: [{
+                required: true,
+                message: '请输入路径',
+              }],
+            })(
+              <Input size="large" placeholder="请输入路径"/>
             )}
           </FormItem>
           <FormItem {...formItemLayout} label="活动内容">

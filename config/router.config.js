@@ -122,6 +122,16 @@ export default [
             name: 'userlist',
             component: './Forms/UserList',
           },
+          {
+            path: '/form/pointset',
+            name: 'pointset',
+            component: './Forms/PointSet',
+          },
+          {
+            path: '/form/gradeset',
+            name: 'gradeset',
+            component: './Forms/GradeSet',
+          },
           // {
           //   path: '/form/basic-form',
           //   name: 'basicform',
@@ -183,6 +193,7 @@ export default [
             path: '/form/addauthor',
             component: './Forms/AddAuthor',
           },
+
           {
             path: '/form/addteam',
             component: './Forms/AddTeam',
@@ -285,6 +296,16 @@ export default [
         icon: 'profile',
         routes: [
           // profile
+          {
+            path: '/profile/addgame',
+            name: 'addgame',
+            component: './Profile/AddGame',
+          },
+          {
+            path: '/profile/listgame',
+            name: 'listgame',
+            component: './Profile/ListGame',
+          },
           {
             path: '/profile/activitymanager',
             name: 'activitymanager',

@@ -2,7 +2,6 @@ import { stringify } from 'qs';
 import request from '@/utils/request';
 import { async } from 'q';
 import { func } from 'prop-types';
-
 export async function queryUserAccount(params) {
   const rep = await request(`/api/system/admin/list?${stringify(params)}`);
   return rep.data;
@@ -31,6 +30,14 @@ export async function queryStation(params) {
   const rep = await request(`/api/system/job/list?${stringify(params)}`);
   return rep.data;
 }
+export async function queryActivity(params) {
+  const rep = await request(`/api/service/activity/list?${stringify(params)}`);
+  return rep.data;
+}
+export async function queryGame(params) {
+  const rep = await request(`/api/service/game/list?${stringify(params)}`);
+  return rep.data;
+}
 export async function queryMoney(params) {
   const rep = await request(`/api/service/rp/order/list?${stringify(params)}`);
   return rep.data;
@@ -47,6 +54,15 @@ export async function queryStopMoney(params) {
     },
   });
   return rep.data;
+}
+export async function addActivity(params){
+  return request('/api/service/add/activity', {
+    method: 'POST',
+    data: stringify(params),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
 }
 export async function queryProjectNotice(params) {
   const rep = await request(`/api/mg/user/follow/${params.id}`);
@@ -249,6 +265,28 @@ export async function addBranch(params) {
 }
 export async function changeBranch(params){
   return request(`/api/system/${params.oprType}/stat`, {
+    method: 'POST',
+    data: stringify({
+      ...params,
+    }),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+export async function changeGame(params){
+  return request(`/api/service/update/game`, {
+    method: 'POST',
+    data: stringify({
+      ...params,
+    }),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+export async function changeActivity(params){
+  return request(`/api/service/update/activity`, {
     method: 'POST',
     data: stringify({
       ...params,
@@ -464,6 +502,18 @@ export async function submitAddAuthor(params) {
     },
   });
 }
+export async function submitAddGame(params) {
+  return request(`/api/service/add/game`, {
+    method: 'POST',
+    data: stringify({
+      ...params,
+    }),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+
 export async function submitAddTeam(params) {
   return request(`/api/mg/user/company/add`, {
     method: 'POST',

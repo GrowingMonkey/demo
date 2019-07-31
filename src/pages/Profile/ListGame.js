@@ -277,9 +277,9 @@ class UpdateForm extends PureComponent {
 }
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ activitymanage, loading }) => ({
-  activitymanage,
-  loading: loading.models.activitymanage,
+@connect(({ listgame, loading }) => ({
+  listgame,
+  loading: loading.models.listgame,
 }))
 @Form.create()
 class Comments extends PureComponent {
@@ -294,27 +294,51 @@ class Comments extends PureComponent {
 
   columns = [
     {
-      title: '活动标题',
-      dataIndex: 'title',
+      title: '游戏名称',
+      dataIndex: 'name',
+      render: text => <a onClick={() => this.previewItem(text)}>{text}</a>,
     },
     {
-      title: '活动内容简述',
+      title: '游戏介绍图',
+      dataIndex: 'detailImg',
+      render: val => <img src={val} width="30"/>,
+    },
+    {
+      title: '游戏说明',
       dataIndex: 'detail',
-    },
-    {
-      title: '当前状态',
-      dataIndex: 'stat',
       sorter: true,
-      render: val => val==0?<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'red'}}></span>:<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'green'}}></span>,
+      render: val => `${val}`,
       // mark to display a total number
+      needTotal: true,
     },
     {
-      title: '封面图',
-      dataIndex: 'img',
-      render: val => <img src={val} style={{width:100}}/>,
+        title: '游戏消耗积分',
+        dataIndex: 'usePoint',
+        sorter: true,
+        render: val => `${val}`,
+        // mark to display a total number
+        // needTotal: true,
+      },
+      {
+        title: '游戏获取积分',
+        dataIndex: 'getPoint',
+        sorter: true,
+        render: val => `${val}`,
+        // mark to display a total number
+        // needTotal: true,
+      },
+    {
+      title: '游戏url',
+      dataIndex: 'url',
+      render: val => <span>{val}</span>,
     },
     {
-      title: '活动发布时间',
+        title: '游戏状态',
+        dataIndex: 'stat',
+        render: val => val==0?<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'red'}}></span>:<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'green'}}></span>,
+      },
+    {
+      title: '创建时间',
       dataIndex: 'createTime',
       sorter: true,
       render: val => <span>{moment(parseInt(val)).format('YYYY-MM-DD HH:mm:ss')}</span>,
@@ -324,8 +348,6 @@ class Comments extends PureComponent {
       render: (text, record) => (
         <Fragment>
           {record.stat==0?<a onClick={() => this.handleChangeStat(1, record)}>下架</a>:<a onClick={() => this.handleChangeStat(0, record)}>上架</a>}
-          <Divider type="vertical" />
-          <a onClick={() => this.handleScan(record)}>修改</a>
         </Fragment>
       ),
     },
@@ -333,7 +355,7 @@ class Comments extends PureComponent {
   handleChangeStat(stat,record){
     const { dispatch } = this.props;
     dispatch({
-      type: 'activitymanage/stat',
+      type: 'listgame/stat',
       payload: {
         id:record.id,
         stat:stat,
@@ -343,14 +365,14 @@ class Comments extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'activitymanage/fetch',
+      type: 'listgame/fetch',
     });
   }
 
   handleStop(stat, record) {
     const { dispatch } = this.props;
     dispatch({
-      type: 'activitymanage/stop',
+      type: 'listgame/stop',
       payload: {
         oprType: stat,
         id: record.orderId,
@@ -359,7 +381,7 @@ class Comments extends PureComponent {
   }
 
   handleScan(record) {
-    router.push(`/profile/activitysend?id=${record.id}`);
+    router.push(`/profile/accountflow?id=${record.id}`);
   }
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
@@ -383,7 +405,7 @@ class Comments extends PureComponent {
     }
 
     dispatch({
-      type: 'activitymanage/fetch',
+      type: 'listgame/fetch',
       payload: params,
     });
   };
@@ -399,7 +421,7 @@ class Comments extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'activitymanage/fetch',
+      type: 'listgame/fetch',
       payload: {},
     });
   };
@@ -419,7 +441,7 @@ class Comments extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'activitymanage/remove',
+          type: 'listgame/remove',
           payload: {
             key: selectedRows.map(row => row.key),
           },
@@ -460,7 +482,7 @@ class Comments extends PureComponent {
       });
 
       dispatch({
-        type: 'activitymanage/fetch',
+        type: 'listgame/fetch',
         payload: values,
       });
     });
@@ -481,7 +503,7 @@ class Comments extends PureComponent {
   handleDelete = record => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'activitymanage/remove',
+      type: 'listgame/remove',
       payload: record,
     });
   };
@@ -489,7 +511,7 @@ class Comments extends PureComponent {
   handleCancle = record => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'activitymanage/cancle',
+      type: 'listgame/cancle',
       payload: record,
     });
   };
@@ -497,7 +519,7 @@ class Comments extends PureComponent {
   handleAdd = fields => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'activitymanage/add',
+      type: 'listgame/add',
       payload: {
         desc: fields.desc,
       },
@@ -513,7 +535,7 @@ class Comments extends PureComponent {
     const { dispatch } = this.props;
     const { formValues } = this.state;
     dispatch({
-      type: 'activitymanage/update',
+      type: 'listgame/update',
       payload: {
         query: formValues,
         body: {
@@ -536,12 +558,12 @@ class Comments extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={6} sm={24}>
-            <FormItem label="标题">
+            <FormItem label="游戏名称">
               {getFieldDecorator('name')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
-            <FormItem label="发布日期">
+            <FormItem label="创建日期">
               {getFieldDecorator('startDate')(
                 <RangePicker
                   style={{ width: '100%' }}
@@ -654,7 +676,7 @@ class Comments extends PureComponent {
   render() {
     console.log(this.props);
     const {
-      activitymanage: { data },
+      listgame: { data },
       loading,
     } = this.props;
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
@@ -674,7 +696,7 @@ class Comments extends PureComponent {
       handleUpdate: this.handleUpdate,
     };
     return (
-      <PageHeaderWrapper title="红包活动">
+      <PageHeaderWrapper title="游戏列表">
         <div>
           <Card bordered={false}>
             <div className={styles.tableList}>
