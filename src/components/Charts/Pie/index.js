@@ -246,7 +246,7 @@ class Pie extends Component {
         {hasLegend && (
           <ul className={styles.legend}>
             {legendData.map((item, i) => (
-              <li key={item.x} onClick={() => this.handleLegendClick(item, i)}>
+              <li key={item.x} onClick={() => this.handleLegendClick(item, i)} style={{marginBottom:'2px'}}>
                 <span
                   className={styles.dot}
                   style={{

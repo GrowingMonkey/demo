@@ -344,7 +344,7 @@ class Center extends React.Component {
                     </div>
                     <Divider dashed />
                     <div className={styles.tags}>
-                      <div className={styles.tagsTitle}>标签</div>
+                      {/* <div className={styles.tagsTitle}>标签</div> */}
                       <div className={styles.detail}>
                         <p>
                           <i />
@@ -357,6 +357,25 @@ class Center extends React.Component {
                         <p>
                           <i />
                           被评论&nbsp;&nbsp;{currentUser.arguedCount}
+                        </p>
+                      </div>
+                    </div>
+                    <Divider dashed />
+                    <div className={styles.tags}>
+                      {/* <div className={styles.tagsTitle}>标签</div> */}
+                      <div className={styles.detail}>
+                        <p>
+                          <i />
+                          等级&nbsp;&nbsp;{currentUser.likeCount}
+                        </p>
+                        <p>
+                          <i />
+                          积分&nbsp;&nbsp;{currentUser.tuckCount}
+                        </p>
+                        <p>
+                          <i />
+                          凝聚值&nbsp;&nbsp;{currentUser.arguedCount}
+                          <a style={{float:'right'}}>查看明细</a>
                         </p>
                       </div>
                     </div>

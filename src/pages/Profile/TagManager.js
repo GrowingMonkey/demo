@@ -7,7 +7,6 @@ import {
   Row,
   Col,
   Card,
-  Popconfirm,
   Form,
   Input,
   Select,
@@ -27,15 +26,14 @@ import {
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
-import styles from '../../List/TableList.less';
-import list from '@/models/list';
+import styles from '../List/TableList.less';
 
-const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const { Step } = Steps;
 const { TextArea } = Input;
 const { Option } = Select;
 const RadioGroup = Radio.Group;
+const { RangePicker } = DatePicker;
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
@@ -173,15 +171,16 @@ class UpdateForm extends PureComponent {
     }
     if (currentStep === 2) {
       return [
-        <FormItem key="time" {...this.formLayout} label="开始时间">
+        <FormItem key="time" {...this.formLayout} label="时间">
           {form.getFieldDecorator('time', {
             rules: [{ required: true, message: '请选择开始时间！' }],
           })(
-            <DatePicker
+            <RangePicker
               style={{ width: '100%' }}
-              showTime
-              format="YYYY-MM-DD HH:mm:ss"
-              placeholder="选择开始时间"
+              placeholder={[
+                formatMessage({ id: 'form.date.placeholder.start' }),
+                formatMessage({ id: 'form.date.placeholder.end' }),
+              ]}
             />
           )}
         </FormItem>,
@@ -278,12 +277,12 @@ class UpdateForm extends PureComponent {
 }
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ picture, loading }) => ({
-  picture,
-  loading: loading.models.picture,
+@connect(({ tagmanager, loading }) => ({
+  tagmanager,
+  loading: loading.models.tagmanager,
 }))
 @Form.create()
-class Pictures extends PureComponent {
+class Comments extends PureComponent {
   state = {
     modalVisible: false,
     updateModalVisible: false,
@@ -295,75 +294,20 @@ class Pictures extends PureComponent {
 
   columns = [
     {
-      title: '作者',
+      title: '标签名称',
       dataIndex: 'name',
-      render: text => <span>{text}</span>,
+      render: text => <a onClick={() => this.previewItem(text)}>{text}</a>,
     },
     {
-      title: '手机号',
-      dataIndex: 'phone',
-    },
-    {
-      title: '作品说明',
+      title: '标签说明',
       dataIndex: 'detail',
-      sorter: true,
-      render: val => (
-        <span
-          style={{
-            maxWidth: 600,
-            overflow: 'hidden',
-            display: 'block',
-            textOverflow: 'ellipsis',
-            display: '-webkit-box',
-            boxOrient: 'vertical',
-            whiteSpace: 'nowrap',
-            boxOrient: 'vertical',
-            lineClamp: 1,
-          }}
-        >
-          {val}
-        </span>
-      ),
-      // mark to display a total number
-      needTotal: true,
     },
     {
-      title: '图片作品',
-      dataIndex: 'picList',
-      // render(val) {
-      //   let imgwall
-      //   val.map(item=>{
-      //     imgwall+=<img src={item.sourceUrl}/>
-      //   })
-      //   return imgwall;
-      // },
-      render(val) {
-        console.log(val);
-        return val.map((item, key) => {
-          if (key < 4) {
-            return (
-              <div
-                key={key}
-                style={{
-                  width: 50,
-                  height: 50,
-                  overflow: 'hidden',
-                  display: 'inline-block',
-                  marginRight: 8,
-                }}
-              >
-                <img
-                  src={`http://file-t.imuguang.com/${item.displayUrl}`}
-                  style={{ width: '100%' }}
-                />
-              </div>
-            );
-          }
-        });
-      },
+      title: '标签下作品数量',
+      dataIndex: 'count',
     },
     {
-      title: '发布时间',
+      title: '创建时间',
       dataIndex: 'createTime',
       sorter: true,
       render: val => <span>{moment(parseInt(val)).format('YYYY-MM-DD HH:mm:ss')}</span>,
@@ -372,41 +316,43 @@ class Pictures extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.handleUpdateModalVisible(record)}>查看</a>
+          <a>查看</a>
           <Divider type="vertical" />
-          <Popconfirm
-            title="你确认撤销这篇被举报文章？"
-            onConfirm={() => this.handleCancle(record)}
-            okText="确认"
-            cancelText="取消"
-            >
-            {/* <a href="#">Delete</a> */}
-            <a href="#">撤销</a>
-          </Popconfirm>
-          {/* <a onClick={() => this.handleCancle(record)}>撤销</a> */}
-          <Divider type="vertical" />
-          <Popconfirm
-            title="你确认删除这篇被举报文章？"
-            onConfirm={() => this.handleDelete(record)}
-            okText="确认"
-            cancelText="取消"
-            >
-            {/* <a href="#">Delete</a> */}
-            <a href="#">删除</a>
-          </Popconfirm>
+          <a>删除</a>
         </Fragment>
       ),
     },
   ];
-
+  handleChangeStat(stat,record){
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'tagmanager/stat',
+      payload: {
+        id:record.id,
+        stat:stat,
+      }
+    });
+  }
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'picture/fetch',
+      type: 'tagmanager/fetch',
+    });
+  }
+
+  handleStop(stat, record) {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'tagmanager/stop',
       payload: {
-        result: 'report',
+        oprType: stat,
+        id: record.orderId,
       },
     });
+  }
+
+  handleScan(record) {
+    router.push(`/profile/accountflow?id=${record.id}`);
   }
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
@@ -430,11 +376,8 @@ class Pictures extends PureComponent {
     }
 
     dispatch({
-      type: 'picture/fetch',
-      payload: {
-        ...params,
-        result: 'report',
-      },
+      type: 'tagmanager/fetch',
+      payload: params,
     });
   };
 
@@ -449,10 +392,8 @@ class Pictures extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'picture/fetch',
-      payload: {
-        result: 'report',
-      },
+      type: 'tagmanager/fetch',
+      payload: {},
     });
   };
 
@@ -471,7 +412,7 @@ class Pictures extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'picture/remove',
+          type: 'tagmanager/remove',
           payload: {
             key: selectedRows.map(row => row.key),
           },
@@ -500,7 +441,7 @@ class Pictures extends PureComponent {
 
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-
+      console.log(fieldsValue);
       const values = {
         ...fieldsValue,
         startDate: fieldsValue.startDate && fieldsValue.startDate[0].format('YYYY-MM-DD'),
@@ -512,11 +453,8 @@ class Pictures extends PureComponent {
       });
 
       dispatch({
-        type: 'picture/fetch',
-        payload: {
-          ...values,
-          result: 'report',
-        },
+        type: 'tagmanager/fetch',
+        payload: values,
       });
     });
   };
@@ -527,15 +465,16 @@ class Pictures extends PureComponent {
     });
   };
 
+  // 查看详情
   handleUpdateModalVisible = record => {
     const { match } = this.props;
-    router.push(`/dashboard/commondetail/${record.id}?type=picture`);
+    router.push(`/dashboard/commondetail/${record.id}?type=comments`);
   };
 
   handleDelete = record => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'picture/remove',
+      type: 'tagmanager/remove',
       payload: record,
     });
   };
@@ -543,7 +482,7 @@ class Pictures extends PureComponent {
   handleCancle = record => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'picture/cancle',
+      type: 'tagmanager/cancle',
       payload: record,
     });
   };
@@ -551,7 +490,7 @@ class Pictures extends PureComponent {
   handleAdd = fields => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'picture/add',
+      type: 'tagmanager/add',
       payload: {
         desc: fields.desc,
       },
@@ -561,11 +500,13 @@ class Pictures extends PureComponent {
     this.handleModalVisible();
   };
 
+  onChangeDate() {}
+
   handleUpdate = fields => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
     dispatch({
-      type: 'picture/update',
+      type: 'tagmanager/update',
       payload: {
         query: formValues,
         body: {
@@ -584,44 +525,26 @@ class Pictures extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
-    const optionlist=[{name:'图片',value:'image'},{name:'文章',value:'activity'}];
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={4} sm={24}>
-            <FormItem label="用户名">
+          <Col md={6} sm={24}>
+            <FormItem label="标签名称">
               {getFieldDecorator('name')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
-          <Col md={4} sm={24}>
-            <FormItem label="手机号">
-              {getFieldDecorator('phone')(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
           <Col md={6} sm={24}>
-            <FormItem label="日期">
+            <FormItem label="创建日期">
               {getFieldDecorator('startDate')(
                 <RangePicker
                   style={{ width: '100%' }}
+                  format="YYYY-MM-DD"
                   placeholder={[
                     formatMessage({ id: 'form.date.placeholder.start' }),
                     formatMessage({ id: 'form.date.placeholder.end' }),
                   ]}
                 />
               )}
-            </FormItem>
-          </Col>
-          <Col md={4} sm={24}>
-            <FormItem label="标签">
-              {getFieldDecorator('tagType')(<Select placeholder="请选择" style={{ width: '60%' }}>
-                  {optionlist.map((intem, i) => {
-                    return (
-                      <Option value={intem.value} key={i}>
-                        {intem.name}
-                      </Option>
-                    );
-                  })}
-                </Select>)}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
@@ -631,9 +554,6 @@ class Pictures extends PureComponent {
               </Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
-              </Button>
-              <Button style={{ marginLeft: 8 }} type="primary" htmlType="submit">
-                刷新
               </Button>
               {/* <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
                 展开 <Icon type="down" />
@@ -727,7 +647,7 @@ class Pictures extends PureComponent {
   render() {
     console.log(this.props);
     const {
-      picture: { data },
+      tagmanager: { data },
       loading,
     } = this.props;
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
@@ -747,31 +667,33 @@ class Pictures extends PureComponent {
       handleUpdate: this.handleUpdate,
     };
     return (
-      <div>
-        <Card bordered={false}>
-          <div className={styles.tableList}>
-            <div className={styles.tableListForm}>{this.renderForm()}</div>
-            <StandardTable
-              selectedRows={selectedRows}
-              loading={loading}
-              data={data}
-              columns={this.columns}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
+      <PageHeaderWrapper title="游戏列表">
+        <div>
+          <Card bordered={false}>
+            <div className={styles.tableList}>
+              <div className={styles.tableListForm}>{this.renderForm()}</div>
+              <StandardTable
+                // selectedRows={selectedRows}
+                loading={loading}
+                data={data}
+                columns={this.columns}
+                onSelectRow={this.handleSelectRows}
+                onChange={this.handleStandardTableChange}
+              />
+            </div>
+          </Card>
+          <CreateForm {...parentMethods} modalVisible={modalVisible} />
+          {stepFormValues && Object.keys(stepFormValues).length ? (
+            <UpdateForm
+              {...updateMethods}
+              updateModalVisible={updateModalVisible}
+              values={stepFormValues}
             />
-          </div>
-        </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
-        {stepFormValues && Object.keys(stepFormValues).length ? (
-          <UpdateForm
-            {...updateMethods}
-            updateModalVisible={updateModalVisible}
-            values={stepFormValues}
-          />
-        ) : null}
-      </div>
+          ) : null}
+        </div>
+      </PageHeaderWrapper>
     );
   }
 }
 
-export default Pictures;
+export default Comments;

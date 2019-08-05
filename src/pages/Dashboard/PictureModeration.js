@@ -582,20 +582,21 @@ class Pictures extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
+    const optionlist=[{name:'图片',value:'image'},{name:'文章',value:'activity'}];
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={6} sm={24}>
+          <Col md={4} sm={24}>
             <FormItem label="用户名">
               {getFieldDecorator('name')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={4} sm={24}>
             <FormItem label="手机号">
               {getFieldDecorator('phone')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={5} sm={24}>
             <FormItem label="日期">
               {getFieldDecorator('startDate')(
                 <RangePicker
@@ -606,6 +607,19 @@ class Pictures extends PureComponent {
                   ]}
                 />
               )}
+            </FormItem>
+          </Col>
+          <Col md={4} sm={24}>
+            <FormItem label="标签">
+              {getFieldDecorator('tagType')(<Select placeholder="请选择" style={{ width: '60%' }}>
+                  {optionlist.map((intem, i) => {
+                    return (
+                      <Option value={intem.value} key={i}>
+                        {intem.name}
+                      </Option>
+                    );
+                  })}
+                </Select>)}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>

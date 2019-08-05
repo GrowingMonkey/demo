@@ -5,13 +5,21 @@ import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import { getTimeDistance } from '@/utils/utils';
 import styles from './Dashboard/Analysis.less';
 import PageLoading from '@/components/PageLoading';
+import { ChartCard, MiniArea, MiniBar, MiniProgress, Field } from '@/components/Charts';
 
 const IntroduceRow = React.lazy(() => import('./Dashboard/IntroduceRow'));
 const SalesCard = React.lazy(() => import('./Dashboard/SalesCard'));
 const TopSearch = React.lazy(() => import('./Dashboard/TopSearch'));
 const ProportionSales = React.lazy(() => import('./Dashboard/ProportionSales'));
 // const OfflineData = React.lazy(() => import('./Dashboard/OfflineData'));
-
+const topColResponsiveProps = {
+  xs: 24,
+  sm: 12,
+  md: 12,
+  lg: 12,
+  xl: 8,
+  style: { marginBottom: 24},
+};
 @connect(({ chart, loading }) => ({
   chart,
   loading: loading.effects['chart/fetch'],
@@ -189,7 +197,7 @@ class IndexPage extends Component {
             selectDate={this.selectDate}
           />
         </Suspense>
-        <div className={styles.twoColLayout}>
+        <div className={styles.twoColLayout} style={{ marginBottom: 24,}}>
           <Row gutter={24}>
             <Col xl={12} lg={24} md={24} sm={24} xs={24}>
               <Suspense fallback={null}>
@@ -269,6 +277,112 @@ class IndexPage extends Component {
             </Col>
           </Row>
         </div>
+        <Suspense fallback={null}>
+        <Row gutter={24}>
+    <Col {...topColResponsiveProps}>
+      <ChartCard
+        bordered={false}
+        title="日新增用户"
+        loading={loading}
+        total={() => <h6>1</h6>}
+        footer={
+          <Field
+            label="用户总量"
+            value={
+              `3`
+              // visitData.regTotal
+            }
+          />
+        }
+        contentHeight={46}
+      />
+    </Col>
+
+    <Col {...topColResponsiveProps}>
+      <ChartCard
+        bordered={false}
+        title="日活跃用户"
+        loading={loading}
+        total={() => <h6>2</h6>}
+        footer={
+          <Field
+            label="用户活跃率"
+            value={
+              // `${numeral(visitData.actRate).format('0,0')}`
+              `2%`
+            }
+          />
+        }
+        contentHeight={46}
+      />
+    </Col>
+    <Col {...topColResponsiveProps}>
+      <ChartCard
+        bordered={false}
+        title="日作品发布量"
+        loading={loading}
+        total={() => <h6>3</h6>}
+        footer={
+          <Field label="总作品发布量" value={`1`} />
+        }
+        contentHeight={46}
+      />
+    </Col>
+  </Row>
+        </Suspense>
+        <Suspense fallback={null}>
+        <Row gutter={24}>
+    <Col {...topColResponsiveProps}>
+      <ChartCard
+        bordered={false}
+        title="日新增用户"
+        loading={loading}
+        total={() => <h6>1</h6>}
+        footer={
+          <Field
+            label="用户总量"
+            value={
+              `3`
+              // visitData.regTotal
+            }
+          />
+        }
+        contentHeight={46}
+      />
+    </Col>
+
+    <Col {...topColResponsiveProps}>
+      <ChartCard
+        bordered={false}
+        title="日活跃用户"
+        loading={loading}
+        total={() => <h6>2</h6>}
+        footer={
+          <Field
+            label="用户活跃率"
+            value={
+              // `${numeral(visitData.actRate).format('0,0')}`
+              `2%`
+            }
+          />
+        }
+        contentHeight={46}
+      />
+    </Col>
+    <Col {...topColResponsiveProps}>
+      <ChartCard
+        bordered={false}
+        title="日作品发布量"
+        loading={loading}
+        total={() => <h6>3</h6>}
+        footer={
+          <Field label="总作品发布量" value={`1`} />
+        }
+        contentHeight={46}
+      />
+    </Col>
+  </Row>
+        </Suspense>
       </GridContent>
     );
   }

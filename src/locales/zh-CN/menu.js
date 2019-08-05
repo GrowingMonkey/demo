@@ -46,6 +46,7 @@ export default {
   'menu.profile.activitySend':'活动发布',
   'menu.profile.activitymanager':'活动管理',
   'menu.profile.listgame':'游戏管理',
+  'menu.profile.tagmanager':'标签管理',
   'menu.profile.addgame':'新增游戏',
   'menu.profile.moneyprofile': '红包活动',
   'menu.profile.accountflow': '账户详情',

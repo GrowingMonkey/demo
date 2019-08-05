@@ -34,8 +34,16 @@ export async function queryActivity(params) {
   const rep = await request(`/api/service/activity/list?${stringify(params)}`);
   return rep.data;
 }
+export async function queryPoint(params) {
+  const rep = await request(`/api/mg/user/task/point/list?${stringify(params)}`);
+  return rep.data;
+}
 export async function queryGame(params) {
   const rep = await request(`/api/service/game/list?${stringify(params)}`);
+  return rep.data;
+}
+export async function queryTag(params) {
+  const rep = await request(`/api/service/tag/list?${stringify(params)}`);
   return rep.data;
 }
 export async function queryMoney(params) {

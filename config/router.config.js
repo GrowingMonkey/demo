@@ -118,6 +118,11 @@ export default [
             component: './Forms/AuthManage',
           },
           {
+            path: '/form/counselee',
+            name: 'counselee',
+            component: './Forms/Counselee',
+          },
+          {
             path: '/form/userlist',
             name: 'userlist',
             component: './Forms/UserList',
@@ -336,6 +341,12 @@ export default [
             hideInMenu: true,
             name: 'accountflow',
             component: './Profile/AccountFlow',
+          },
+          {
+            path: '/profile/tagmanager',
+            // hideInMenu: true,
+            name: 'tagmanager',
+            component: './Profile/TagManager',
           },
           // {
           //   path: '/profile/basic',

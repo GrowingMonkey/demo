@@ -1,7 +1,7 @@
 import {
+    queryTag,
     queryRule,
-    queryPoint,
-    queryActivity,
+    queryGame,
     queryStopMoney,
     querySureMoney,
     removeComment,
@@ -10,11 +10,10 @@ import {
     updateRule,
     queryComments,
     changeGame,
-    changeActivity,
   } from '@/services/api';
   
   export default {
-    namespace: 'pointset',
+    namespace: 'tagmanager',
   
     state: {
       data: {
@@ -25,7 +24,7 @@ import {
   
     effects: {
       *fetch({ payload }, { call, put }) {
-        const response = yield call(queryPoint, payload);
+        const response = yield call(queryTag, payload);
         console.log(response);
         yield put({
           type: 'save',
@@ -55,9 +54,9 @@ import {
         if (callback) callback();
       },
       *stat({ payload, callback }, { call, put }) {
-        const response = yield call(changeActivity, payload);
+        const response = yield call(changeGame, payload);
         if(response.code==0){
-          const resp = yield call(queryActivity);
+          const resp = yield call(queryGame);
           yield put({
             type: 'save',
             payload: resp,
