@@ -54,6 +54,15 @@ const errorHandler = error => {
     });
     return;
   }
+  if (status === 200 && response.code == -3) {
+    notification.error({
+      message: 'token已过期，请重新登录。',
+    });
+    window.g_app._store.dispatch({
+      type: 'login/logout',
+    });
+    return;
+  }
   if(status === 200&&response.code!=0){
     notification.error({
       message: response.message,
