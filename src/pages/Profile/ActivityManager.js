@@ -305,13 +305,13 @@ class Comments extends PureComponent {
       title: '当前状态',
       dataIndex: 'stat',
       sorter: true,
-      render: val => val==0?<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'red'}}></span>:<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'green'}}></span>,
+      render: val => val==1?<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'red'}}></span>:<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'green'}}></span>,
       // mark to display a total number
     },
     {
       title: '封面图',
       dataIndex: 'img',
-      render: val => <img src={val} style={{width:100}}/>,
+      render: val => <img src={val} style={{width:100,maxHeight:200}}/>,
     },
     {
       title: '活动发布时间',
@@ -674,7 +674,7 @@ class Comments extends PureComponent {
       handleUpdate: this.handleUpdate,
     };
     return (
-      <PageHeaderWrapper title="红包活动">
+      <PageHeaderWrapper title="活动管理">
         <div>
           <Card bordered={false}>
             <div className={styles.tableList}>

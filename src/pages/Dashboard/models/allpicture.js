@@ -6,6 +6,7 @@ import {
   queryPicture,
   removePicture,
   canclePicture,
+  queryTag,
 } from '@/services/api';
 import {deleteArray} from '@/utils/utils'
 
@@ -17,6 +18,10 @@ export default {
       list: [],
       pagination: {},
     },
+    dataTag:{
+      list: [],
+      pagination: {},
+    }
   },
 
   effects: {
@@ -25,6 +30,14 @@ export default {
       yield put({
         type: 'save',
         payload: response.data,
+      });
+    },
+    *fetchtag({ payload }, { call, put }) {
+      const response = yield call(queryTag, payload);
+      console.log(response);
+      yield put({
+        type: 'savetag',
+        payload: response,
       });
     },
     *remove({ payload, callback }, { call, put, select }) {
@@ -88,6 +101,13 @@ export default {
       return {
         ...state,
         data: action.payload,
+      };
+    },
+    savetag(state, action) {
+      console.log(action);
+      return {
+        ...state,
+        dataTag: action.payload,
       };
     },
     delete(state, action) {

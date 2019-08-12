@@ -301,7 +301,7 @@ class Comments extends PureComponent {
     {
       title: '游戏介绍图',
       dataIndex: 'detailImg',
-      render: val => <img src={val} width="30"/>,
+      render: val => <img src={val.substring(0, val.length - 1)} width="30"/>,
     },
     {
       title: '游戏说明',
@@ -335,7 +335,7 @@ class Comments extends PureComponent {
     {
         title: '游戏状态',
         dataIndex: 'stat',
-        render: val => val==0?<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'red'}}></span>:<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'green'}}></span>,
+        render: val => val==1?<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'red'}}></span>:<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'green'}}></span>,
       },
     {
       title: '创建时间',

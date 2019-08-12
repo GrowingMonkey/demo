@@ -1,10 +1,12 @@
 import {
     queryRule,
+    queryActivity,
     deleteService,
     addroft,
     addService,
     removeRule,
     addRule,
+    addTag,
     updateRule,
     queryService,
     queryMarketService,
@@ -24,13 +26,12 @@ import {
   
     effects: {
       *fetch({ payload }, { call, put }) {
-        const response = yield call(queryService, payload);
-        // if (payload.type == 'mkurl') {
-          yield put({
-            type: 'save',
-            payload: response,
-          });
-        // } 
+        const response = yield call(queryActivity, payload);
+        console.log(response);
+        yield put({
+          type: 'save',
+          payload: response,
+        });
       },
       *submitAddForm({ payload }, { call, put }) {
         const response = yield call(addActivity, payload);
@@ -68,14 +69,7 @@ import {
         }
       },
       *add({ payload, callback }, { call, put }) {
-        const response = yield call(addroft, payload);
-        if(response.code==0){
-          const resp = yield call(queryService, {type: 'mkurl'});
-          yield put({
-            type: 'save',
-            payload: resp,
-          });
-        }
+        const response = yield call(addTag, payload);
         //   yield put({
         //     type: 'save',
         //     payload: response,

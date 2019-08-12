@@ -221,9 +221,9 @@ class UpdateForm extends PureComponent {
 }
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ userlist, loading }) => ({
-  userlist,
-  loading: loading.models.userlist,
+@connect(({ counselee, loading }) => ({
+  counselee,
+  loading: loading.models.counselee,
 }))
 @Form.create()
 class UserList extends PureComponent {
@@ -238,45 +238,20 @@ class UserList extends PureComponent {
 
   columns = [
     {
-      title: '用户名',
-      dataIndex: 'name',
+      title: '师傅名称',
+      dataIndex: 'mname',
     },
     {
-      title: '手机号',
-      dataIndex: 'phone',
+      title: '师傅手机',
+      dataIndex: 'mphone',
     },
     {
-      title: '注册时间',
-      dataIndex: 'createTime',
-      render: val => <span>{moment(parseInt(val)).format('YYYY-MM-DD HH:mm:ss')}</span>,
+      title: '徒弟名称',
+      dataIndex: 'aname',
     },
     {
-      title: '图片',
-      dataIndex: 'picCount',
-    },
-    {
-      title: '视频',
-      dataIndex: 'videoCount',
-    },
-    {
-      title: '文章',
-      dataIndex: 'artCount',
-    },
-    {
-      title: '评论',
-      dataIndex: 'commentCount',
-    },
-    {
-      title: '总数',
-      dataIndex: 'total',
-    },
-    {
-      title: '收藏',
-      dataIndex: 'collectCount',
-    },
-    {
-      title: '获赞',
-      dataIndex: 'likeCount',
+      title: '徒弟手机',
+      dataIndex: 'aphone',
     },
     {
       title: '操作',
@@ -285,37 +260,7 @@ class UserList extends PureComponent {
         const textMsg=`你确认重${textStr}置这个账号吗？`;
         return (
           <Fragment>
-            <a onClick={() => this.handleUpdateModalVisibleRouter(true, record)}>查看</a>
-            <Divider type="vertical" />
-            <a onClick={() => this.handleUpdateModalVisible(true, record)}>设置</a>
-            <Divider type="vertical" />
-            {/* <a onClick={() => this.handleStopStatus(record)}>{textStr}</a> */}
-            <Popconfirm
-            title={textMsg}
-            onConfirm={() => this.handleStopStatus(record)}
-            okText="确认"
-            cancelText="取消"
-            >
-            <a href="#">{textStr}</a>
-          </Popconfirm>
-            <Divider type="vertical" />
-            <Popconfirm
-            title="你确认重置这个账号吗？"
-            onConfirm={() => this.handleDeleteReset(0, record)}
-            okText="确认"
-            cancelText="取消"
-            >
-            <a href="#">重置</a>
-          </Popconfirm>
-            <Divider type="vertical" />
-            <Popconfirm
-            title="你确认注销这个账号吗？"
-            onConfirm={() => this.handleDeleteReset(1, record)}
-            okText="确认"
-            cancelText="取消"
-            >
-            <a href="#">注销</a>
-          </Popconfirm>
+            <a onClick={() => this.handleUpdateModalVisibleRouter(true, record)}>查看详情</a>
           </Fragment>
         );
       },
@@ -325,7 +270,7 @@ class UserList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'userlist/fetch',
+      type: 'counselee/fetch',
     });
   }
 
@@ -350,7 +295,7 @@ class UserList extends PureComponent {
     }
 
     dispatch({
-      type: 'userlist/fetch',
+      type: 'counselee/fetch',
       payload: params,
     });
   };
@@ -366,7 +311,7 @@ class UserList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'userlist/fetch',
+      type: 'counselee/fetch',
       payload: {},
     });
   };
@@ -386,7 +331,7 @@ class UserList extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'userlist/remove',
+          type: 'counselee/remove',
           payload: {
             key: selectedRows.map(row => row.key),
           },
@@ -427,7 +372,7 @@ class UserList extends PureComponent {
       });
 
       dispatch({
-        type: 'userlist/fetch',
+        type: 'counselee/fetch',
         payload: values,
       });
     });
@@ -455,7 +400,7 @@ class UserList extends PureComponent {
     const { dispatch, form } = this.props;
     console.log(record);
     dispatch({
-      type: 'userlist/status',
+      type: 'counselee/status',
       payload: record,
     });
   };
@@ -464,7 +409,7 @@ class UserList extends PureComponent {
     const { dispatch, form } = this.props;
     console.log(record);
     dispatch({
-      type: 'userlist/reset',
+      type: 'counselee/reset',
       payload: {
         userId: record.id,
         type: flag,
@@ -475,7 +420,7 @@ class UserList extends PureComponent {
   handleAdd = fields => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'userlist/add',
+      type: 'counselee/add',
       payload: {
         desc: fields.desc,
       },
@@ -489,7 +434,7 @@ class UserList extends PureComponent {
     const { dispatch } = this.props;
     const { formValues } = this.state;
     dispatch({
-      type: 'userlist/update',
+      type: 'counselee/update',
       payload: {
         query: formValues,
         body: {
@@ -512,26 +457,23 @@ class UserList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={6} sm={24}>
-            <FormItem label="用户名">
-              {getFieldDecorator('name')(<Input placeholder="请输入" />)}
+            <FormItem label="师傅名称">
+              {getFieldDecorator('mname')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
-            <FormItem label="手机号">
-              {getFieldDecorator('phone')(<Input placeholder="请输入" />)}
+            <FormItem label="师傅手机号">
+              {getFieldDecorator('mphone')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
-            <FormItem label="注册时间">
-              {getFieldDecorator('startDate')(
-                <RangePicker
-                  style={{ width: '100%' }}
-                  placeholder={[
-                    formatMessage({ id: 'form.date.placeholder.start' }),
-                    formatMessage({ id: 'form.date.placeholder.end' }),
-                  ]}
-                />
-              )}
+            <FormItem label="徒弟名称">
+              {getFieldDecorator('aname')(<Input placeholder="请输入" />)}
+            </FormItem>
+          </Col>
+          <Col md={6} sm={24}>
+            <FormItem label="徒弟手机号">
+              {getFieldDecorator('aphone')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
@@ -604,7 +546,7 @@ class UserList extends PureComponent {
   render() {
     console.log(this.props);
     const {
-      userlist: { data },
+      counselee: { data },
       loading,
     } = this.props;
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
@@ -624,7 +566,7 @@ class UserList extends PureComponent {
       handleUpdate: this.handleUpdate,
     };
     return (
-      <PageHeaderWrapper title="用户列表">
+      <PageHeaderWrapper title="师徒列表">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>

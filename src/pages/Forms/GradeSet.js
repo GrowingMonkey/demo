@@ -42,244 +42,95 @@ const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['关闭', '运行中', '已上线', '异常'];
 
 const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
+  const { modalVisible, form, handleAdd,handleUpdate, handleModalVisible ,formVals,modelsType} = props;
+  const formValscurrent=formVals?formVals:'';
   const okHandle = () => {
+    console.log(modelsType);
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       form.resetFields();
-      handleAdd(fieldsValue);
+      console.log(fieldsValue);
+      const fieldsNewValue={
+        ...fieldsValue,
+        id:formVals.id,
+        modelsType:modelsType,
+      }
+      if(modelsType==2){
+        handleUpdate(fieldsNewValue);
+      }else{
+        handleAdd(fieldsNewValue);
+      }
     });
   };
+  console.log(formVals);
   return (
     <Modal
       destroyOnClose
-      title="新建规则"
+      title={modelsType==2?"修改等级权限":'新增等级权限'}
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
-    >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="描述">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-        })(<Input placeholder="请输入" />)}
+    > 
+      <FormItem labelCol={{ span: 10 }} wrapperCol={{ span: 10 }} label="等级" style={{display:modelsType==2?'none':'block'}}>
+      {form.getFieldDecorator('level', {
+          rules: [{ required: modelsType==2?false:true}],
+        })(<Input placeholder="请输入等级" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 10 }} wrapperCol={{ span: 10 }} label="是否可以发布图片">
+        {form.getFieldDecorator('pic', {
+          rules: [{ required: true}],
+          initialValue:formVals?formVals.pic:''
+        })(<Select placeholder="请选择" style={{width:"100%"}}>
+        <Option value="0">是</Option>
+        <Option value="1">否</Option>
+      </Select>)}
+      </FormItem>
+      <FormItem labelCol={{ span:10 }} wrapperCol={{ span: 10 }} label="是否可以发布图文">
+        {form.getFieldDecorator('article', {
+          rules: [{ required: true}],
+          initialValue:formVals?formVals.article:''
+        })(<Select placeholder="请选择" style={{width:"100%"}}>
+        <Option value="0">是</Option>
+        <Option value="1">否</Option>
+      </Select>)}
+      </FormItem>
+      <FormItem labelCol={{ span: 10 }} wrapperCol={{ span: 10 }} label="是否可以发布视频">
+        {form.getFieldDecorator('video', {
+          rules: [{ required: true}],
+          initialValue:formVals?formVals.video:''
+        })(<Select placeholder="请选择" style={{width:"100%"}}>
+        <Option value="0">是</Option>
+        <Option value="1">否</Option>
+      </Select>)}
+      </FormItem>
+      <FormItem labelCol={{ span: 10 }} wrapperCol={{ span: 10}} label="是否可以发布段子">
+        {form.getFieldDecorator('stalk', {
+          rules: [{ required: true}],
+          initialValue:formVals?formVals.stalk:''
+        })(<Select placeholder="请选择" style={{width:"100%"}}>
+        <Option value="0">是</Option>
+        <Option value="1">否</Option>
+      </Select>)}
+        </FormItem>
+        <FormItem labelCol={{ span: 10 }} wrapperCol={{ span: 10 }} label="用户可以拍摄时长">
+        {form.getFieldDecorator('videoTimes', {
+          rules: [{ required: true}],
+          initialValue:formVals?formVals.videoTimes:''
+        })(<Input placeholder="请输入秒数" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 10 }} wrapperCol={{ span: 10}} label="用户可以上传时长">
+        {form.getFieldDecorator('uploadTimes', {
+          rules: [{ required: true}],
+          initialValue:formVals?formVals.uploadTimes:''
+        })(<Input placeholder="请输入秒数" />)}
       </FormItem>
     </Modal>
   );
 });
-
-@Form.create()
-class UpdateForm extends PureComponent {
-  static defaultProps = {
-    handleUpdate: () => {},
-    handleUpdateModalVisible: () => {},
-    values: {},
-  };
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      formVals: {
-        name: props.values.name,
-        desc: props.values.desc,
-        key: props.values.key,
-        target: '0',
-        template: '0',
-        type: '1',
-        time: '',
-        frequency: 'month',
-      },
-      currentStep: 0,
-    };
-
-    this.formLayout = {
-      labelCol: { span: 7 },
-      wrapperCol: { span: 13 },
-    };
-  }
-
-  handleNext = currentStep => {
-    const { form, handleUpdate } = this.props;
-    const { formVals: oldValue } = this.state;
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      const formVals = { ...oldValue, ...fieldsValue };
-      this.setState(
-        {
-          formVals,
-        },
-        () => {
-          if (currentStep < 2) {
-            this.forward();
-          } else {
-            handleUpdate(formVals);
-          }
-        }
-      );
-    });
-  };
-
-  backward = () => {
-    const { currentStep } = this.state;
-    this.setState({
-      currentStep: currentStep - 1,
-    });
-  };
-
-  forward = () => {
-    const { currentStep } = this.state;
-    this.setState({
-      currentStep: currentStep + 1,
-    });
-  };
-
-  renderContent = (currentStep, formVals) => {
-    const { form } = this.props;
-    if (currentStep === 1) {
-      return [
-        <FormItem key="target" {...this.formLayout} label="监控对象">
-          {form.getFieldDecorator('target', {
-            initialValue: formVals.target,
-          })(
-            <Select style={{ width: '100%' }}>
-              <Option value="0">表一</Option>
-              <Option value="1">表二</Option>
-            </Select>
-          )}
-        </FormItem>,
-        <FormItem key="template" {...this.formLayout} label="规则模板">
-          {form.getFieldDecorator('template', {
-            initialValue: formVals.template,
-          })(
-            <Select style={{ width: '100%' }}>
-              <Option value="0">规则模板一</Option>
-              <Option value="1">规则模板二</Option>
-            </Select>
-          )}
-        </FormItem>,
-        <FormItem key="type" {...this.formLayout} label="规则类型">
-          {form.getFieldDecorator('type', {
-            initialValue: formVals.type,
-          })(
-            <RadioGroup>
-              <Radio value="0">强</Radio>
-              <Radio value="1">弱</Radio>
-            </RadioGroup>
-          )}
-        </FormItem>,
-      ];
-    }
-    if (currentStep === 2) {
-      return [
-        <FormItem key="time" {...this.formLayout} label="时间">
-          {form.getFieldDecorator('time', {
-            rules: [{ required: true, message: '请选择开始时间！' }],
-          })(
-            <RangePicker
-              style={{ width: '100%' }}
-              placeholder={[
-                formatMessage({ id: 'form.date.placeholder.start' }),
-                formatMessage({ id: 'form.date.placeholder.end' }),
-              ]}
-            />
-          )}
-        </FormItem>,
-        <FormItem key="frequency" {...this.formLayout} label="调度周期">
-          {form.getFieldDecorator('frequency', {
-            initialValue: formVals.frequency,
-          })(
-            <Select style={{ width: '100%' }}>
-              <Option value="month">月</Option>
-              <Option value="week">周</Option>
-            </Select>
-          )}
-        </FormItem>,
-      ];
-    }
-    return [
-      <FormItem key="name" {...this.formLayout} label="规则名称">
-        {form.getFieldDecorator('name', {
-          rules: [{ required: true, message: '请输入规则名称！' }],
-          initialValue: formVals.name,
-        })(<Input placeholder="请输入" />)}
-      </FormItem>,
-      <FormItem key="desc" {...this.formLayout} label="规则描述">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-          initialValue: formVals.desc,
-        })(<TextArea rows={4} placeholder="请输入至少五个字符" />)}
-      </FormItem>,
-    ];
-  };
-
-  renderFooter = currentStep => {
-    const { handleUpdateModalVisible, values } = this.props;
-    if (currentStep === 1) {
-      return [
-        <Button key="back" style={{ float: 'left' }} onClick={this.backward}>
-          上一步
-        </Button>,
-        <Button key="cancel" onClick={() => handleUpdateModalVisible(false, values)}>
-          取消
-        </Button>,
-        <Button key="forward" type="primary" onClick={() => this.handleNext(currentStep)}>
-          下一步
-        </Button>,
-      ];
-    }
-    if (currentStep === 2) {
-      return [
-        <Button key="back" style={{ float: 'left' }} onClick={this.backward}>
-          上一步
-        </Button>,
-        <Button key="cancel" onClick={() => handleUpdateModalVisible(false, values)}>
-          取消
-        </Button>,
-        <Button key="submit" type="primary" onClick={() => this.handleNext(currentStep)}>
-          完成
-        </Button>,
-      ];
-    }
-    return [
-      <Button key="cancel" onClick={() => handleUpdateModalVisible(false, values)}>
-        取消
-      </Button>,
-      <Button key="forward" type="primary" onClick={() => this.handleNext(currentStep)}>
-        下一步
-      </Button>,
-    ];
-  };
-
-  render() {
-    const { updateModalVisible, handleUpdateModalVisible, values } = this.props;
-    const { currentStep, formVals } = this.state;
-
-    return (
-      <Modal
-        width={640}
-        bodyStyle={{ padding: '32px 40px 48px' }}
-        destroyOnClose
-        title="规则配置"
-        visible={updateModalVisible}
-        footer={this.renderFooter(currentStep)}
-        onCancel={() => handleUpdateModalVisible(false, values)}
-        afterClose={() => handleUpdateModalVisible()}
-      >
-        <Steps style={{ marginBottom: 28 }} size="small" current={currentStep}>
-          <Step title="基本信息" />
-          <Step title="配置规则属性" />
-          <Step title="设定调度周期" />
-        </Steps>
-        {this.renderContent(currentStep, formVals)}
-      </Modal>
-    );
-  }
-}
-
 /* eslint react/no-multi-comp:0 */
-@connect(({ pointset, loading }) => ({
-    pointset,
-  loading: loading.models.pointset,
+@connect(({ gradeset, loading }) => ({
+  gradeset,
+  loading: loading.models.gradeset,
 }))
 @Form.create()
 class Comments extends PureComponent {
@@ -289,45 +140,50 @@ class Comments extends PureComponent {
     expandForm: false,
     selectedRows: [],
     formValues: {},
+    modelsType:1,
     stepFormValues: {},
   };
 
   columns = [
     {
       title: '等级',
-      dataIndex: 'title',
+      dataIndex: 'level',
     },
     {
       title: '图片',
-      dataIndex: 'detail',
+      dataIndex: 'pic',
+      render:(val)=><span>{val==0?'是':'否'}</span>
     },
     {
       title: '视频',
-      dataIndex: 'stat',
-      sorter: true,
-      render: val => val==0?<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'red'}}></span>:<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'green'}}></span>,
+      dataIndex: 'video',
+      render:(val)=><span>{val==0?'是':'否'}</span>
       // mark to display a total number
     },
     {
       title: '文章',
-      dataIndex: 'img',
-      render: val => <img src={val} style={{width:100}}/>,
+      dataIndex: 'article',
+      render:(val)=><span>{val==0?'是':'否'}</span>
+    },
+    {
+      title: '段子',
+      dataIndex: 'stalk',
+      render:(val)=><span>{val==0?'是':'否'}</span>
     },
     {
         title: '视频拍摄时长',
-        dataIndex: 'img',
-        render: val => <img src={val} style={{width:100}}/>,
+        dataIndex: 'videoTimes',
       },
       {
         title: '可上传视频长度',
-        dataIndex: 'img',
-        render: val => <img src={val} style={{width:100}}/>,
+        dataIndex: 'uploadTimes',
+        render:val=>`${val}(秒)`
       },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.handleScan(record)}>修改</a>
+          <a onClick={() => this.handleModalVisible(true,record,2)}>修改</a>
         </Fragment>
       ),
     },
@@ -335,7 +191,7 @@ class Comments extends PureComponent {
   handleChangeStat(stat,record){
     const { dispatch } = this.props;
     dispatch({
-      type: 'pointset/stat',
+      type: 'gradeset/stat',
       payload: {
         id:record.id,
         stat:stat,
@@ -345,14 +201,14 @@ class Comments extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'pointset/fetch',
+      type: 'gradeset/fetch',
     });
   }
 
   handleStop(stat, record) {
     const { dispatch } = this.props;
     dispatch({
-      type: 'pointset/stop',
+      type: 'gradeset/stop',
       payload: {
         oprType: stat,
         id: record.orderId,
@@ -385,7 +241,7 @@ class Comments extends PureComponent {
     }
 
     dispatch({
-      type: 'pointset/fetch',
+      type: 'gradeset/fetch',
       payload: params,
     });
   };
@@ -401,7 +257,7 @@ class Comments extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'pointset/fetch',
+      type: 'gradeset/fetch',
       payload: {},
     });
   };
@@ -421,7 +277,7 @@ class Comments extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'pointset/remove',
+          type: 'gradeset/remove',
           payload: {
             key: selectedRows.map(row => row.key),
           },
@@ -462,28 +318,32 @@ class Comments extends PureComponent {
       });
 
       dispatch({
-        type: 'pointset/fetch',
+        type: 'gradeset/fetch',
         payload: values,
       });
     });
   };
 
-  handleModalVisible = flag => {
+  handleModalVisible = (flag ,record,modelsType)=> {
     this.setState({
       modalVisible: !!flag,
+      formVals:record,
+      modelsType:modelsType
     });
   };
 
   // 查看详情
-  handleUpdateModalVisible = record => {
-    const { match } = this.props;
-    router.push(`/dashboard/commondetail/${record.id}?type=comments`);
+  handleUpdateModalVisible = (flag) => {
+    console.log(flag);
+    this.setState({
+      updateModalVisible: !!flag,
+    });
   };
 
   handleDelete = record => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'pointset/remove',
+      type: 'gradeset/remove',
       payload: record,
     });
   };
@@ -491,17 +351,17 @@ class Comments extends PureComponent {
   handleCancle = record => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'pointset/cancle',
+      type: 'gradeset/cancle',
       payload: record,
     });
   };
 
-  handleAdd = fields => {
+  handleUpdate = fields => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'pointset/add',
+      type: 'gradeset/update',
       payload: {
-        desc: fields.desc,
+       ...fields
       },
     });
 
@@ -511,47 +371,20 @@ class Comments extends PureComponent {
 
   onChangeDate() {}
 
-  handleUpdate = fields => {
+  handleAdd = fields => {
+    console.log(fields);
     const { dispatch } = this.props;
     const { formValues } = this.state;
     dispatch({
-      type: 'pointset/update',
+      type: 'gradeset/add',
       payload: {
-        query: formValues,
-        body: {
-          name: fields.name,
-          desc: fields.desc,
-          key: fields.key,
-        },
+        ...fields
       },
     });
 
-    message.success('配置成功');
-    this.handleUpdateModalVisible();
+    message.success('添加成功');
+    this.handleModalVisible();
   };
-
-  renderSimpleForm() {
-    const {
-      form: { getFieldDecorator },
-    } = this.props;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline" >
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }} style={{float:'right'}}>
-          <Col md={6} sm={24}>
-            <span className={styles.submitButtons}>
-              <Button type="primary" htmlType="submit">
-                积分兑换比例设置
-              </Button>
-              {/* <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                展开 <Icon type="down" />
-              </a> */}
-            </span>
-          </Col>
-        </Row>
-      </Form>
-    );
-  }
-
   renderAdvancedForm() {
     const {
       form: { getFieldDecorator },
@@ -634,10 +467,10 @@ class Comments extends PureComponent {
   render() {
     console.log(this.props);
     const {
-        pointset: { data },
+      gradeset: { data },
       loading,
     } = this.props;
-    const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
+    const { selectedRows, modalVisible, updateModalVisible, stepFormValues,formVals ,modelsType} = this.state;
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
@@ -647,7 +480,10 @@ class Comments extends PureComponent {
 
     const parentMethods = {
       handleAdd: this.handleAdd,
+      handleUpdate:this.handleUpdate,
       handleModalVisible: this.handleModalVisible,
+      formVals:formVals,
+      modelsType:modelsType
     };
     const updateMethods = {
       handleUpdateModalVisible: this.handleUpdateModalVisible,
@@ -658,6 +494,15 @@ class Comments extends PureComponent {
         <div>
           <Card bordered={false}>
             <div className={styles.tableList}>
+              <div className={styles.tableListForm}>
+                <div layout="inline" >
+                    <span className={styles.submitButtons}>
+                    <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true,'',1)}>
+                      新建
+                    </Button>
+                    </span>
+              </div>
+            </div>
               <StandardTable
                 // selectedRows={selectedRows}
                 loading={loading}
@@ -669,13 +514,6 @@ class Comments extends PureComponent {
             </div>
           </Card>
           <CreateForm {...parentMethods} modalVisible={modalVisible} />
-          {stepFormValues && Object.keys(stepFormValues).length ? (
-            <UpdateForm
-              {...updateMethods}
-              updateModalVisible={updateModalVisible}
-              values={stepFormValues}
-            />
-          ) : null}
         </div>
       </PageHeaderWrapper>
     );

@@ -34,6 +34,15 @@ export async function queryActivity(params) {
   const rep = await request(`/api/service/activity/list?${stringify(params)}`);
   return rep.data;
 }
+
+export async function queryGrade(params) {
+  const rep = await request(`/api/mg/user/level/grant?${stringify(params)}`);
+  return rep.data;
+}
+export async function queryCounselee(params) {
+  const rep = await request(`/api/mg/user/extend/list?${stringify(params)}`);
+  return rep.data;
+}
 export async function queryPoint(params) {
   const rep = await request(`/api/mg/user/task/point/list?${stringify(params)}`);
   return rep.data;
@@ -238,6 +247,19 @@ export async function addBasicProfile(params) {
     },
   });
 }
+//新增标签
+export async function addTag(params) {
+  return request('/api/service/add/tag', {
+    method: 'POST',
+    data: stringify({
+      ...params,
+    }),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+//新增标签
 export async function addroft(params) {
   return request('/api/service/add/market/url', {
     method: 'POST',
@@ -304,12 +326,65 @@ export async function changeActivity(params){
     },
   });
 }
+
 export async function updateRule(params) {
   return request(`/api/mg/user/role/modify/${params.id}`, {
     method: 'POST',
     data: stringify({
       ...params,
     }),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+export async function addGrade(params = {}) {
+  const newParams = {
+    level:params.level,
+    pic: params.pic,
+    article:params.article,
+    video:params.video,
+    stalk:params.stalk,
+    videoTimes:params.videoTimes,
+    uploadTimes:params.uploadTimes,
+  };
+  return request(`/api/mg/user/add/level/grant`,{
+    method: 'POST',
+    data: stringify(newParams),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+export async function updateGrade(params = {}) {
+  const newParams = {
+    id: params.id,
+    pic: params.pic,
+    article:params.article,
+    video:params.video,
+    stalk:params.stalk,
+    videoTimes:params.videoTimes,
+    uploadTimes:params.uploadTimes,
+  };
+  return request(`/api/mg/user/update/level/grant`,{
+    method: 'POST',
+    data: stringify(newParams),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+export async function updateTag(params = {}) {
+  console.log();
+  const newParams = {
+    id: params.id,
+    type: params.type,
+    name:params.name,
+    detail:params.detail,
+  };
+  return request(`/api/service/update/tag`,{
+    method: 'POST',
+    data: stringify(newParams),
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },

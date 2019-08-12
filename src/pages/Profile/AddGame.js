@@ -123,7 +123,8 @@ class BasicFormss extends PureComponent {
             url: values.url,
           },
         });
-        
+        message.success('添加成功');
+        router.push(`/profile/addgame`);
       }
     });
   };

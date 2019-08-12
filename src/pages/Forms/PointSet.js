@@ -295,23 +295,33 @@ class Comments extends PureComponent {
   columns = [
     {
       title: '每日获取',
-      dataIndex: 'title',
+      dataIndex: 'name',
     },
     {
       title: '最大次数',
-      dataIndex: 'detail',
+      dataIndex: 'limit',
+      render:(val)=>{
+        if(parseInt(val)==-1){
+          return '无限次';
+        }else{
+          return val;
+        }
+      }
     },
     {
       title: '单次积分',
-      dataIndex: 'stat',
-      sorter: true,
-      render: val => val==0?<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'red'}}></span>:<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'green'}}></span>,
+      dataIndex: 'value',
       // mark to display a total number
     },
     {
       title: '最大积分',
-      dataIndex: 'img',
-      render: val => <img src={val} style={{width:100}}/>,
+      render:  (text, record) =>{
+        if(parseInt(record.limit)==-1){
+          return '无限';
+        }else{
+          return record.limit*record.value;
+        }
+      }
     },
     {
       title: '操作',

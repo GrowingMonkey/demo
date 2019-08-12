@@ -1,20 +1,21 @@
 import {
-    queryTag,
     queryRule,
-    queryGame,
+    queryPoint,
+    queryCounselee,
+    queryActivity,
     queryStopMoney,
     querySureMoney,
     removeComment,
     addRule,
     cancleComment,
     updateRule,
-    updateTag,
     queryComments,
     changeGame,
+    changeActivity,
   } from '@/services/api';
   
   export default {
-    namespace: 'tagmanager',
+    namespace: 'counselee',
   
     state: {
       data: {
@@ -25,7 +26,7 @@ import {
   
     effects: {
       *fetch({ payload }, { call, put }) {
-        const response = yield call(queryTag, payload);
+        const response = yield call(queryCounselee, payload);
         console.log(response);
         yield put({
           type: 'save',
@@ -55,9 +56,9 @@ import {
         if (callback) callback();
       },
       *stat({ payload, callback }, { call, put }) {
-        const response = yield call(changeGame, payload);
+        const response = yield call(changeActivity, payload);
         if(response.code==0){
-          const resp = yield call(queryGame);
+          const resp = yield call(queryActivity);
           yield put({
             type: 'save',
             payload: resp,
@@ -84,7 +85,11 @@ import {
         if (callback) callback();
       },
       *update({ payload, callback }, { call, put }) {
-        const response = yield call(updateTag, payload);
+        const response = yield call(updateRule, payload);
+        yield put({
+          type: 'save',
+          payload: response,
+        });
         if (callback) callback();
       },
       *cancle({ payload, callback }, { call, put, select }) {

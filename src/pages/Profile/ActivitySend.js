@@ -21,6 +21,7 @@ const { TextArea } = Input;
 const FormItem = Form.Item;
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../Forms/style.less';
+import { router } from 'umi';
 function getBase64(img, callback) {
   const reader = new FileReader();
   reader.addEventListener('load', () => callback(reader.result));
@@ -108,6 +109,7 @@ const uuid = () => {
 };
 @connect(({ activitysend, loading }) => ({
   activitysend,
+  loading: loading.models.activitysend,
 }))
 @Form.create()
 class ServiceSet extends PureComponent {
@@ -157,8 +159,22 @@ class ServiceSet extends PureComponent {
     };
     return false; // 不调用默认的上传方法
   };
+  componentDidMount(){
+    console.log(this.props);
+    const {dispatch,location}=this.props;
+    const id=location.query.id;
+    if(id){
+      dispatch({
+        type:'activitysend/fetch',
+        payload:{
+          id:id
+        }
+      })
+      console.log(11111);
+      this.handleChange('<p>Hello <b>World!</b></p>');
+    }
+  }
 //   componentDidMount () {
-
 //     // 异步设置编辑器内容
 //     setTimeout(() => {
 //       this.props.form.setFieldsValue({
@@ -300,6 +316,8 @@ handleSubmit = e =>{
             detail: values.detail,
           },
         });
+        message.success('添加成功');
+        router.push(`/profile/activitymanager`);
       }
     });
 }
@@ -350,6 +368,7 @@ handleSubmit = e =>{
       accept:"image/*",
       showUploadList:false
     }
+    const updateData={title:'11',detail:'dsdas',activityUrl:'wwww.baidu.com',content:'<p>sss</p>',cover:'www.baidu.com'};
     return (
       <PageHeaderWrapper title="活动发布">
         <Card bordered={false}>
@@ -381,6 +400,7 @@ handleSubmit = e =>{
                 required: true,
                 message: '请输入路径',
               }],
+              initialValue:`${window.location.href.indexOf('www')>-1?'http://www.imuguang.com':'http://test.imuguang.com'}/g/activity.html`
             })(
               <Input size="large" placeholder="请输入路径"/>
             )}
@@ -402,6 +422,7 @@ handleSubmit = e =>{
             })( */}
               <BraftEditor
                 value={this.state.editorState}
+                // value='111'
                 onChange={this.handleChange}
                 className="my-editor"
                 style={{border:'1px solid #ddd'}}

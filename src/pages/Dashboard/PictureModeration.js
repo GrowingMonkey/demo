@@ -338,7 +338,6 @@ class Pictures extends PureComponent {
       //   return imgwall;
       // },
       render(val) {
-        console.log(val);
         return val.map((item, key) => {
           if (key < 4) {
             return (
@@ -389,13 +388,21 @@ class Pictures extends PureComponent {
   ];
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, location } = this.props;
+    const { query } = location;
+
     dispatch({
       type: 'allpicture/fetch',
       payload: {
         result: 'normal',
+        tagId:query.tagId
       },
     });
+    dispatch({
+      type:'allpicture/fetchtag',
+      payload:{
+      }
+    })
   }
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
@@ -582,7 +589,14 @@ class Pictures extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
-    const optionlist=[{name:'图片',value:'image'},{name:'文章',value:'activity'}];
+    console.log(this.props);
+    const {
+      allpicture:{dataTag:{
+        list
+      }}
+    }=this.props;
+    console.log(list);
+    const optionlist=list;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
@@ -611,10 +625,10 @@ class Pictures extends PureComponent {
           </Col>
           <Col md={4} sm={24}>
             <FormItem label="标签">
-              {getFieldDecorator('tagType')(<Select placeholder="请选择" style={{ width: '60%' }}>
-                  {optionlist.map((intem, i) => {
+              {getFieldDecorator('tagId')(<Select placeholder="请选择" style={{ width: '60%' }}>
+                  {optionlist&&optionlist.map((intem, i) => {
                     return (
-                      <Option value={intem.value} key={i}>
+                      <Option value={intem.id} key={i}>
                         {intem.name}
                       </Option>
                     );

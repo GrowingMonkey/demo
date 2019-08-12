@@ -1,20 +1,23 @@
 import {
-    queryTag,
     queryRule,
-    queryGame,
+    queryGrade,
+    queryPoint,
+    queryActivity,
     queryStopMoney,
     querySureMoney,
     removeComment,
+    addGrade,
     addRule,
     cancleComment,
     updateRule,
-    updateTag,
+    updateGrade,
     queryComments,
     changeGame,
+    changeActivity,
   } from '@/services/api';
   
   export default {
-    namespace: 'tagmanager',
+    namespace: 'gradeset',
   
     state: {
       data: {
@@ -25,7 +28,7 @@ import {
   
     effects: {
       *fetch({ payload }, { call, put }) {
-        const response = yield call(queryTag, payload);
+        const response = yield call(queryGrade, payload);
         console.log(response);
         yield put({
           type: 'save',
@@ -46,18 +49,32 @@ import {
         //   payload: response,
         // });
       },
+      *update({ payload, callback }, { call, put }) {
+        const response = yield call(updateGrade, payload);
+        if(response.code==0){
+          const resp = yield call(queryGrade);
+          yield put({
+            type: 'save',
+            payload: resp,
+          });
+        }
+        if (callback) callback();
+      },
       *add({ payload, callback }, { call, put }) {
-        const response = yield call(addRule, payload);
-        yield put({
-          type: 'save',
-          payload: response,
-        });
+        const response = yield call(addGrade, payload);
+        if(response.code==0){
+          const resp = yield call(queryGrade);
+          yield put({
+            type: 'save',
+            payload: resp,
+          });
+        }
         if (callback) callback();
       },
       *stat({ payload, callback }, { call, put }) {
-        const response = yield call(changeGame, payload);
+        const response = yield call(changeActivity, payload);
         if(response.code==0){
-          const resp = yield call(queryGame);
+          const resp = yield call(queryActivity);
           yield put({
             type: 'save',
             payload: resp,
@@ -81,10 +98,6 @@ import {
             payload: rep.data,
           });
         }
-        if (callback) callback();
-      },
-      *update({ payload, callback }, { call, put }) {
-        const response = yield call(updateTag, payload);
         if (callback) callback();
       },
       *cancle({ payload, callback }, { call, put, select }) {

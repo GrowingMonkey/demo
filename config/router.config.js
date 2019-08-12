@@ -332,6 +332,11 @@ export default [
             component: './Profile/PullSend',
           },
           {
+            path: '/profile/addtag',
+            name: 'addtag',
+            component: './Profile/AddTag',
+          },
+          {
             path: '/profile/moneyprofile',
             name: 'moneyprofile',
             component: './Profile/MoneyProfile',
