@@ -247,6 +247,18 @@ export async function addBasicProfile(params) {
     },
   });
 }
+//修改积分
+export async function updatePoint(params) {
+  return request('/api/mg/user/task/point/set', {
+    method: 'POST',
+    data: stringify({
+      ...params,
+    }),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
 //新增标签
 export async function addTag(params) {
   return request('/api/service/add/tag', {

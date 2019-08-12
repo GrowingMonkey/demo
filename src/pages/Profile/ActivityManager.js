@@ -311,7 +311,7 @@ class Comments extends PureComponent {
     {
       title: '封面图',
       dataIndex: 'img',
-      render: val => <img src={val} style={{width:100,maxHeight:200}}/>,
+      render: val => <img src={val} style={{width:200,maxHeight:80}}/>,
     },
     {
       title: '活动发布时间',

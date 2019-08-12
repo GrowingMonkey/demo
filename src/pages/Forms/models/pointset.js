@@ -5,6 +5,7 @@ import {
     queryStopMoney,
     querySureMoney,
     removeComment,
+    updatePoint,
     addRule,
     cancleComment,
     updateRule,
@@ -47,11 +48,14 @@ import {
         // });
       },
       *add({ payload, callback }, { call, put }) {
-        const response = yield call(addRule, payload);
-        yield put({
-          type: 'save',
-          payload: response,
-        });
+        const response = yield call(updatePoint, payload);
+        if(response.code==0){
+          const resp = yield call(queryPoint);
+          yield put({
+            type: 'save',
+            payload: resp,
+          });
+        }
         if (callback) callback();
       },
       *stat({ payload, callback }, { call, put }) {

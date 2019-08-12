@@ -42,26 +42,37 @@ const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['关闭', '运行中', '已上线', '异常'];
 
 const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
+  const { modalVisible, form, handleAdd, handleModalVisible,formValues } = props;
   const okHandle = () => {
+    console.log(props);
     form.validateFields((err, fieldsValue) => {
+      console.log(fieldsValue);
       if (err) return;
       form.resetFields();
-      handleAdd(fieldsValue);
+      let fieldsNewValue={
+        ...fieldsValue,
+        key:formValues.key
+      }
+      handleAdd(fieldsNewValue);
     });
   };
   return (
     <Modal
       destroyOnClose
-      title="新建规则"
+      title="修改积分"
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
-    >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="描述">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
+    > 
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="积分">
+        {form.getFieldDecorator('value', {
+          rules: [{ required: true, message: '请输入积分', min: 1 }],
         })(<Input placeholder="请输入" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="次数">
+        {form.getFieldDecorator('limit', {
+          rules: [{ required: true, message: '请输入次数', min: 1 }],
+        })(<Input placeholder="请输入次数,无限输入-1" />)}
       </FormItem>
     </Modal>
   );
@@ -327,7 +338,7 @@ class Comments extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.handleScan(record)}>修改</a>
+          <a onClick={() => this.handleModalVisible(true,record)}>修改</a>
         </Fragment>
       ),
     },
@@ -468,9 +479,10 @@ class Comments extends PureComponent {
     });
   };
 
-  handleModalVisible = flag => {
+  handleModalVisible = (flag,record) => {
     this.setState({
       modalVisible: !!flag,
+      formValues:record,
     });
   };
 
@@ -497,11 +509,12 @@ class Comments extends PureComponent {
   };
 
   handleAdd = fields => {
+    console.log(fields);
     const { dispatch } = this.props;
     dispatch({
       type: 'pointset/add',
       payload: {
-        desc: fields.desc,
+        ...fields
       },
     });
 
@@ -637,7 +650,7 @@ class Comments extends PureComponent {
         pointset: { data },
       loading,
     } = this.props;
-    const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
+    const { selectedRows, modalVisible, updateModalVisible, stepFormValues,formValues } = this.state;
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
@@ -648,6 +661,7 @@ class Comments extends PureComponent {
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
+      formValues:formValues,
     };
     const updateMethods = {
       handleUpdateModalVisible: this.handleUpdateModalVisible,
