@@ -1,4 +1,4 @@
-import { queryRule,updateUser, removeRule,addUserAccount,queryStation, queryUserAccount, addRule, updateRule } from '@/services/api';
+import { queryRule,queryBranch,updateUser, removeRule,addUserAccount,queryStation, queryUserAccount, addRule, updateRule } from '@/services/api';
 
 export default {
   namespace: 'usermanage',
@@ -9,6 +9,10 @@ export default {
       pagination: {},
     },
     datass:{
+      list: [],
+      pagination: {},
+    },
+    deptoption:{
       list: [],
       pagination: {},
     }
@@ -26,6 +30,13 @@ export default {
       const response = yield call(queryStation, payload);
       yield put({
         type: 'savedata',
+        payload: response,
+      });
+    },
+    *fetchdept({ payload }, { call, put }) {
+      const response = yield call(queryBranch, payload);
+      yield put({
+        type: 'savedept',
         payload: response,
       });
     },
@@ -76,6 +87,13 @@ export default {
       return {
         ...state,
         datass: action.payload,
+      };
+    },
+    savedept(state, action) {
+      return {
+        ...state,
+        deptoption: action.payload,
+        datass:{}
       };
     }
   },

@@ -41,7 +41,8 @@ const getValue = obj =>
 // const status = ['关闭', '运行中', '已上线', '异常'];
 
 const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible,data,step } = props;
+  const { modalVisible, form, handleAdd, handleModalVisible,data,step ,deptoption,handleDept} = props;
+  const {list}=deptoption;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -49,15 +50,18 @@ const CreateForm = Form.create()(props => {
       handleAdd(fieldsValue);
     });
   };
+  const handleChangeDept=(value)=>{
+    handleDept(value);
+  };
   console.log(props);
-  let arrays=[];
-  data&&data.list.map((item,index) => {
-    arrays.push(item.name);
-  })
+  // let arrays=[];
+  // data&&data.list.map((item,index) => {
+  //   arrays.push(item.name);
+  // })
   return (
     <Modal
       destroyOnClose
-      title="新建部门"
+      title="新建员工"
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
@@ -72,18 +76,26 @@ const CreateForm = Form.create()(props => {
           rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="部门">
+        {form.getFieldDecorator('deptId', {
+          rules: [{ required: true, message: '请选择选项' }],
+        })(<Select placeholder="请选择" style={{ width: '100%' }} onChange={handleChangeDept}>
+          {
+             list&&list.map((item,index) => <Option value={item.id} key={index}>{item.name}</Option>)
+          }
+      </Select>)}
+      </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="岗位">
         {form.getFieldDecorator('jobId', {
           rules: [{ required: true, message: '请选择选项' }],
         })(<Select placeholder="请选择" style={{ width: '100%' }}>
           {
-             data&&data.list.map((item,index) => <option value={item.id} key={index}>{item.name}</option>)
+             data.list&&data.list.map((item,index) => <Option value={item.id} key={index}>{item.name}</Option>)
           }
       </Select>)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="邮箱">
         {form.getFieldDecorator('mail', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
     </Modal>
@@ -152,10 +164,15 @@ class UpdateForm extends PureComponent {
       currentStep: currentStep + 1,
     });
   };
-
-  renderContent = (currentStep, formVals,value,jobOptions) => {
+  handleUpdateDept=(id)=>{
+    const {handleDept}=this.props;
+    console.log(id);
+    handleDept(id);
+  }
+  renderContent = (currentStep, formVals,value,jobOptions,branchOption) => {
     const { form } = this.props;
-    console.log(value);
+    console.log(branchOption);
+    console.log(this.props);
     const tagStyle={
       borderRadius:5,
       display:'inline-block',
@@ -167,26 +184,26 @@ class UpdateForm extends PureComponent {
     }
     if (currentStep === 1) {
       return [
-        <div {...this.formLayout} style={{display:'flex',alignItems:'center',flexDirection:'column'}}>
-          <img  style={{borderRadius:'50%',overflow:'hidden',background:'#ddd',width:50,height:50}}/>
+        <div key='header' {...this.formLayout} style={{display:'flex',alignItems:'center',flexDirection:'column'}}>
+          <img  style={{borderRadius:'50%',overflow:'hidden',background:'#ddd',width:50,height:50}} src={`https://f-bd.imuguang.com/${value.headUrl}`}/>
           <h4>{value.name}</h4>
         </div>,
-        <div>
+        <div key="detail">
           <div className={styles.detail}>
               <p><i />{value.phone}</p>
               <p><i />{value.mail}</p>
               <p><i />{moment(parseInt(value.createTime)).format('YYYY-MM-DD HH:mm:ss')}</p>
           </div>
         </div>,
-         <Divider dashed />,
-         <div>
+         <Divider dashed key="line-one"/>,
+         <div key="deptName">
           <div className={styles.detail}>
               <p><i />{value.deptName}</p>
               <p><i />{value.jobName}</p>
           </div>
         </div>,
-         <Divider dashed />,
-         <div>
+         <Divider dashed key="line-two"/>,
+         <div key="tag">
           <div className={styles.detail}>
               <p><i /><b>操作权限</b></p>
               <p><i />{<span style={tagStyle}>sss</span>}</p>
@@ -214,17 +231,28 @@ class UpdateForm extends PureComponent {
            rules: [{ required: true, message: '请输入邮箱' }],
           })(<Input placeholder="请输入" />)}
         </FormItem>,
-        <FormItem key="jobId" {...this.formLayout} label="部门">
-          {form.getFieldDecorator('jobId', {
+        <FormItem key="deptId" {...this.formLayout} label="部门">
+          {form.getFieldDecorator('deptId', {
             initialValue: value.jobId,
           })(
-            <Select style={{ width: '100%' }}>
-              {
-                jobOptions&&jobOptions.list.map((v,i)=><Option value={v.id} key={i}>{v.deptName}</Option>)
+            <Select style={{ width: '100%' }} onChange={this.handleUpdateDept.bind(this)}>
+              { 
+                jobOptions&&jobOptions.list.map((v,i)=><Option value={v.id} key={i}>{v.name}</Option>)
               }
             </Select>
           )}
         </FormItem>,
+        <FormItem key="jobId" {...this.formLayout} label="岗位">
+        {form.getFieldDecorator('jobId', {
+          initialValue: value.jobId,
+        })(
+          <Select style={{ width: '100%' }}>
+            { 
+              branchOption.list&&branchOption.list.map((v,i)=><Option value={v.id} key={i}>{v.name}</Option>)
+            }
+          </Select>
+        )}
+      </FormItem>,
       ];
     }
   };
@@ -247,9 +275,8 @@ class UpdateForm extends PureComponent {
   };
 
   render() {
-    const { updateModalVisible, handleUpdateModalVisible, values ,step,jobOptions} = this.props;
+    const { updateModalVisible, handleUpdateModalVisible, values ,step,jobOptions,branchOption} = this.props;
     const { currentStep, formVals } = this.state;
-    console.log(step);
     console.log(this.props)
 
     return (
@@ -263,7 +290,7 @@ class UpdateForm extends PureComponent {
         onCancel={() => handleUpdateModalVisible(false, values)}
         afterClose={() => handleUpdateModalVisible()}
       >
-        {this.renderContent(step, formVals,values,jobOptions)}
+        {this.renderContent(step, formVals,values,jobOptions,branchOption)}
       </Modal>
     );
   }
@@ -332,8 +359,13 @@ class Articles extends PureComponent {
     dispatch({
       type: 'usermanage/fetch',
     });
+    //岗位列表
+    // dispatch({
+    //   type: 'usermanage/stationrulefetch',
+    // });
+    //部门列表
     dispatch({
-      type: 'usermanage/stationrulefetch',
+      type: 'usermanage/fetchdept',
     });
   }
 
@@ -598,7 +630,15 @@ class Articles extends PureComponent {
       </Form>
     );
   }
-
+  handleDept=(id)=>{
+    const {dispatch}=this.props;
+    dispatch({
+      type:'usermanage/stationrulefetch',
+      payload:{
+        deptId:id,
+      }
+    })
+  }
   renderForm() {
     const { expandForm } = this.state;
     return expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
@@ -607,7 +647,7 @@ class Articles extends PureComponent {
   render() {
     console.log(this.props);
     const {
-      usermanage: { data ,datass},
+      usermanage: { data ,datass,deptoption},
       loading,
     } = this.props;
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues,step } = this.state;
@@ -621,13 +661,16 @@ class Articles extends PureComponent {
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
+      deptoption:deptoption,
+      handleDept:this.handleDept
     };
     const updateMethods = {
       handleUpdateModalVisible: this.handleUpdateModalVisible,
       handleUpdate: this.handleUpdate,
+      handleDept:this.handleDept
     };
     return (
-      <PageHeaderWrapper title="文章审核">
+      <PageHeaderWrapper title="人员管理">
         <Card bordered={false}>
           <div className={styles.tableList}>
             {/* <div className={styles.tableListForm}>{this.renderForm()}</div> */}
@@ -663,7 +706,8 @@ class Articles extends PureComponent {
             updateModalVisible={updateModalVisible}
             values={stepFormValues}
             step={step}
-            jobOptions={datass}
+            jobOptions={deptoption}
+            branchOption={datass}
             // id={id}
           />
         ) : null}

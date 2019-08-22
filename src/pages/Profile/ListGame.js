@@ -584,6 +584,9 @@ class Comments extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.handleJumpAdd}>
+                新增
+              </Button>
               {/* <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
                 展开 <Icon type="down" />
               </a> */}
@@ -593,7 +596,9 @@ class Comments extends PureComponent {
       </Form>
     );
   }
-
+  handleJumpAdd=()=>{
+    router.push('/profile/addgame')
+  }
   renderAdvancedForm() {
     const {
       form: { getFieldDecorator },

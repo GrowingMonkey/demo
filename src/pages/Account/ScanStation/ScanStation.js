@@ -333,10 +333,11 @@ class Articles extends PureComponent {
   componentDidMount() {
     const { dispatch, match } = this.props;
     const { params } = match;
+    console.log(params);
     dispatch({
       type: 'scanstation/fetch',
       payload: {
-        deptId: params.branchid,
+        deptId: params.stationid,
       },
     });
   }

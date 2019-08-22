@@ -325,7 +325,7 @@ class Articles extends PureComponent {
     {
       title: '状态',
       dataIndex: 'stat',
-      render: val => val==0?<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'red'}}></span>:<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'green'}}></span>,
+      render: val => val==1?<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'red'}}></span>:<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'green'}}></span>,
     },
     {
       title: '操作',

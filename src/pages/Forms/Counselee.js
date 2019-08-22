@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent, Fragment,useState } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
@@ -45,7 +45,14 @@ const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['关闭', '运行中', '已上线', '异常'];
 
 const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
+  const { modalVisible, form, handleAdd, handleModalVisible,counseleelist:{
+    list
+  } } = props;
+
+  const [current,setList]=useState({
+    current:0
+  });
+  console.log(current);
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -53,18 +60,40 @@ const CreateForm = Form.create()(props => {
       handleAdd(fieldsValue);
     });
   };
+  const handleChange=(item)=>{
+    list&&list.map((v,i)=>{
+      if(v.code===item){
+        setList({
+          current:v.detail,
+        });
+      }
+    })
+    // console.log(current);
+  }
   return (
     <Modal
       destroyOnClose
-      title="新建规则"
+      title="师徒系统收益比例设置"
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="描述">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="比例设置">
+        {form.getFieldDecorator('code', {
+          rules: [{ required: true, message: '请输入比例', }],
+        })(<Select placeholder="请选择师徒比例等级" style={{width:"100%"}} onChange={handleChange}>
+        {
+          list&&list.map((value,index)=>{
+           return <Option value={value.code} defaultValue key="index">{value.name}</Option>
+          })
+        }
+      </Select>)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="比例设置">
         {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-        })(<Input placeholder="请输入" />)}
+          rules: [{ required: true, message: '请输入比例', }],
+          initialValue:current.current
+        })(<Input />)}
       </FormItem>
     </Modal>
   );
@@ -260,7 +289,7 @@ class UserList extends PureComponent {
         const textMsg=`你确认重${textStr}置这个账号吗？`;
         return (
           <Fragment>
-            <a onClick={() => this.handleUpdateModalVisibleRouter(true, record)}>查看详情</a>
+            <a onClick={() => this.handleUpdateModalVisibleRouter(record)}>查看详情</a>
           </Fragment>
         );
       },
@@ -272,6 +301,9 @@ class UserList extends PureComponent {
     dispatch({
       type: 'counselee/fetch',
     });
+    dispatch({
+      type:'counselee/convert',
+    })
   }
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
@@ -379,9 +411,7 @@ class UserList extends PureComponent {
   };
 
   handleModalVisible = flag => {
-    this.setState({
-      modalVisible: !!flag,
-    });
+    router.push('/form/counseleeset')
   };
 
   handleUpdateModalVisible = (flag, record) => {
@@ -393,7 +423,7 @@ class UserList extends PureComponent {
 
   handleUpdateModalVisibleRouter = (flag, record) => {
     const { match } = this.props;
-    router.push(`/form/scandetail/${record.id}`);
+    router.push(`/form/counseleedetail`);
   };
 
   handleStopStatus = record => {
@@ -484,6 +514,9 @@ class UserList extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
+              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleModalVisible}>
+              师徒系统收益比例设置
+              </Button>
             </span>
           </Col>
         </Row>
@@ -500,7 +533,9 @@ class UserList extends PureComponent {
       </Form>
     );
   }
+  handleSetCounselee=()=>{
 
+  }
   renderAdvancedForm() {
     const {
       form: { getFieldDecorator },
@@ -546,7 +581,7 @@ class UserList extends PureComponent {
   render() {
     console.log(this.props);
     const {
-      counselee: { data },
+      counselee: { data,counseleelist },
       loading,
     } = this.props;
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
@@ -560,6 +595,7 @@ class UserList extends PureComponent {
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
+      counseleelist:counseleelist,
     };
     const updateMethods = {
       handleUpdateModalVisible: this.handleUpdateModalVisible,

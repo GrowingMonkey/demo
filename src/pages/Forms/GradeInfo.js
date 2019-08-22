@@ -221,9 +221,9 @@ class UpdateForm extends PureComponent {
 }
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ userlist, loading }) => ({
-  userlist,
-  loading: loading.models.userlist,
+@connect(({ gradeinfo, loading }) => ({
+  gradeinfo,
+  loading: loading.models.gradeinfo,
 }))
 @Form.create()
 class UserList extends PureComponent {
@@ -237,97 +237,33 @@ class UserList extends PureComponent {
   };
 
   columns = [
+    // {
+    //   title: '用户名',
+    //   dataIndex: 'name',
+    // },
     {
-      title: '用户名',
-      dataIndex: 'name',
+      title: '行为',
+      dataIndex: 'behaviorName',
     },
     {
-      title: '手机号',
-      dataIndex: 'phone',
-    },
-    {
-      title: '注册时间',
+      title: '创建时间 ',
       dataIndex: 'createTime',
       render: val => <span>{moment(parseInt(val)).format('YYYY-MM-DD HH:mm:ss')}</span>,
     },
     {
-      title: '图片',
-      dataIndex: 'picCount',
-    },
-    {
-      title: '视频',
-      dataIndex: 'videoCount',
-    },
-    {
-      title: '文章',
-      dataIndex: 'artCount',
-    },
-    {
-      title: '评论',
-      dataIndex: 'commentCount',
-    },
-    {
-      title: '总数',
-      dataIndex: 'total',
-    },
-    {
-      title: '收藏',
-      dataIndex: 'collectCount',
-    },
-    {
-      title: '获赞',
-      dataIndex: 'likeCount',
-    },
-    {
-      title: '操作',
-      render: (text, record) => {
-        const textStr = record.stat == 0 ? '停用' : '启用';
-        const textMsg=`你确认重${textStr}置这个账号吗？`;
-        return (
-          <Fragment>
-            <a onClick={() => this.handleUpdateModalVisibleRouter(true, record)}>查看</a>
-            <Divider type="vertical" />
-            {/* <a onClick={() => this.handleUpdateModalVisible(true, record)}>权限</a> */}
-            {/* <Divider type="vertical" /> */}
-            {/* <a onClick={() => this.handleStopStatus(record)}>{textStr}</a> */}
-            <Popconfirm
-            title={textMsg}
-            onConfirm={() => this.handleStopStatus(record)}
-            okText="确认"
-            cancelText="取消"
-            >
-            <a href="#">{textStr}</a>
-          </Popconfirm>
-            <Divider type="vertical" />
-            <Popconfirm
-            title="你确认重置这个账号吗？"
-            onConfirm={() => this.handleDeleteReset(0, record)}
-            okText="确认"
-            cancelText="取消"
-            >
-            <a href="#">重置</a>
-          </Popconfirm>
-            <Divider type="vertical" />
-            <Popconfirm
-            title="你确认注销这个账号吗？"
-            onConfirm={() => this.handleDeleteReset(1, record)}
-            okText="确认"
-            cancelText="取消"
-            >
-            <a href="#">注销</a>
-          </Popconfirm>
-          <Divider type="vertical" />
-          <a onClick={() => this.handleJumpDetail(record)}>积分明细</a>
-          </Fragment>
-        );
-      },
+      title: '积分收支',
+      dataIndex: 'point1',
+      render:val=>parseInt(val)>=0?<span style={{color:'red'}}>{"+"+val}</span>:<span style={{color:'green'}}>{val}</span>
     },
   ];
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    console.log(this.props);
+    const { dispatch,location:{query:{id} }} = this.props;
+    console.log(id);
     dispatch({
-      type: 'userlist/fetch',
+      type: 'gradeinfo/fetch',
+      payload:{id:id}
     });
   }
   
@@ -352,7 +288,7 @@ class UserList extends PureComponent {
     }
 
     dispatch({
-      type: 'userlist/fetch',
+      type: 'gradeinfo/fetch',
       payload: params,
     });
   };
@@ -368,7 +304,7 @@ class UserList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'userlist/fetch',
+      type: 'gradeinfo/fetch',
       payload: {},
     });
   };
@@ -388,7 +324,7 @@ class UserList extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'userlist/remove',
+          type: 'gradeinfo/remove',
           payload: {
             key: selectedRows.map(row => row.key),
           },
@@ -429,7 +365,7 @@ class UserList extends PureComponent {
       });
 
       dispatch({
-        type: 'userlist/fetch',
+        type: 'gradeinfo/fetch',
         payload: values,
       });
     });
@@ -449,7 +385,7 @@ class UserList extends PureComponent {
   };
   handleJumpDetail=(record)=>{
     const {match}=this.props;
-    router.push(`/form/gradeinfo?id=${record.id}`)
+    router.push(`/form/gradeinfo`)
   }
   handleUpdateModalVisibleRouter = (flag, record) => {
     const { match } = this.props;
@@ -460,7 +396,7 @@ class UserList extends PureComponent {
     const { dispatch, form } = this.props;
     console.log(record);
     dispatch({
-      type: 'userlist/status',
+      type: 'gradeinfo/status',
       payload: record,
     });
   };
@@ -469,7 +405,7 @@ class UserList extends PureComponent {
     const { dispatch, form } = this.props;
     console.log(record);
     dispatch({
-      type: 'userlist/reset',
+      type: 'gradeinfo/reset',
       payload: {
         userId: record.id,
         type: flag,
@@ -480,7 +416,7 @@ class UserList extends PureComponent {
   handleAdd = fields => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'userlist/add',
+      type: 'gradeinfo/add',
       payload: {
         desc: fields.desc,
       },
@@ -494,7 +430,7 @@ class UserList extends PureComponent {
     const { dispatch } = this.props;
     const { formValues } = this.state;
     dispatch({
-      type: 'userlist/update',
+      type: 'gradeinfo/update',
       payload: {
         query: formValues,
         body: {
@@ -609,7 +545,7 @@ class UserList extends PureComponent {
   render() {
     console.log(this.props);
     const {
-      userlist: { data },
+      gradeinfo: { data },
       loading,
     } = this.props;
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
@@ -629,7 +565,7 @@ class UserList extends PureComponent {
       handleUpdate: this.handleUpdate,
     };
     return (
-      <PageHeaderWrapper title="用户列表">
+      <PageHeaderWrapper title="积分明细">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>

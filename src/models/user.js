@@ -1,4 +1,4 @@
-import { query as queryUsers, queryCurrent, queryUser } from '@/services/user';
+import { query as queryUsers, queryCurrent, queryUser,addReward } from '@/services/user';
 
 export default {
   namespace: 'user',
@@ -32,6 +32,10 @@ export default {
         type: 'saveCurrentUser',
         payload: response.data,
       });
+    },
+    *reward({ payload, callback }, { call, put }) {
+      // const response = yield call(queryCurrent);
+      const response = yield call(addReward, payload);
     },
   },
 

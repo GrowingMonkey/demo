@@ -1,47 +1,29 @@
 import {
   queryRule,
-  queryStation,
+  queryUserList,
   removeRule,
   addRule,
-  queryGrant,
   updateRule,
-  queryBranch
+  changeStatus,
+  resetDeleteUser,
+  queryGrade,queryGradeInfo
 } from '@/services/api';
 
 export default {
-  namespace: 'stationrule',
+  namespace: 'gradeinfo',
 
   state: {
     data: {
       list: [],
       pagination: {},
     },
-    deptoption:{
-      list: [],
-      pagination: {},
-    },
-    datagrant:{}
   },
 
   effects: {
     *fetch({ payload }, { call, put }) {
-      const response = yield call(queryStation, payload);
+      const response = yield call(queryGradeInfo, payload);
       yield put({
         type: 'save',
-        payload: response,
-      });
-    },
-    *fetchdept({ payload }, { call, put }) {
-      const response = yield call(queryBranch, payload);
-      yield put({
-        type: 'savedept',
-        payload: response,
-      });
-    },
-    *grant({ payload }, { call, put }) {
-      const response = yield call(queryGrant, payload);
-      yield put({
-        type: 'savegrant',
         payload: response,
       });
     },
@@ -69,6 +51,29 @@ export default {
       });
       if (callback) callback();
     },
+    *status({ payload, callback }, { call, put }) {
+      const response = yield call(changeStatus, payload);
+      console.log(response);
+      if(response.code==0){
+        const req = yield call(queryUserList);
+        yield put({
+          type: 'save',
+          payload: req.data,
+        });
+      }
+      if (callback) callback();
+    },
+    *reset({ payload, callback }, { call, put }) {
+      const response = yield call(resetDeleteUser, payload);
+      if(response.code==0){
+        const req = yield call(queryUserList);
+        yield put({
+          type: 'save',
+          payload: req.data,
+        });
+      }
+      if (callback) callback();
+    },
   },
 
   reducers: {
@@ -78,17 +83,5 @@ export default {
         data: action.payload,
       };
     },
-    savedept(state, action) {
-      return {
-        ...state,
-        deptoption: action.payload,
-      };
-    },
-    savegrant(state, action) {
-      return {
-        ...state,
-        datagrant: action.payload,
-      };
-    }
   },
 };

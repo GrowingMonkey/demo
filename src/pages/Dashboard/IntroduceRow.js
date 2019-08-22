@@ -12,12 +12,12 @@ const topColResponsiveProps = {
   sm: 12,
   md: 12,
   lg: 12,
-  xl: 6,
+  xl: 8,
   style: { marginBottom: 24 },
 };
-
 const IntroduceRow = memo(({ loading, visitData }) => (
-  <Row gutter={24}>
+  <div>
+    <Row gutter={24}>
     <Col {...topColResponsiveProps}>
       <ChartCard
         bordered={false}
@@ -67,19 +67,60 @@ const IntroduceRow = memo(({ loading, visitData }) => (
         contentHeight={46}
       />
     </Col>
+  </Row>
+  <Row gutter={24}>
     <Col {...topColResponsiveProps}>
       <ChartCard
         bordered={false}
-        title="广告点击次数"
+        title="作品激励积分(本周)"
         loading={loading}
-        total={() => <h6>{visitData.adtotal}</h6>}
+        total={() => <h6>{visitData.pointVo?visitData.pointVo.inviteCount:0}</h6>}
         footer={
-          <Field label="总点击次数" value={`${numeral(visitData.adDownTotal).format('0,0')}`} />
+          <Field
+            label="总收益:"
+            value={
+              `${numeral(visitData.pointVo?visitData.pointVo.inviteTotal:0).format('0,0')}`
+              // visitData.regTotal
+            }
+          />
+        }
+        contentHeight={46}
+      />
+    </Col>
+
+    <Col {...topColResponsiveProps}>
+      <ChartCard
+        bordered={false}
+        title="师徒产生积分(本周)"
+        loading={loading}
+        total={() => <h6>{visitData.pointVo?visitData.pointVo.extendPoint:0}</h6>}
+        footer={
+          <Field
+            label="总收益:"
+            value={
+              // `${numeral(visitData.actRate).format('0,0')}`
+              `${visitData.pointVo?visitData.pointVo.extendPointTotal:0  }%`
+            }
+          />
+        }
+        contentHeight={46}
+      />
+    </Col>
+    <Col {...topColResponsiveProps}>
+      <ChartCard
+        bordered={false}
+        title="邀请注册人数(当日):"
+        loading={loading}
+        total={() => <h6>{visitData.pointVo?visitData.pointVo.opusPoint:0}</h6>}
+        footer={
+          <Field label="总邀请注册人数" value={`${numeral(visitData.pointVo?visitData.pointVo.opusPointTotal:0).format('0,0')}`} />
         }
         contentHeight={46}
       />
     </Col>
   </Row>
+
+  </div>
 ));
 
 export default IntroduceRow;

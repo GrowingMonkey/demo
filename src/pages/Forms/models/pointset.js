@@ -5,11 +5,13 @@ import {
     queryStopMoney,
     querySureMoney,
     removeComment,
+    updateCounseleeSet,
     updatePoint,
     addRule,
     cancleComment,
     updateRule,
     queryComments,
+    fetchlPoint,
     changeGame,
     changeActivity,
   } from '@/services/api';
@@ -22,6 +24,7 @@ import {
         list: [],
         pagination: {},
       },
+      datal:{}
     },
   
     effects: {
@@ -32,6 +35,10 @@ import {
           type: 'save',
           payload: response,
         });
+      },
+      *setcode({ payload, callback }, { call, put }) {
+        const response = yield call(updateCounseleeSet, payload);
+        if (callback) callback();
       },
       *stop({ payload }, { call, put }) {
         const response = yield call(queryStopMoney, payload);
@@ -46,6 +53,13 @@ import {
         //   type: 'save',
         //   payload: response,
         // });
+      },
+      *fetchl({ payload, callback }, { call, put }) {
+        const response = yield call(fetchlPoint, payload);
+        yield put({
+          type:'savel',
+          payload:response
+        })
       },
       *add({ payload, callback }, { call, put }) {
         const response = yield call(updatePoint, payload);
@@ -127,6 +141,13 @@ import {
         return {
           ...state,
           data: action.payload,
+        };
+      },
+      savel(state, action) {
+        console.log(action.payload);
+        return {
+          ...state,
+          datal: action.payload,
         };
       },
     },

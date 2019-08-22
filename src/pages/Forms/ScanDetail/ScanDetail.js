@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import AvatarList from '@/components/AvatarList';
+import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import Link from 'umi/link';
 import router from 'umi/router';
 import {
@@ -9,7 +10,10 @@ import {
   Row,
   Col,
   Icon,
+  message,
   Avatar,
+  Form,
+  Modal,
   Tag,
   Divider,
   Spin,
@@ -20,6 +24,7 @@ import {
   Dropdown,
   Menu,
 } from 'antd';
+const FormItem = Form.Item;
 import ArticleListContent from '@/components/ArticleListContent';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 
@@ -32,6 +37,41 @@ const TabPane = Tabs.TabPane;
 // function callback(key) {
 //     console.log(key);
 //   }
+const CreateForm = Form.create()(props => {
+  const { modalVisible, handleReward,form, handleAdd, handleModalVisible,formValues,opusId } = props;
+  const okHandle = () => {
+    console.log(props);
+    form.validateFields((err, fieldsValue) => {
+      console.log(fieldsValue);
+      if (err) return;
+      form.resetFields();
+      let fieldsNewValue={
+        ...fieldsValue,
+        opusId:opusId
+      }
+      console.log(fieldsNewValue);
+      handleReward(fieldsNewValue);
+    });
+  };
+  return (
+    <Modal
+      destroyOnClose
+      title="打赏"
+      visible={modalVisible}
+      onOk={okHandle}
+      onCancel={() => handleModalVisible()}
+    > 
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="积分打赏">
+        {form.getFieldDecorator('point', {
+          rules: [{ required: true, message: '请输入积分', min: 1 }],
+        })(<Input placeholder="请输入积分" />)}
+      </FormItem>
+    </Modal>
+  );
+});
+
+
+
 @connect(({ loading, user, project, list }) => ({
   listLoading: loading.effects['list/fetch','list/fetchP','list/fetchA','list/fetchV','list/fetchC'],
   currentUser: user.currentUser,
@@ -46,6 +86,8 @@ class Center extends React.Component {
     inputVisible: false,
     inputValue: '',
     id: '',
+    modalVisible: false,
+    opusId:''
   };
 
   componentDidMount() {
@@ -232,7 +274,24 @@ class Center extends React.Component {
   handleInputChange = e => {
     this.setState({ inputValue: e.target.value });
   };
-
+  handleReward=(fields)=>{
+    const {dispatch}=this.props;
+    dispatch({
+      type:'user/reward',
+      payload:{
+        ...fields
+      }
+    })
+    message.success('打赏成功');
+    this.handleModalVisible();
+  }
+  handleModalVisible = (flag,id) => {
+    console.log(111);
+    this.setState({
+      modalVisible: !!flag,
+      opusId:id
+    });
+  };
   handleInputConfirm = () => {
     const { state } = this;
     const { inputValue } = state;
@@ -246,7 +305,6 @@ class Center extends React.Component {
       inputValue: '',
     });
   };
-
   render() {
     const itemMenu = (
       <Menu>
@@ -282,6 +340,7 @@ class Center extends React.Component {
       location,
       children,
     } = this.props;
+    const {opusId,modalVisible}=this.state;
     console.log(likes);
     const operationTabList = [
       {
@@ -315,6 +374,11 @@ class Center extends React.Component {
         {text}
       </span>
     );
+    const parentProps={
+      handleModalVisible:this.handleModalVisible,
+      handleReward:this.handleReward,
+      opusId:opusId,
+    }
     return (
       <PageHeaderWrapper title="用户详情">
         <GridContent className={styles.userCenter}>
@@ -324,7 +388,7 @@ class Center extends React.Component {
                 {currentUser && Object.keys(currentUser).length ? (
                   <div>
                     <div className={styles.avatarHolder}>
-                      <img alt="" src={currentUser.headUrl} />
+                      <img alt="" src={`https://f-bd.imuguang.com/${currentUser.headUrl}`} style={{width:60,height:60,borderRadius:'50%'}}/>
                       <div className={styles.name}>{currentUser.name}</div>
                       <div>{currentUser.mail}</div>
                     </div>
@@ -433,8 +497,9 @@ class Center extends React.Component {
                             }
                           >
                             <Card.Meta description={item.detail ? item.detail : '暂无详情'} />
-                            <div className={stylesProjects.cardItemContent}>
+                            <div className={stylesProjects.cardItemContent} style={{display:'flex',justifyContent:'space-between'}}>
                               <span>{moment(parseInt(item.createTime)).fromNow()}</span>
+                              <span style={{textAlign:"right",color:"red"}} onClick={()=>this.handleModalVisible(true,item.id)}>打赏</span>
                             </div>
                           </Card>
                         </List.Item>
@@ -460,8 +525,9 @@ class Center extends React.Component {
                             }
                           >
                             <Card.Meta description={item.detail ? item.detail : '暂无详情'} />
-                            <div className={stylesProjects.cardItemContent}>
+                            <div className={stylesProjects.cardItemContent} style={{display:'flex',justifyContent:'space-between'}}>
                               <span>{moment(parseInt(item.createTime)).fromNow()}</span>
+                              <span style={{textAlign:"right",color:"red"}} onClick={()=>this.handleModalVisible(true,item.id)}>打赏</span>
                             </div>
                           </Card>
                         </List.Item>
@@ -487,8 +553,9 @@ class Center extends React.Component {
                             }
                           >
                             <Card.Meta description={item.detail ? item.detail : '暂无资料'} />
-                            <div className={stylesProjects.cardItemContent}>
+                            <div className={stylesProjects.cardItemContent} style={{display:'flex',justifyContent:'space-between'}}>
                               <span>{moment(parseInt(item.createTime)).fromNow()}</span>
+                              <span style={{textAlign:"right",color:"red"}} onClick={()=>this.handleModalVisible(true,item.id)}>打赏</span>
                             </div>
                           </Card>
                         </List.Item>
@@ -514,8 +581,9 @@ class Center extends React.Component {
                             }
                           >
                             <Card.Meta description={item.detail ? item.detail : '暂无详情'} />
-                            <div className={stylesProjects.cardItemContent}>
+                            <div className={stylesProjects.cardItemContent} style={{display:'flex',justifyContent:'space-between'}}>
                               <span>{moment(parseInt(item.createTime)).fromNow()}</span>
+                              <span style={{textAlign:"right",color:"red"}} onClick={()=>this.handleModalVisible(true,item.id)}>打赏</span>
                             </div>
                           </Card>
                         </List.Item>
@@ -527,6 +595,7 @@ class Center extends React.Component {
             </Col>
           </Row>
         </GridContent>
+        <CreateForm {...parentProps} modalVisible={modalVisible}/>
       </PageHeaderWrapper>
     );
   }

@@ -115,12 +115,19 @@ export default [
           {
             path: '/form/authmanage',
             name: 'authmanage',
+            hideInMenu:true,
             component: './Forms/AuthManage',
           },
           {
             path: '/form/counselee',
             name: 'counselee',
             component: './Forms/Counselee',
+          },
+          {
+            path: '/form/counseleeset',
+            name: 'counseleeset',
+            hideInMenu:true,
+            component: './Forms/CounseleeSet',
           },
           {
             path: '/form/userlist',
@@ -136,6 +143,18 @@ export default [
             path: '/form/gradeset',
             name: 'gradeset',
             component: './Forms/GradeSet',
+          },
+          {
+            path: '/form/gradeinfo',
+            name: 'gradeinfo',
+            hideInMenu: true,
+            component: './Forms/GradeInfo',
+          },
+          {
+            path: '/form/counseleedetail',
+            name: 'counseleedetail',
+            hideInMenu: true,
+            component: './Forms/CounseleeDetail',
           },
           // {
           //   path: '/form/basic-form',
@@ -304,6 +323,7 @@ export default [
           {
             path: '/profile/addgame',
             name: 'addgame',
+            hideInMenu: true,
             component: './Profile/AddGame',
           },
           {
@@ -319,6 +339,7 @@ export default [
           {
             path: '/profile/activitysend',
             name: 'activitySend',
+            hideInMenu:true,
             component: './Profile/ActivitySend',
           },
           {
@@ -334,6 +355,7 @@ export default [
           {
             path: '/profile/addtag',
             name: 'addtag',
+            hideInMenu: true,
             component: './Profile/AddTag',
           },
           {

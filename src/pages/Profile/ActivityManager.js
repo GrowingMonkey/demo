@@ -537,7 +537,7 @@ class Comments extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={6} sm={24}>
             <FormItem label="标题">
-              {getFieldDecorator('name')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('title')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
@@ -562,6 +562,9 @@ class Comments extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
+              <Button style={{ marginLeft: 8 }} onClick={this.handleAddActivity}>
+                新增
+              </Button>
               {/* <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
                 展开 <Icon type="down" />
               </a> */}
@@ -571,7 +574,9 @@ class Comments extends PureComponent {
       </Form>
     );
   }
-
+  handleAddActivity=()=>{
+    router.push('/profile/activitysend')
+  }
   renderAdvancedForm() {
     const {
       form: { getFieldDecorator },

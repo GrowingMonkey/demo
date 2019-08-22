@@ -12,21 +12,17 @@ import {
     queryComments,
     changeGame,
     changeActivity,
-    queryConvert
   } from '@/services/api';
   
   export default {
-    namespace: 'counselee',
+    namespace: 'counseleedetail',
   
     state: {
       data: {
         list: [],
         pagination: {},
       },
-      counseleelist: {
-        list: [],
-        pagination: {},
-      },
+      initList:{}
     },
   
     effects: {
@@ -35,14 +31,6 @@ import {
         console.log(response);
         yield put({
           type: 'save',
-          payload: response,
-        });
-      },
-      *convert({ payload }, { call, put }) {
-        const response = yield call(queryConvert, payload);
-        console.log(response);
-        yield put({
-          type: 'savecovert',
           payload: response,
         });
       },
@@ -137,13 +125,6 @@ import {
         return {
           ...state,
           data: action.payload,
-        };
-      },
-      savecovert(state, action) {
-        console.log(action.payload);
-        return {
-          ...state,
-          counseleelist: action.payload,
         };
       },
     },

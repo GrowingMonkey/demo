@@ -30,6 +30,7 @@ const codeMessage = {
  * 异常处理程序
  */
 const errorHandler = error => {
+  console.log(error);
   const { response = {} } = error;
   const errortext = codeMessage[response.status] || response.statusText;
   const { status, url } = response;
@@ -45,7 +46,7 @@ const errorHandler = error => {
     });
     return;
   }
-  if (status === 200 && response.code == -2) {
+  if (status === 200 && response.data.code == -2) {
     notification.error({
       message: 'token已过期，请重新登录。',
     });
@@ -54,7 +55,7 @@ const errorHandler = error => {
     });
     return;
   }
-  if (status === 200 && response.code == -3) {
+  if (status === 200 && response.date.code == -3) {
     notification.error({
       message: 'token已过期，请重新登录。',
     });
@@ -63,7 +64,7 @@ const errorHandler = error => {
     });
     return;
   }
-  if(status === 200&&response.code!=0){
+  if(status === 200&&response.date.code!=0){
     notification.error({
       message: response.message,
     });
@@ -96,11 +97,11 @@ const request = extend({
     token: window.localStorage.getItem('token'),
   },
   transformResponse(data) {
+    console.log(data);
     return JSONbig.parse(data);
   },
 });
 request.interceptors.request.use((url, options) => {
-  console.log(options);
   return {
     url,
     options: {
@@ -114,4 +115,5 @@ request.interceptors.request.use((url, options) => {
     },
   };
 });
+
 export default request;

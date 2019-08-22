@@ -12,11 +12,12 @@ import {
     queryComments,
     changeGame,
     changeActivity,
+    updateCounseleeSet,
     queryConvert
   } from '@/services/api';
   
   export default {
-    namespace: 'counselee',
+    namespace: 'counseleeset',
   
     state: {
       data: {
@@ -31,7 +32,7 @@ import {
   
     effects: {
       *fetch({ payload }, { call, put }) {
-        const response = yield call(queryCounselee, payload);
+        const response = yield call(queryConvert, payload);
         console.log(response);
         yield put({
           type: 'save',
@@ -98,11 +99,15 @@ import {
         if (callback) callback();
       },
       *update({ payload, callback }, { call, put }) {
-        const response = yield call(updateRule, payload);
-        yield put({
-          type: 'save',
-          payload: response,
-        });
+        const response = yield call(updateCounseleeSet, payload);
+        if(response.code==0){
+            const resp = yield call(queryConvert, payload);
+            console.log(resp);
+            yield put({
+              type: 'save',
+              payload: resp,
+            });
+        }
         if (callback) callback();
       },
       *cancle({ payload, callback }, { call, put, select }) {

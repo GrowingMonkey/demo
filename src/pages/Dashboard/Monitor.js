@@ -36,7 +36,7 @@ class Monitor extends Component {
 
   render() {
     const { monitor, loading } = this.props;
-    const { tags } = monitor;
+    // const { tags } = monitor;
 
     return (
       <GridContent>
@@ -212,7 +212,7 @@ class Monitor extends Component {
               bordered={false}
               bodyStyle={{ overflow: 'hidden' }}
             >
-              <TagCloud data={tags} height={161} />
+              {/* <TagCloud data={tags} height={161} /> */}
             </Card>
           </Col>
           <Col xl={6} lg={12} sm={24} xs={24} style={{ marginBottom: 24 }}>

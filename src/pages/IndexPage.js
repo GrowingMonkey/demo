@@ -2,7 +2,10 @@ import React, { Component, Suspense } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Icon, Menu, Dropdown, Card } from 'antd';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
+import { Pie, WaterWave, Gauge, TagCloud } from '@/components/Charts';
 import { getTimeDistance } from '@/utils/utils';
+import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
+import numeral from 'numeral';
 import styles from './Dashboard/Analysis.less';
 import PageLoading from '@/components/PageLoading';
 import { ChartCard, MiniArea, MiniBar, MiniProgress, Field } from '@/components/Charts';
@@ -132,7 +135,12 @@ class IndexPage extends Component {
       vdOpusCount,
       vdOpusTotal,
       picOpusCount,
-      picOpusTotal
+      picOpusTotal,
+      inviteCount,
+      inviteTotal,
+      adContentCount,
+      adContentTotal,
+      pointVo,
     } = chart;
     const cardUpData = {
       actCount,
@@ -144,6 +152,14 @@ class IndexPage extends Component {
       actRate,
       adtotal: parseInt(adLoginCount) + parseInt(adBannerCount),
       adDownTotal: parseInt(adBannerTotal) + parseInt(adLoginTotal),
+      inviteCount,
+      inviteTotal,
+      
+      pointVo,
+      // opusPoint,
+      // opusPointTotal,
+      // extendPoint,
+      // extendPointTotal
     };
     const mySalesData = [];
     todayTagList &&
@@ -181,7 +197,22 @@ class IndexPage extends Component {
     );
 
     const activeKey = currentTabKey || (offlineData[0] && offlineData[0].name);
-
+    const rankingListData=[{title:'公专路',total:3323},{title:'公专路',total:3323},{title:'公专路',total:3323},{title:'公专路',total:3323},]
+    let arrlist=[];
+    // const {pointVo}=chart;
+    if(pointVo){
+    arrlist.push({name:'活跃积分',daycount:pointVo.actCount,totalCount:pointVo.actTotal})
+    arrlist.push({name:'发帖积分',daycount:pointVo.pubCount,totalCount:pointVo.pubTotal})
+    arrlist.push({name:'点赞积分',daycount:pointVo.likeCount,totalCount:pointVo.likeTotal})
+    arrlist.push({name:'评论积分',daycount:pointVo.commentCount,totalCount:pointVo.commentTotal})
+    arrlist.push({name:'收藏积分',daycount:pointVo.collectCount,totalCount:pointVo.collectTotal})
+    arrlist.push({name:'邀请积分',daycount:pointVo.inviteCount,totalCount:pointVo.inviteTotal})
+    arrlist.push({name:'游戏总产出积分',daycount:pointVo.outputCount,totalCount:pointVo.outputTotal})
+    arrlist.push({name:'游戏总回收积分',daycount:pointVo.recoverCount,totalCount:pointVo.recoverTotal})
+    arrlist.push({name:'总产出积分',daycount:pointVo.allCount,totalCount:pointVo.allTotal})
+    console.log(arrlist);
+    console.log(pointVo);
+    }
     return (
       <GridContent>
         <Suspense fallback={<PageLoading />}>
@@ -277,112 +308,96 @@ class IndexPage extends Component {
             </Col>
           </Row>
         </div>
-        <Suspense fallback={null}>
         <Row gutter={24}>
-    <Col {...topColResponsiveProps}>
-      <ChartCard
-        bordered={false}
-        title="日新增用户"
-        loading={loading}
-        total={() => <h6>1</h6>}
-        footer={
-          <Field
-            label="用户总量"
-            value={
-              `3`
-              // visitData.regTotal
-            }
-          />
-        }
-        contentHeight={46}
-      />
-    </Col>
-
-    <Col {...topColResponsiveProps}>
-      <ChartCard
-        bordered={false}
-        title="日活跃用户"
-        loading={loading}
-        total={() => <h6>2</h6>}
-        footer={
-          <Field
-            label="用户活跃率"
-            value={
-              // `${numeral(visitData.actRate).format('0,0')}`
-              `2%`
-            }
-          />
-        }
-        contentHeight={46}
-      />
-    </Col>
-    <Col {...topColResponsiveProps}>
-      <ChartCard
-        bordered={false}
-        title="日作品发布量"
-        loading={loading}
-        total={() => <h6>3</h6>}
-        footer={
-          <Field label="总作品发布量" value={`1`} />
-        }
-        contentHeight={46}
-      />
-    </Col>
-  </Row>
-        </Suspense>
-        <Suspense fallback={null}>
-        <Row gutter={24}>
-    <Col {...topColResponsiveProps}>
-      <ChartCard
-        bordered={false}
-        title="日新增用户"
-        loading={loading}
-        total={() => <h6>1</h6>}
-        footer={
-          <Field
-            label="用户总量"
-            value={
-              `3`
-              // visitData.regTotal
-            }
-          />
-        }
-        contentHeight={46}
-      />
-    </Col>
-
-    <Col {...topColResponsiveProps}>
-      <ChartCard
-        bordered={false}
-        title="日活跃用户"
-        loading={loading}
-        total={() => <h6>2</h6>}
-        footer={
-          <Field
-            label="用户活跃率"
-            value={
-              // `${numeral(visitData.actRate).format('0,0')}`
-              `2%`
-            }
-          />
-        }
-        contentHeight={46}
-      />
-    </Col>
-    <Col {...topColResponsiveProps}>
-      <ChartCard
-        bordered={false}
-        title="日作品发布量"
-        loading={loading}
-        total={() => <h6>3</h6>}
-        footer={
-          <Field label="总作品发布量" value={`1`} />
-        }
-        contentHeight={46}
-      />
-    </Col>
-  </Row>
-        </Suspense>
+          <Col xl={16} lg={24} sm={24} xs={24} style={{ marginBottom: 24 }}>
+            <Card
+              title="广告统计"
+              bordered={false}
+              className={styles.pieCard}
+            >
+              <Row style={{ padding: '16px 0' }}>
+                <Col span={8}>
+                  <Pie
+                  color="#4495F2"
+                    animate={false}
+                    percent={100}
+                    total={parseInt(adLoginTotal/(adLoginTotal+adBannerTotal+adContentCount)*100)+'%'}
+                    height={128}
+                    lineWidth={2}
+                  />
+                  <div style={{fontSize:14,textAlign:"center"}}>启动广告页</div>
+                  <div style={{fontSize:14,textAlign:"center",marginTop:62}}>
+                    <p style={{fontSize:14,textAlign:"center"}}>点击量(今日):{adLoginCount}</p>
+                    <p style={{fontSize:14,textAlign:"center",marginBottom:72}}>点击量(总量):{adLoginTotal}</p>
+                  </div>
+                </Col>
+                <Col span={8}>
+                  <Pie
+                    animate={false}
+                    color="#FFDE5B"
+                    percent={100}
+                    total={parseInt(adBannerTotal/(adLoginTotal+adBannerTotal+adContentCount)*100)+'%'}
+                    height={128}
+                    lineWidth={2}
+                  />
+                  <div style={{fontSize:14,textAlign:"center"}}>推荐页banner</div>
+                  <div style={{fontSize:14,textAlign:"center",marginTop:62}}>
+                    <p style={{fontSize:14,textAlign:"center"}}>点击量(今日):{adBannerCount}</p>
+                    <p style={{fontSize:14,textAlign:"center",marginBottom:72}}>点击量(总量):{adBannerTotal}</p>
+                  </div>
+                </Col>
+                <Col span={8}>
+                  <Pie
+                    animate={false}
+                    color="#F95F5F"
+                    percent={100}
+                    total={100-parseInt(adLoginTotal/(adLoginTotal+adBannerTotal+adContentCount)*100)-parseInt(adBannerTotal/(adLoginTotal+adBannerTotal+adContentCount)*100)}
+                    height={128}
+                    lineWidth={2}
+                  />
+                  <div style={{fontSize:14,textAlign:"center"}}>内容页广告广告页</div>
+                  <div style={{fontSize:14,textAlign:"center",marginTop:62}}>
+                    <p style={{fontSize:14,textAlign:"center"}}>点击量(今日):33234</p>
+                    <p style={{fontSize:14,textAlign:"center",marginBottom:72}}>点击量(总量):12334</p>
+                  </div>
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+          <Col xl={8} lg={12} sm={24} xs={24} style={{ marginBottom: 24 }}>
+          <Card
+              title="积分统计"
+              bordered={false}
+              className={styles.pieCard}
+            >
+            <div className={styles.salesRank}>
+                  <ul className={styles.rankingList} style={{marginTop:4}}>
+                      <li style={{marginTop:0}}>
+                        <span></span>
+                        <span className={styles.rankingItemTitle}>
+                        </span>
+                        <span  className={styles.rankingItemTitle} style={{fontWeight:'bold'}}>当日积分统计</span>
+                        <span  className={styles.rankingItemTitle} style={{fontWeight:'bold'}}>总积分产出量</span>
+                      </li>
+                    {arrlist.map((item, i) => (
+                      <li key={item.title}>
+                        <span
+                          className={`${styles.rankingItemNumber} ${i < 3 ? styles.active : ''}`}
+                        >
+                          {i + 1}
+                        </span>
+                        <span className={styles.rankingItemTitle} title={item.name}>
+                          {item.name}
+                        </span>
+                        <span  className={styles.rankingItemTitle}>{numeral(item.daycount).format('0,0')}</span>
+                        <span  className={styles.rankingItemTitle}>{numeral(item.totalCount).format('0,0')}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+            </Card>
+          </Col>
+        </Row>
       </GridContent>
     );
   }

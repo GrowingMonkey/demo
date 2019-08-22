@@ -1,6 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
+import AddInfo from '@/components/myComponents/AddInfo'
 import router from 'umi/router';
 import {
   Row,
@@ -21,6 +22,7 @@ import {
   Divider,
   Steps,
   Radio,
+  Checkbox
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -28,6 +30,7 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../../List/TableList.less';
 
 const FormItem = Form.Item;
+const CheckboxGroup=Checkbox.Group;
 const { Step } = Steps;
 const { TextArea } = Input;
 const { Option } = Select;
@@ -40,7 +43,7 @@ const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['关闭', '运行中', '已上线', '异常'];
 
 const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
+  const { modalVisible, form, handleAdd, handleModalVisible ,deptoption,jurisdiction,} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -48,19 +51,39 @@ const CreateForm = Form.create()(props => {
       handleAdd(fieldsValue);
     });
   };
+  const list=deptoption?deptoption.list:[];
   return (
     <Modal
       destroyOnClose
-      title="新建规则"
+      title="新建岗位"
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="描述">
-        {form.getFieldDecorator('desc', {
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="岗位名称">
+        {form.getFieldDecorator('name', {
           rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="部门">
+        {form.getFieldDecorator('deptId', {
+          rules: [{ required: true}],
+        })(<Select placeholder="请选择" style={{ width: '100%' }}>
+        {
+           list&&list.map((item,index) => <Option value={item.id} key={index}>{item.name}</Option>)
+        }
+    </Select>)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="职责">
+        {form.getFieldDecorator('duty', {
+          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="说明">
+        {form.getFieldDecorator('desc', {
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
+      <AddInfo allCheckArr={jurisdiction||[]}/>
     </Modal>
   );
 });
@@ -315,7 +338,7 @@ class Articles extends PureComponent {
     {
       title: '状态',
       dataIndex: 'stat',
-      render: val => val==0?<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'red'}}></span>:<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'green'}}></span>,
+      render: val => val==1?<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'red'}}></span>:<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'green'}}></span>,
     },
     {
       title: '操作',
@@ -338,6 +361,12 @@ class Articles extends PureComponent {
     dispatch({
       type: 'stationrule/fetch',
     });
+    dispatch({
+      type: 'stationrule/fetchdept',
+    });
+    dispatch({
+      type:'stationrule/grant'
+    })
   }
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
@@ -610,7 +639,7 @@ class Articles extends PureComponent {
   render() {
     console.log(this.props);
     const {
-      stationrule: { data },
+      stationrule: { data,deptoption,datagrant},
       loading,
     } = this.props;
     // const mydata={
@@ -627,6 +656,8 @@ class Articles extends PureComponent {
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
+      deptoption:deptoption,
+      jurisdiction:datagrant
     };
     const updateMethods = {
       handleUpdateModalVisible: this.handleUpdateModalVisible,

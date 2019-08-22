@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent, Fragment,useState } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
@@ -45,7 +45,14 @@ const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['关闭', '运行中', '已上线', '异常'];
 
 const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
+  const { modalVisible, form, handleAdd, handleModalVisible,counseleelist:{
+    list
+  } } = props;
+
+  const [current,setList]=useState({
+    current:0
+  });
+  console.log(props);
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -53,18 +60,28 @@ const CreateForm = Form.create()(props => {
       handleAdd(fieldsValue);
     });
   };
+  const handleChange=(item)=>{
+    list&&list.map((v,i)=>{
+      if(v.code===item){
+        setList({
+          current:v.detail,
+        });
+      }
+    })
+    // console.log(current);
+  }
   return (
     <Modal
       destroyOnClose
-      title="新建规则"
+      title="师徒系统收益比例设置"
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="描述">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="比例设置">
         {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-        })(<Input placeholder="请输入" />)}
+          rules: [{ required: true, message: '请输入比例', }],
+        })(<Input placeholder="该比例为千分比"/>)}
       </FormItem>
     </Modal>
   );
@@ -80,17 +97,11 @@ class UpdateForm extends PureComponent {
 
   constructor(props) {
     super(props);
-
+    
     this.state = {
       formVals: {
         name: props.values.name,
-        desc: props.values.desc,
-        key: props.values.key,
-        target: '0',
-        template: '0',
-        type: '1',
-        time: '',
-        frequency: 'month',
+        code:props.values.code
       },
       currentStep: 0,
     };
@@ -104,7 +115,9 @@ class UpdateForm extends PureComponent {
   handleNext = currentStep => {
     const { form, handleUpdate } = this.props;
     const { formVals: oldValue } = this.state;
+    console.log(this.state);
     form.validateFields((err, fieldsValue) => {
+        console.log(fieldsValue);
       if (err) return;
       const formVals = { ...oldValue, ...fieldsValue };
       this.setState(
@@ -112,11 +125,7 @@ class UpdateForm extends PureComponent {
           formVals,
         },
         () => {
-          if (currentStep < 2) {
-            this.forward();
-          } else {
-            handleUpdate(formVals);
-          }
+            handleUpdate(formVals);       
         }
       );
     });
@@ -144,18 +153,13 @@ class UpdateForm extends PureComponent {
       { label: '作品转载', value: '3' },
     ];
     return (
-      <div style={{ display: 'flex' }}>
+      <div>
         {/* <label>角色</label> */}
-        <FormItem
-          labelCol={{ span: 5 }}
-          wrapperCol={{ span: 10, offset: 0 }}
-          label="角色"
-          key="powerNames"
-        >
-          {form.getFieldDecorator('ids', {
-            rules: [{ required: true, message: '请设置用户权限' }],
-          })(<CheckboxGroup options={options} />)}
-        </FormItem>
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="比例设置">
+        {form.getFieldDecorator('detail', {
+          rules: [{ required: true, message: '请输入比例', }],
+        })(<Input placeholder="该比例为千分比"/>)}
+      </FormItem>
         ,
       </div>
     );
@@ -163,32 +167,6 @@ class UpdateForm extends PureComponent {
 
   renderFooter = currentStep => {
     const { handleUpdateModalVisible, values } = this.props;
-    if (currentStep === 1) {
-      return [
-        <Button key="back" style={{ float: 'left' }} onClick={this.backward}>
-          上一步
-        </Button>,
-        <Button key="cancel" onClick={() => handleUpdateModalVisible(false, values)}>
-          取消
-        </Button>,
-        <Button key="forward" type="primary" onClick={() => this.handleNext(currentStep)}>
-          下一步
-        </Button>,
-      ];
-    }
-    if (currentStep === 2) {
-      return [
-        <Button key="back" style={{ float: 'left' }} onClick={this.backward}>
-          上一步
-        </Button>,
-        <Button key="cancel" onClick={() => handleUpdateModalVisible(false, values)}>
-          取消
-        </Button>,
-        <Button key="submit" type="primary" onClick={() => this.handleNext(currentStep)}>
-          完成
-        </Button>,
-      ];
-    }
     return [
       <Button key="forward" type="primary" onClick={() => this.handleNext(currentStep)}>
         提交
@@ -208,7 +186,7 @@ class UpdateForm extends PureComponent {
         width={640}
         bodyStyle={{ padding: '32px 40px 48px' }}
         destroyOnClose
-        title="设置角色"
+        title="修改比例"
         visible={updateModalVisible}
         footer={this.renderFooter(currentStep)}
         onCancel={() => handleUpdateModalVisible(false, values)}
@@ -221,9 +199,9 @@ class UpdateForm extends PureComponent {
 }
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ userlist, loading }) => ({
-  userlist,
-  loading: loading.models.userlist,
+@connect(({ counseleeset, loading }) => ({
+    counseleeset,
+  loading: loading.models.counseleeset,
 }))
 @Form.create()
 class UserList extends PureComponent {
@@ -238,86 +216,19 @@ class UserList extends PureComponent {
 
   columns = [
     {
-      title: '用户名',
+      title: '等级',
       dataIndex: 'name',
     },
     {
-      title: '手机号',
-      dataIndex: 'phone',
-    },
-    {
-      title: '注册时间',
-      dataIndex: 'createTime',
-      render: val => <span>{moment(parseInt(val)).format('YYYY-MM-DD HH:mm:ss')}</span>,
-    },
-    {
-      title: '图片',
-      dataIndex: 'picCount',
-    },
-    {
-      title: '视频',
-      dataIndex: 'videoCount',
-    },
-    {
-      title: '文章',
-      dataIndex: 'artCount',
-    },
-    {
-      title: '评论',
-      dataIndex: 'commentCount',
-    },
-    {
-      title: '总数',
-      dataIndex: 'total',
-    },
-    {
-      title: '收藏',
-      dataIndex: 'collectCount',
-    },
-    {
-      title: '获赞',
-      dataIndex: 'likeCount',
+      title: '比例',
+      dataIndex: 'detail',
     },
     {
       title: '操作',
       render: (text, record) => {
-        const textStr = record.stat == 0 ? '停用' : '启用';
-        const textMsg=`你确认重${textStr}置这个账号吗？`;
         return (
           <Fragment>
-            <a onClick={() => this.handleUpdateModalVisibleRouter(true, record)}>查看</a>
-            <Divider type="vertical" />
-            {/* <a onClick={() => this.handleUpdateModalVisible(true, record)}>权限</a> */}
-            {/* <Divider type="vertical" /> */}
-            {/* <a onClick={() => this.handleStopStatus(record)}>{textStr}</a> */}
-            <Popconfirm
-            title={textMsg}
-            onConfirm={() => this.handleStopStatus(record)}
-            okText="确认"
-            cancelText="取消"
-            >
-            <a href="#">{textStr}</a>
-          </Popconfirm>
-            <Divider type="vertical" />
-            <Popconfirm
-            title="你确认重置这个账号吗？"
-            onConfirm={() => this.handleDeleteReset(0, record)}
-            okText="确认"
-            cancelText="取消"
-            >
-            <a href="#">重置</a>
-          </Popconfirm>
-            <Divider type="vertical" />
-            <Popconfirm
-            title="你确认注销这个账号吗？"
-            onConfirm={() => this.handleDeleteReset(1, record)}
-            okText="确认"
-            cancelText="取消"
-            >
-            <a href="#">注销</a>
-          </Popconfirm>
-          <Divider type="vertical" />
-          <a onClick={() => this.handleJumpDetail(record)}>积分明细</a>
+            <a onClick={() => this.handleUpdateModalVisible(true,record)}>修改</a>
           </Fragment>
         );
       },
@@ -327,10 +238,13 @@ class UserList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'userlist/fetch',
+      type: 'counseleeset/fetch',
     });
+    dispatch({
+      type:'counseleeset/convert',
+    })
   }
-  
+
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
@@ -352,7 +266,7 @@ class UserList extends PureComponent {
     }
 
     dispatch({
-      type: 'userlist/fetch',
+      type: 'counseleeset/fetch',
       payload: params,
     });
   };
@@ -368,7 +282,7 @@ class UserList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'userlist/fetch',
+      type: 'counseleeset/fetch',
       payload: {},
     });
   };
@@ -388,7 +302,7 @@ class UserList extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'userlist/remove',
+          type: 'counseleeset/remove',
           payload: {
             key: selectedRows.map(row => row.key),
           },
@@ -429,15 +343,16 @@ class UserList extends PureComponent {
       });
 
       dispatch({
-        type: 'userlist/fetch',
+        type: 'counseleeset/fetch',
         payload: values,
       });
     });
   };
 
-  handleModalVisible = flag => {
+  handleModalVisible = (flag,record) => {
     this.setState({
       modalVisible: !!flag,
+      formVals:record
     });
   };
 
@@ -447,20 +362,17 @@ class UserList extends PureComponent {
       stepFormValues: record || {},
     });
   };
-  handleJumpDetail=(record)=>{
-    const {match}=this.props;
-    router.push(`/form/gradeinfo?id=${record.id}`)
-  }
+
   handleUpdateModalVisibleRouter = (flag, record) => {
     const { match } = this.props;
-    router.push(`/form/scandetail/${record.id}`);
+    router.push(`/form/counseleedetail`);
   };
 
   handleStopStatus = record => {
     const { dispatch, form } = this.props;
     console.log(record);
     dispatch({
-      type: 'userlist/status',
+      type: 'counseleeset/status',
       payload: record,
     });
   };
@@ -469,7 +381,7 @@ class UserList extends PureComponent {
     const { dispatch, form } = this.props;
     console.log(record);
     dispatch({
-      type: 'userlist/reset',
+      type: 'counseleeset/reset',
       payload: {
         userId: record.id,
         type: flag,
@@ -480,7 +392,7 @@ class UserList extends PureComponent {
   handleAdd = fields => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'userlist/add',
+      type: 'counseleeset/add',
       payload: {
         desc: fields.desc,
       },
@@ -494,14 +406,9 @@ class UserList extends PureComponent {
     const { dispatch } = this.props;
     const { formValues } = this.state;
     dispatch({
-      type: 'userlist/update',
-      payload: {
-        query: formValues,
-        body: {
-          name: fields.name,
-          desc: fields.desc,
-          key: fields.key,
-        },
+      type: 'counseleeset/update',
+      payload: {  
+        ...fields
       },
     });
 
@@ -517,26 +424,23 @@ class UserList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={6} sm={24}>
-            <FormItem label="用户名">
-              {getFieldDecorator('name')(<Input placeholder="请输入" />)}
+            <FormItem label="师傅名称">
+              {getFieldDecorator('mname')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
-            <FormItem label="手机号">
-              {getFieldDecorator('phone')(<Input placeholder="请输入" />)}
+            <FormItem label="师傅手机号">
+              {getFieldDecorator('mphone')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
-            <FormItem label="注册时间">
-              {getFieldDecorator('startDate')(
-                <RangePicker
-                  style={{ width: '100%' }}
-                  placeholder={[
-                    formatMessage({ id: 'form.date.placeholder.start' }),
-                    formatMessage({ id: 'form.date.placeholder.end' }),
-                  ]}
-                />
-              )}
+            <FormItem label="徒弟名称">
+              {getFieldDecorator('aname')(<Input placeholder="请输入" />)}
+            </FormItem>
+          </Col>
+          <Col md={6} sm={24}>
+            <FormItem label="徒弟手机号">
+              {getFieldDecorator('aphone')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
@@ -546,6 +450,9 @@ class UserList extends PureComponent {
               </Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
+              </Button>
+              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleModalVisible}>
+              师徒系统收益比例设置
               </Button>
             </span>
           </Col>
@@ -563,7 +470,9 @@ class UserList extends PureComponent {
       </Form>
     );
   }
+  handleSetCounselee=()=>{
 
+  }
   renderAdvancedForm() {
     const {
       form: { getFieldDecorator },
@@ -609,7 +518,7 @@ class UserList extends PureComponent {
   render() {
     console.log(this.props);
     const {
-      userlist: { data },
+      counseleeset: { data,counseleelist },
       loading,
     } = this.props;
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
@@ -623,16 +532,16 @@ class UserList extends PureComponent {
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
+      counseleelist:counseleelist,
     };
     const updateMethods = {
       handleUpdateModalVisible: this.handleUpdateModalVisible,
       handleUpdate: this.handleUpdate,
     };
     return (
-      <PageHeaderWrapper title="用户列表">
+      <PageHeaderWrapper title="师徒比例设置">
         <Card bordered={false}>
           <div className={styles.tableList}>
-            <div className={styles.tableListForm}>{this.renderForm()}</div>
             <div className={styles.tableListOperator} />
             <StandardTable
               selectedRows={selectedRows}

@@ -15,10 +15,12 @@ export async function queryCommentDetail(params) {
   return rep.data;
 }
 export async function queryScanBranch(params) {
+  console.log(params);
   const rep = await request(`/api/system/admin/list?${stringify(params)}`);
   return rep.data;
 }
 export async function queryScanStation(params) {
+  console.log(params);
   const rep = await request(`/api/system/job/list?${stringify(params)}`);
   return rep.data;
 }
@@ -26,7 +28,13 @@ export async function queryBranch(params) {
   const rep = await request(`/api/system/dept/list?${stringify(params)}`);
   return rep.data;
 }
+export async function queryGrant(params) {
+  const rep = await request(`/api/system/grant/list?${stringify(params)}`);
+  return rep.data;
+}
+queryGrant
 export async function queryStation(params) {
+  console.log(params);
   const rep = await request(`/api/system/job/list?${stringify(params)}`);
   return rep.data;
 }
@@ -34,7 +42,15 @@ export async function queryActivity(params) {
   const rep = await request(`/api/service/activity/list?${stringify(params)}`);
   return rep.data;
 }
-
+export async function queryGradeInfo(params) {
+  console.log(params);
+  if(!params.id){
+    params.id=window.location.search.slice(4);
+    console.log(params.id);
+  }
+  const rep = await request(`/api/mg/user/point/detail/${params.id}?${stringify(params)}`);
+  return rep.data;
+}
 export async function queryGrade(params) {
   const rep = await request(`/api/mg/user/level/grant?${stringify(params)}`);
   return rep.data;
@@ -43,8 +59,16 @@ export async function queryCounselee(params) {
   const rep = await request(`/api/mg/user/extend/list?${stringify(params)}`);
   return rep.data;
 }
+export async function queryConvert(params) {
+  const rep = await request(`/api/service/extend/convert?${stringify(params)}`);
+  return rep.data;
+}
 export async function queryPoint(params) {
   const rep = await request(`/api/mg/user/task/point/list?${stringify(params)}`);
+  return rep.data;
+}
+export async function fetchlPoint(params) {
+  const rep = await request(`/api/service/point/convert?${stringify(params)}`);
   return rep.data;
 }
 export async function queryGame(params) {
@@ -236,6 +260,17 @@ export async function addRule(params) {
     },
   });
 }
+export async function setPoint(params) {
+  return request(`/api/service/push/${params.pushType}`, {
+    method: 'POST',
+    data: stringify({
+      ...params,
+    }),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
 export async function addBasicProfile(params) {
   return request(`/api/service/push/${params.pushType}`, {
     method: 'POST',
@@ -338,9 +373,19 @@ export async function changeActivity(params){
     },
   });
 }
-
 export async function updateRule(params) {
   return request(`/api/mg/user/role/modify/${params.id}`, {
+    method: 'POST',
+    data: stringify({
+      ...params,
+    }),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+export async function updateCounseleeSet(params) {
+  return request(`/api/service/param/setting`, {
     method: 'POST',
     data: stringify({
       ...params,
