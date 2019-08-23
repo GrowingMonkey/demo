@@ -59,6 +59,11 @@ export async function queryCounselee(params) {
   const rep = await request(`/api/mg/user/extend/list?${stringify(params)}`);
   return rep.data;
 }
+export async function queryCounseleeDetail(params) {
+  console.log(params);
+  const rep = await request(`/api/mg/user/extend/detail/${params.aid}`);
+  return rep.data;
+}
 export async function queryConvert(params) {
   const rep = await request(`/api/service/extend/convert?${stringify(params)}`);
   return rep.data;
@@ -80,6 +85,10 @@ export async function queryTag(params) {
   return rep.data;
 }
 export async function queryMoney(params) {
+  const rep = await request(`/api/service/rp/order/list?${stringify(params)}`);
+  return rep.data;
+}
+export async function  queryHistoryMoney(params) {
   const rep = await request(`/api/service/rp/order/list?${stringify(params)}`);
   return rep.data;
 }
@@ -199,7 +208,9 @@ export async function queryVideo(params) {
   console.log(params);
   return request(`/api/opus/report/video?${stringify(params)}`);
 }
-
+export async function queryTalk(params) {
+  return request(`/api/opus/report/stalk?${stringify(params)}`);
+}
 export async function queryArticle(params) {
   return request(`/api/opus/report/article?${stringify(params)}`);
 }

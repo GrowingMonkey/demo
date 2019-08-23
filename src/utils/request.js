@@ -115,5 +115,8 @@ request.interceptors.request.use((url, options) => {
     },
   };
 });
+// request.interceptors.response.use((res) => {
+//   console.log(res);
+// })
 
 export default request;

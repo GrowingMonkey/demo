@@ -339,6 +339,9 @@ class Comments extends PureComponent {
     const { dispatch } = this.props;
     dispatch({
       type: 'moneyprofile/fetch',
+      payload:{
+        stat:0
+      }
     });
   }
 
@@ -398,7 +401,6 @@ class Comments extends PureComponent {
       payload: {},
     });
   };
-
   toggleForm = () => {
     const { expandForm } = this.state;
     this.setState({
@@ -562,6 +564,9 @@ class Comments extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
+              <Button style={{ marginLeft: 8 }} onClick={this.handleHistoryReset}>
+                提现历史
+              </Button>
               {/* <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
                 展开 <Icon type="down" />
               </a> */}
@@ -571,7 +576,9 @@ class Comments extends PureComponent {
       </Form>
     );
   }
-
+  handleHistoryReset=()=>{
+    router.push(`/profile/historymoney`);
+  }
   renderAdvancedForm() {
     const {
       form: { getFieldDecorator },

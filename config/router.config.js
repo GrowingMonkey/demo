@@ -61,6 +61,10 @@ export default [
                 path: '/dashboard/workmanage/articles',
                 component: './Dashboard/WorkManage/Articles',
               },
+              {
+                path: '/dashboard/workmanage/talks',
+                component: './Dashboard/WorkManage/Talks',
+              },
             ],
           },
           {
@@ -82,6 +86,11 @@ export default [
             path: '/dashboard/articlemoderation',
             name: 'articlemoderation',
             component: './Dashboard/ArticleModeration',
+          },
+          {
+            path: '/dashboard/talkmoderation',
+            name: 'talkmoderation',
+            component: './Dashboard/TalkModeration',
           },
           // {
           //   path: '/dashboard/analysis',
@@ -362,6 +371,12 @@ export default [
             path: '/profile/moneyprofile',
             name: 'moneyprofile',
             component: './Profile/MoneyProfile',
+          },
+          {
+            path: '/profile/historymoney',
+            name: 'historymoney',
+            hideInMenu: true,
+            component: './Profile/HistoryMoney',
           },
           {
             path: '/profile/accountflow',

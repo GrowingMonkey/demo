@@ -101,7 +101,7 @@ const CreateFormTwo = Form.create()(props => {
       onOk={okHandle}
       onCancel={() => handleUpdateModalVisible()}
     > 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={value.name}>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="积分比例">
         {form.getFieldDecorator('detail', {
           rules: [{ required: true, message: '请输入积分比例', min: 1 }],
           initialValue:value.detail

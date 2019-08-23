@@ -52,6 +52,11 @@ const CreateForm = Form.create()(props => {
     });
   };
   const list=deptoption?deptoption.list:[];
+  // let CheckedList=jurisdiction.filters(function(item,index,array){
+  //   //元素值，元素的索引，原数组。
+  //   return (item.parentId==0);
+  // })
+  // console.log(CheckedList);
   return (
     <Modal
       destroyOnClose

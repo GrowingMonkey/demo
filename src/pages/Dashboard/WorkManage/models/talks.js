@@ -1,20 +1,15 @@
 import {
-    queryTag,
     queryRule,
-    queryGame,
-    queryStopMoney,
-    querySureMoney,
-    removeComment,
+    removeArticle,
     addRule,
-    cancleComment,
+    cancleArticle,
     updateRule,
-    updateTag,
-    queryComments,
-    changeGame,
+    queryArticle,
+    queryTalk,
   } from '@/services/api';
-  
+  import {deleteArray} from '@/utils/utils'
   export default {
-    namespace: 'tagmanager',
+    namespace: 'talk',
   
     state: {
       data: {
@@ -25,26 +20,12 @@ import {
   
     effects: {
       *fetch({ payload }, { call, put }) {
-        const response = yield call(queryTag, payload);
+        const response = yield call(queryTalk, payload);
         console.log(response);
         yield put({
           type: 'save',
-          payload: response,
+          payload: response.data,
         });
-      },
-      *stop({ payload }, { call, put }) {
-        const response = yield call(queryStopMoney, payload);
-        if(response.code==0){
-          const resp = yield call(queryMoney);
-          yield put({
-            type: 'save',
-            payload: resp,
-          });
-        }
-        // yield put({
-        //   type: 'save',
-        //   payload: response,
-        // });
       },
       *add({ payload, callback }, { call, put }) {
         const response = yield call(addRule, payload);
@@ -54,19 +35,8 @@ import {
         });
         if (callback) callback();
       },
-      *stat({ payload, callback }, { call, put }) {
-        const response = yield call(changeGame, payload);
-        if(response.code==0){
-          const resp = yield call(queryGame);
-          yield put({
-            type: 'save',
-            payload: resp,
-          });
-        }
-        if (callback) callback();
-      },
       *remove({ payload, callback }, { call, put, select }) {
-        const response = yield call(removeComment, payload);
+        const response = yield call(removeArticle, payload);
         // let data=yield select(state=>state.data);
         // for(let i in data.list){
         //   if(data.list[i].id===action.payload.id){
@@ -75,27 +45,25 @@ import {
         //   }
         // }
         if (parseInt(response.code) === 0) {
-          const rep = yield call(queryComments, payload);
+          const data = yield select(state=>state.article);
+          const newComment=deleteArray(data,payload.id);
           yield put({
             type: 'save',
-            payload: rep.data,
+            payload: newComment,
           });
         }
         if (callback) callback();
       },
       *update({ payload, callback }, { call, put }) {
-        const response = yield call(updateTag, payload);
-        if(response.code==0){
-          const res = yield call(queryTag, {});
+        const response = yield call(updateRule, payload);
         yield put({
           type: 'save',
-          payload: res,
+          payload: response,
         });
-        }
         if (callback) callback();
       },
       *cancle({ payload, callback }, { call, put, select }) {
-        const response = yield call(cancleComment, payload);
+        const response = yield call(cancleArticle);
         // let data=yield select(state=>state.data);
         // for(let i in data.list){
         //   if(data.list[i].id===action.payload.id){
@@ -104,10 +72,11 @@ import {
         //   }
         // }
         if (parseInt(response.code) === 0) {
-          const rep = yield call(queryComments, payload);
+          const data = yield select(state=>state.article);
+          const newComment=deleteArray(data,payload.id);
           yield put({
             type: 'save',
-            payload: rep.data,
+            payload: newComment,
           });
         }
         if (callback) callback();

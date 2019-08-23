@@ -66,9 +66,11 @@ class UserList extends PureComponent {
     }],
   }
   componentDidMount() {
-    const { dispatch } = this.props;
+    console.log(this.props);
+    const { dispatch,location:{query} } = this.props;
     dispatch({
-      type: 'counselee/fetch',
+      type: 'counseleedetail/fetch',
+      payload:{aid:query.id}
     });
   }
   setList(prev){
@@ -104,7 +106,7 @@ class UserList extends PureComponent {
   };
   
   render(){
-    const { initlist } = this.props;
+    const { initlist ,location:{query}} = this.props;
     // const [list, setList] = useState(initlist);
     const {list} =this.state;
     const onClickItemEvent = async (item, nowIndex) => {
@@ -125,8 +127,8 @@ class UserList extends PureComponent {
         <section className={style2.cascaderCol}>
           <p className={style2.cascaderColTitle}>师傅</p>
           <p style={{display:'flex',alignItems:'center'}}>
-            <img src="" style={{width:32,height:32,overflow:'hidden',borderRadius:50,background:'#ddd',marginRight:18}}/>
-          {"asas"}<i>&gt;</i>
+            <img src={`https://f-bd.imuguang.com/${query.headerUrl}`} style={{width:32,height:32,overflow:'hidden',borderRadius:50,background:'#ddd',marginRight:18}}/>
+          {query.name}<i>&gt;</i>
       </p>
         </section>
           {list.map((listItem, index) => {

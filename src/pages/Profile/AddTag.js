@@ -8,6 +8,7 @@ import {
   DatePicker,
   Select,
   Button,
+  message,
   Card,
   InputNumber,
   Radio,
@@ -16,6 +17,7 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../Forms/style.less';
+import { router } from 'umi';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -37,6 +39,7 @@ class BasicForms extends PureComponent {
           payload: values,
         });
         message.success('添加成功');
+        router.push(`/profile/tagmanager`)
       }
     });
   };
@@ -70,7 +73,7 @@ class BasicForms extends PureComponent {
       <PageHeaderWrapper title="新增标签">
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
-            <FormItem {...formItemLayout} label={<FormattedMessage id="标签名称" />}>
+            <FormItem {...formItemLayout} label="标签名称">
               {getFieldDecorator('name', {
                 rules: [
                   {
@@ -80,7 +83,7 @@ class BasicForms extends PureComponent {
                 ],
               })(<Input placeholder={formatMessage({ id: 'form.title.placeholder' })} />)}
             </FormItem>
-            <FormItem {...formItemLayout} label={<FormattedMessage id="标签说明" />}>
+            <FormItem {...formItemLayout} label="标签说明">
               {getFieldDecorator('detail', {
                 rules: [
                   {
@@ -90,7 +93,7 @@ class BasicForms extends PureComponent {
                 ],
               })(<Input placeholder={formatMessage({ id: 'form.title.placeholder' })} />)}
             </FormItem>
-            <FormItem {...formItemLayout} label={<FormattedMessage id="是否展示" />}>
+            {/* <FormItem {...formItemLayout} label={<FormattedMessage id="是否展示" />}>
               {getFieldDecorator('type', {
                 rules: [
                   {
@@ -104,10 +107,10 @@ class BasicForms extends PureComponent {
                   <Option value="2">否</Option>
                 </Select>
               )}
-            </FormItem>
+            </FormItem> */}
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button type="primary" htmlType="submit" loading={submitting}>
-                <FormattedMessage id="form.submit" />
+                提交
               </Button>
             </FormItem>
           </Form>

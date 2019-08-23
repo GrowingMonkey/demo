@@ -1,7 +1,7 @@
 import {
     queryRule,
     queryPoint,
-    queryCounselee,
+    queryCounseleeDetail,
     queryActivity,
     queryStopMoney,
     querySureMoney,
@@ -27,7 +27,7 @@ import {
   
     effects: {
       *fetch({ payload }, { call, put }) {
-        const response = yield call(queryCounselee, payload);
+        const response = yield call(queryCounseleeDetail, payload);
         console.log(response);
         yield put({
           type: 'save',

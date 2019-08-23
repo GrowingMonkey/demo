@@ -21,6 +21,9 @@ class SearchList extends Component {
       case 'videos':
         router.push(`${match.url}/videos`);
         break;
+      case 'talks':
+        router.push(`${match.url}/talks`);
+        break;
       default:
         break;
     }
@@ -48,6 +51,10 @@ class SearchList extends Component {
       {
         key: 'articles',
         tab: '文章',
+      },
+      {
+        key: 'talks',
+        tab: '段子',
       },
     ];
 

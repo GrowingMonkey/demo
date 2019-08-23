@@ -421,8 +421,8 @@ class Comments extends PureComponent {
       },
     });
 
-    message.success('配置成功');
-    // this.handleUpdateModalVisible();
+    message.success('修改成功');
+    this.handleUpdateModalVisible();
   };
 
   renderSimpleForm() {

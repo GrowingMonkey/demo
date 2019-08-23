@@ -21,6 +21,7 @@ import {
     Radio,
     Checkbox
   } from 'antd';
+import { func } from 'prop-types';
 const CheckboxGroup=Checkbox.Group;
 class AddInfo extends React.Component {
     constructor(props) {
@@ -102,13 +103,28 @@ class AddInfo extends React.Component {
     render() {
         const { checkedList, checkAll, indeterminate } = this.state;
         const { allCheckArr } = this.props;
+        const parentList=allCheckArr.filter(function(item,index,array) {
+            return (item.parentId==0)
+        })
+        // let newList=allCheckArr;
+        let newList=allCheckArr.filter(function(item,index,array) {
+            return (item.parentId==0)
+        });
+        newList.map((item,index)=>{
+            item.value=[];
+            allCheckArr.map((v,i)=>{
+                if(v.parentId==item.id){
+                    item.value.push(v);
+                }
+            })
+        })
+        console.log(newList);
         return (
             // <div className={styles.modalcontent} >
             <div>
-                {
-                    allCheckArr.map( ({ name, value }, key ) => (
+                {   parentList&&parentList.map( ({ name, value ,id}, key ) => (
                         // <div className={styles.checksgroup}>
-                        <div>
+                            <div key={key}>
                             <div>
                                 <Checkbox
                                 indeterminate={indeterminate[name]}
@@ -120,7 +136,11 @@ class AddInfo extends React.Component {
                             </div>
                             <br />
                             {/* <CheckboxGroup className={styles.contents} options={value} value={checkedList} onChange={this.onChange.bind(this, allCheckArr)} /> */}
-                            <CheckboxGroup options={value} value={checkedList} onChange={this.onChange.bind(this, allCheckArr)} />
+                            <CheckboxGroup options={
+                                    allCheckArr.filter(function(itemChild,index,array) {
+                                        return (itemChild.parentId==id) 
+                                    }).map((val,ind)=>val.name)           
+                                } value={checkedList} onChange={this.onChange.bind(this, allCheckArr)} />
                         </div>
                 ))}
             </div>

@@ -1,6 +1,7 @@
 import {
   queryRule,
   queryMoney,
+  queryHistoryMoney,
   queryStopMoney,
   querySureMoney,
   removeComment,
@@ -23,6 +24,14 @@ export default {
   effects: {
     *fetch({ payload }, { call, put }) {
       const response = yield call(queryMoney, payload);
+      console.log(response);
+      yield put({
+        type: 'save',
+        payload: response,
+      });
+    },
+    *fetchhistory({ payload }, { call, put }) {
+      const response = yield call(queryHistoryMoney, payload);
       console.log(response);
       yield put({
         type: 'save',
