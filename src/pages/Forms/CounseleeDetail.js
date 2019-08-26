@@ -52,69 +52,113 @@ const status = ['关闭', '运行中', '已上线', '异常'];
 }))
 class UserList extends PureComponent {
   state={
-    list:[{
-      list: [
-        {
-          name: "测试1",
-          value: "test1"
-        },
-        {
-          name: "测试1",
-          value: "test2"
-        }
-      ]
-    }],
+    lists:[
+      // {
+      // list: [
+      //   {
+      //     aname: "测试1",
+      //     value: "test1"
+      //   },
+      //   {
+      //     aname: "测试2",
+      //     value: "test2"
+      //   }
+      // ]
+    // }
+  ],
   }
   componentDidMount() {
-    console.log(this.props);
     const { dispatch,location:{query} } = this.props;
+    const {lists} =this.state;
+    const id=query.id;
     dispatch({
       type: 'counseleedetail/fetch',
-      payload:{aid:query.id}
+      payload:{
+        aid:query.id
+      },
+      callback:(response)=>{
+        if(response){
+          console.log(response);
+          let cleanedList = lists.slice(0);
+          const newData = cleanedList.slice(0).concat({list:response});
+          console.log(newData);
+          this.setList(newData);
+        }
+      }
     });
   }
   setList(prev){
     this.setState({
-      list:prev
+      lists:prev
     })
   }
   cascaderItemGenerator(list, event, nowIndex) {
     const cascaderItems = list.map((item ,index)=> {
-      const { name } = item;
+      const { aname ,aheadUrl,aid} = item;
       return (<p onClick={() => event(item, nowIndex)} key={index} style={{display:'flex',alignItems:'center'}}>
-        <img src="" style={{width:32,height:32,overflow:'hidden',borderRadius:50,background:'#ddd',marginRight:18}}/>
-          {name}<i>&gt;</i>
+        <img src={`https://f-bd.imuguang.com/${aheadUrl?aheadUrl:'bg/userHead.png'}`} style={{width:32,height:32,overflow:'hidden',borderRadius:50,background:'#ddd',marginRight:18}}/>
+          {aname}
       </p>);
     });
     return cascaderItems;
   }
   testPromiseGenerator = item => {
+    const { dispatch,location:{query} } = this.props;
+
     console.log(`我点中了${item.name}`);
-    return Promise.resolve({
-      title: "测试标题",
-      list: [
-        {
-          name: `${item.name}1`,
-          value: `${item.value}1`
-        },
-        {
-          name: `${item.name}2`,
-          value: `${item.value}2`
+    dispatch({
+      type: 'counseleedetail/fetch',
+      payload:{
+        // aid:'38452297608466432'
+        aid:item.aid
+      },
+      callback:(response) => {
+        if (response&&parseInt(response.length)!==0) {
+          console.log(response);
+          return Promise.resolve({list:response});
+        }else{
+          return Promise.resolve({
+              list: [
+                {
+                  name: `${item.name}1`,
+                  value: `${item.value}1`
+                },
+                {
+                  name: `${item.name}2`,
+                  value: `${item.value}2`
+                }
+              ]
+            });
         }
-      ]
+      }
     });
+    // return Promise.resolve({
+    //   list: [
+    //     {
+    //       name: `${item.name}1`,
+    //       value: `${item.value}1`
+    //     },
+    //     {
+    //       name: `${item.name}2`,
+    //       value: `${item.value}2`
+    //     }
+    //   ]
+    // });
   };
   
   render(){
     const { initlist ,location:{query}} = this.props;
     // const [list, setList] = useState(initlist);
-    const {list} =this.state;
+    const {lists} =this.state;
+    console.log(lists);
+    console.log(this.state);
     const onClickItemEvent = async (item, nowIndex) => {
       // 当点击第几列时需要清理后面的列数。
       console.log(`我点中了第${nowIndex + 1}行`);
-      let cleanedList = list.slice(0);
-       if (list.length !== 1) {
-          cleanedList.splice(nowIndex + 1, list.length - nowIndex);
+      let cleanedList = lists.slice(0);
+      console.log(item);
+       if (lists.length !== 1) {
+          cleanedList.splice(nowIndex + 1, lists.length - nowIndex);
       }
       const result = await this.testPromiseGenerator(item);
       const newData = cleanedList.slice(0).concat([result]);
@@ -128,12 +172,12 @@ class UserList extends PureComponent {
           <p className={style2.cascaderColTitle}>师傅</p>
           <p style={{display:'flex',alignItems:'center'}}>
             <img src={`https://f-bd.imuguang.com/${query.headerUrl}`} style={{width:32,height:32,overflow:'hidden',borderRadius:50,background:'#ddd',marginRight:18}}/>
-          {query.name}<i>&gt;</i>
+          {query.name}<Icon type="right" />
       </p>
         </section>
-          {list.map((listItem, index) => {
+          {lists.map((listItem, index) => {
             const nowIndex = index;
-            const { title, list } = listItem;
+            const { list } = listItem;
             return [
               <section className={style2.cascaderCol} key={index}>
                 <p className={style2.cascaderColTitle}>{index+1}级徒弟({list.length})</p>

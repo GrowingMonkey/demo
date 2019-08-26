@@ -26,13 +26,15 @@ import {
     },
   
     effects: {
-      *fetch({ payload }, { call, put }) {
+      *fetch({ payload,callback }, { call, put }) {
         const response = yield call(queryCounseleeDetail, payload);
         console.log(response);
         yield put({
           type: 'save',
           payload: response,
         });
+        console.log(callback);
+        if (callback) callback(response);
       },
       *stop({ payload }, { call, put }) {
         const response = yield call(queryStopMoney, payload);
