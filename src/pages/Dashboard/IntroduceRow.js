@@ -74,12 +74,12 @@ const IntroduceRow = memo(({ loading, visitData }) => (
         bordered={false}
         title="作品激励积分(本周)"
         loading={loading}
-        total={() => <h6>{visitData.pointVo?visitData.pointVo.inviteCount:0}</h6>}
+        total={() => <h6>{visitData.pointVo?visitData.pointVo.opusPoint:0}</h6>}
         footer={
           <Field
             label="总收益:"
             value={
-              `${numeral(visitData.pointVo?visitData.pointVo.inviteTotal:0).format('0,0')}`
+              `${numeral(visitData.pointVo?visitData.pointVo.opusPointTotal:0).format('0,0')}`
               // visitData.regTotal
             }
           />
@@ -99,7 +99,7 @@ const IntroduceRow = memo(({ loading, visitData }) => (
             label="总收益:"
             value={
               // `${numeral(visitData.actRate).format('0,0')}`
-              `${visitData.pointVo?visitData.pointVo.extendPointTotal:0  }%`
+              `${visitData.pointVo?visitData.pointVo.extendPointTotal:0}`
             }
           />
         }
@@ -111,9 +111,9 @@ const IntroduceRow = memo(({ loading, visitData }) => (
         bordered={false}
         title="邀请注册人数(当日):"
         loading={loading}
-        total={() => <h6>{visitData.pointVo?visitData.pointVo.opusPoint:0}</h6>}
+        total={() => <h6>{visitData.pointVo?visitData.pointVo.inviteCount:0}</h6>}
         footer={
-          <Field label="总邀请注册人数" value={`${numeral(visitData.pointVo?visitData.pointVo.opusPointTotal:0).format('0,0')}`} />
+          <Field label="总邀请注册人数" value={`${numeral(visitData.pointVo?visitData.pointVo.inviteTotal:0).format('0,0')}`} />
         }
         contentHeight={46}
       />

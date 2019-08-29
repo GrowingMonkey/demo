@@ -357,8 +357,8 @@ class IndexPage extends Component {
                   />
                   <div style={{fontSize:14,textAlign:"center"}}>内容页广告广告页</div>
                   <div style={{fontSize:14,textAlign:"center",marginTop:62}}>
-                    <p style={{fontSize:14,textAlign:"center"}}>点击量(今日):33234</p>
-                    <p style={{fontSize:14,textAlign:"center",marginBottom:72}}>点击量(总量):12334</p>
+                    <p style={{fontSize:14,textAlign:"center"}}>点击量(今日):{adContentCount}</p>
+                    <p style={{fontSize:14,textAlign:"center",marginBottom:72}}>点击量(总量):{adContentTotal}</p>
                   </div>
                 </Col>
               </Row>
