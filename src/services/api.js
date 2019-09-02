@@ -217,6 +217,9 @@ export async function queryArticle(params) {
 export async function queryUserList(params) {
   return request(`/api/mg/user/list?${stringify(params)}`);
 }
+export async function queryUserListAuth(params) {
+  return request(`/api/mg/user/grant?${stringify(params)}`);
+}
 export async function changeStatus(params) {
   return request(`/api/mg/user/account/change?`, {
     method: 'POST',
@@ -375,6 +378,17 @@ export async function changeGame(params){
 }
 export async function changeActivity(params){
   return request(`/api/service/update/activity`, {
+    method: 'POST',
+    data: stringify({
+      ...params,
+    }),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+export async function updateUserPower(params){
+  return request(`/api/mg/user/grant/update`, {
     method: 'POST',
     data: stringify({
       ...params,

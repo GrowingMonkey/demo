@@ -29,6 +29,7 @@ import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 import styles from '../List/TableList.less';
+import { isForStatement } from '@babel/types';
 
 const FormItem = Form.Item;
 const { Step } = Steps;
@@ -83,7 +84,7 @@ class UpdateForm extends PureComponent {
 
     this.state = {
       formVals: {
-        name: props.values.name,
+        userId: props.values.id,
         desc: props.values.desc,
         key: props.values.key,
         target: '0',
@@ -102,7 +103,7 @@ class UpdateForm extends PureComponent {
   }
 
   handleNext = currentStep => {
-    const { form, handleUpdate } = this.props;
+    const { form, handleUpdate ,authData} = this.props;
     const { formVals: oldValue } = this.state;
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -112,11 +113,27 @@ class UpdateForm extends PureComponent {
           formVals,
         },
         () => {
-          if (currentStep < 2) {
-            this.forward();
-          } else {
-            handleUpdate(formVals);
-          }
+            if(authData&&authData.userId!=0){
+              let params={
+                id:authData.id,
+                point:formVals.powerShare&&formVals.powerShare.length>0?1:0,
+                pubPic:formVals.pubPic,
+                pubArticle:formVals.pubArticle,
+                pubVideo:formVals.pubVideo,
+                pubStalk:formVals.pubStalk
+              }
+              handleUpdate(params);
+            }else{
+              let params={
+                userId:formVals.userId,
+                point:formVals.powerShare&&formVals.powerShare.length>0?1:0,
+                pubPic:formVals.pubPic,
+                pubArticle:formVals.pubArticle,
+                pubVideo:formVals.pubVideo,
+                pubStalk:formVals.pubStalk
+              }
+              handleUpdate(params);
+            }
         }
       );
     });
@@ -137,26 +154,86 @@ class UpdateForm extends PureComponent {
   };
 
   renderContent = (currentStep, formVals) => {
-    const { form, handleUpdate } = this.props;
+    const { form, handleUpdate, authData} = this.props;
+    console.log(this.props);
     const options = [
-      { label: '作品删除', value: '1' },
-      { label: '账号封禁', value: '2' },
-      { label: '作品转载', value: '3' },
+      { label: '是否显示积分', value:'1'},
     ];
     return (
-      <div style={{ display: 'flex' }}>
+      <div>
         {/* <label>角色</label> */}
+        <h3>分享权限</h3>
         <FormItem
-          labelCol={{ span: 5 }}
-          wrapperCol={{ span: 10, offset: 0 }}
-          label="角色"
           key="powerNames"
         >
-          {form.getFieldDecorator('ids', {
-            rules: [{ required: true, message: '请设置用户权限' }],
+          {form.getFieldDecorator('powerShare', {
           })(<CheckboxGroup options={options} />)}
+        </FormItem>,
+        <h3>发布权限</h3>
+        <FormItem
+          // labelCol={{ span: 5 }}
+          label="文章"
+          style={{display:'flex'}}
+          // wrapperCol={{ span: 10, offset: 0 }}
+          key="powerSend"
+        >
+          {form.getFieldDecorator('pubArticle', {
+            rules: [{ required: true, message: '请设置用户权限' }],
+            initialValue:parseInt(authData.pubArticle)
+          })(<Radio.Group>
+            <Radio value={0} key="0">否</Radio>
+            <Radio value={1} key="1">是</Radio>
+            <Radio value={2} key="2">默认</Radio>
+          </Radio.Group>)}
         </FormItem>
-        ,
+        <FormItem
+          // labelCol={{ span: 5 }}
+          style={{display:'flex'}}
+          label="图片"
+          // wrapperCol={{ span: 10, offset: 0 }}
+          key="pubPic"
+        >
+          {form.getFieldDecorator('pubPic', {
+            rules: [{ required: true, message: '请设置用户权限' }],
+            initialValue:parseInt(authData.pubPic)
+          })(<Radio.Group>
+            <Radio value={0} key="0">否</Radio>
+            <Radio value={1} key="1">是</Radio>
+            <Radio value={2} key="2">默认</Radio>
+          </Radio.Group>)}
+        </FormItem>
+        <FormItem
+          // labelCol={{ span: 5 }}
+          style={{display:'flex'}}
+          label="段子"
+          // wrapperCol={{ span: 10, offset: 0 }}
+          key="pubStalk"
+        >
+          {form.getFieldDecorator('pubStalk', {
+            rules: [{ required: true, message: '请设置用户权限' }],
+            initialValue:parseInt(authData.pubStalk)
+          })(<Radio.Group>
+            <Radio value={0} key="0">否</Radio>
+            <Radio value={1} key="1">是</Radio>
+            <Radio value={2} key="2">默认</Radio>
+          </Radio.Group>)}
+        </FormItem>
+        <FormItem
+          // labelCol={{ span: 5 }}
+          style={{display:'flex'}}
+          label="视频"
+          // wrapperCol={{ span: 10, offset: 0 }}
+          key="pubVideo"
+        >
+          {form.getFieldDecorator('pubVideo', {
+            rules: [{ required: true, message: '请设置用户权限' }],
+            initialValue:parseInt(authData.pubVideo)
+          })(<Radio.Group>
+            <Radio value={0} key="0">否</Radio>
+            <Radio value={1} key="1">是</Radio>
+            <Radio value={2} key="2">默认</Radio>
+          </Radio.Group>)}
+        </FormItem>
       </div>
     );
   };
@@ -205,10 +282,10 @@ class UpdateForm extends PureComponent {
 
     return (
       <Modal
-        width={640}
+        width={480}
         bodyStyle={{ padding: '32px 40px 48px' }}
         destroyOnClose
-        title="设置角色"
+        title="权限设置"
         visible={updateModalVisible}
         footer={this.renderFooter(currentStep)}
         onCancel={() => handleUpdateModalVisible(false, values)}
@@ -234,6 +311,7 @@ class UserList extends PureComponent {
     selectedRows: [],
     formValues: {},
     stepFormValues: {},
+    authData:{}
   };
 
   columns = [
@@ -287,8 +365,8 @@ class UserList extends PureComponent {
           <Fragment>
             <a onClick={() => this.handleUpdateModalVisibleRouter(true, record)}>查看</a>
             <Divider type="vertical" />
-            {/* <a onClick={() => this.handleUpdateModalVisible(true, record)}>权限</a> */}
-            {/* <Divider type="vertical" /> */}
+            <a onClick={() => this.handleUpdateModalVisible(true, record)}>权限</a>
+            <Divider type="vertical" />
             {/* <a onClick={() => this.handleStopStatus(record)}>{textStr}</a> */}
             <Popconfirm
             title={textMsg}
@@ -442,6 +520,23 @@ class UserList extends PureComponent {
   };
 
   handleUpdateModalVisible = (flag, record) => {
+    const {dispatch}=this.props;
+    if(record&&record.id){
+      dispatch({
+      type:'userlist/fetchauth',
+      payload:{
+        id:record.id
+      },
+      callback: (response) => {
+        console.log(response);
+        if(response&&response.code==0){
+            this.setState({
+              authData: response.data,
+            });
+        }
+      },
+    })
+  }
     this.setState({
       updateModalVisible: !!flag,
       stepFormValues: record || {},
@@ -491,22 +586,23 @@ class UserList extends PureComponent {
   };
 
   handleUpdate = fields => {
+    console.log(fields);
     const { dispatch } = this.props;
     const { formValues } = this.state;
     dispatch({
-      type: 'userlist/update',
+      type: 'userlist/updatepower',
       payload: {
-        query: formValues,
-        body: {
-          name: fields.name,
-          desc: fields.desc,
-          key: fields.key,
-        },
+        ...fields
       },
+      callback:(response)=>{
+        if(response&&response.code==0){
+          message.success('修改成功');
+          this.handleUpdateModalVisible();
+        }else{
+          message.error(response.message);
+        }
+      }
     });
-
-    message.success('配置成功');
-    this.handleUpdateModalVisible();
   };
 
   renderSimpleForm() {
@@ -612,7 +708,7 @@ class UserList extends PureComponent {
       userlist: { data },
       loading,
     } = this.props;
-    const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
+    const { selectedRows, modalVisible, updateModalVisible, stepFormValues,authData } = this.state;
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
@@ -650,6 +746,7 @@ class UserList extends PureComponent {
             {...updateMethods}
             updateModalVisible={updateModalVisible}
             values={stepFormValues}
+            authData={authData}
           />
         ) : null}
       </PageHeaderWrapper>

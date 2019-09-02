@@ -6,6 +6,8 @@ import {
   updateRule,
   changeStatus,
   resetDeleteUser,
+  queryUserListAuth,
+  updateUserPower
 } from '@/services/api';
 
 export default {
@@ -25,6 +27,10 @@ export default {
         type: 'save',
         payload: response.data,
       });
+    },
+    *fetchauth({ payload,callback }, { call, put }){
+      const response = yield call(queryUserListAuth, payload);
+      if (callback) callback(response);
     },
     *add({ payload, callback }, { call, put }) {
       const response = yield call(addRule, payload);
@@ -49,6 +55,10 @@ export default {
         payload: response,
       });
       if (callback) callback();
+    },
+    *updatepower({ payload, callback }, { call, put }) {
+      const response=yield call(updateUserPower,payload)
+      if (callback) callback(response);
     },
     *status({ payload, callback }, { call, put }) {
       const response = yield call(changeStatus, payload);
