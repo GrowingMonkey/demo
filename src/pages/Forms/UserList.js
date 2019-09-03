@@ -156,6 +156,10 @@ class UpdateForm extends PureComponent {
   renderContent = (currentStep, formVals) => {
     const { form, handleUpdate, authData} = this.props;
     console.log(this.props);
+    let checkNum=[];
+    if(authData.point==1){
+      checkNum.push('1');
+    }
     const options = [
       { label: '是否显示积分', value:'1'},
     ];
@@ -167,6 +171,7 @@ class UpdateForm extends PureComponent {
           key="powerNames"
         >
           {form.getFieldDecorator('powerShare', {
+            initialValue:checkNum
           })(<CheckboxGroup options={options} />)}
         </FormItem>,
         <h3>发布权限</h3>
