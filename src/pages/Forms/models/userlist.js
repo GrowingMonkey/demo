@@ -7,7 +7,8 @@ import {
   changeStatus,
   resetDeleteUser,
   queryUserListAuth,
-  updateUserPower
+  updateUserPower,
+  updateAllPower
 } from '@/services/api';
 
 export default {
@@ -58,6 +59,10 @@ export default {
     },
     *updatepower({ payload, callback }, { call, put }) {
       const response=yield call(updateUserPower,payload)
+      if (callback) callback(response);
+    },
+    *updatepowerall({ payload, callback }, { call, put }) {
+      const response=yield call(updateAllPower,payload)
       if (callback) callback(response);
     },
     *status({ payload, callback }, { call, put }) {

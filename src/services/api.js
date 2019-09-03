@@ -398,6 +398,18 @@ export async function updateUserPower(params){
     },
   });
 }
+export async function updateAllPower(params){
+  return request(`/api/mg/user/grant/update/all`, {
+    method: 'POST',
+    data: stringify({
+      ...params,
+    }),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+updateAllPower
 export async function updateRule(params) {
   return request(`/api/mg/user/role/modify/${params.id}`, {
     method: 'POST',

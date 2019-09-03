@@ -46,27 +46,97 @@ const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['关闭', '运行中', '已上线', '异常'];
 
 const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
+  const { modalVisible, form, handleAdd, handleModalVisible ,sysDefaultPower,powerType} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       form.resetFields();
-      handleAdd(fieldsValue);
+      let params={
+        ...fieldsValue,
+      }
+      if(powerType==1){
+        params.id=sysDefaultPower.id;
+      }
+      handleAdd(params);
     });
   };
+  console.log(props);
   return (
     <Modal
       destroyOnClose
-      title="新建规则"
+      title="发布设置"
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="描述">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-        })(<Input placeholder="请输入" />)}
-      </FormItem>
+      <div>
+        {/* <label>角色</label> */}
+        <FormItem
+          // labelCol={{ span: 5 }}
+          label="文章"
+          style={{display:'flex'}}
+          // wrapperCol={{ span: 10, offset: 0 }}
+          key="powerSend"
+        >
+          {form.getFieldDecorator('pubArticle', {
+            rules: [{ required: true, message: '请设置用户权限' }],
+            initialValue:parseInt(sysDefaultPower.pubArticle)
+          })(<Radio.Group>
+            <Radio value={0} key="0">否</Radio>
+            <Radio value={1} key="1">是</Radio>
+            {powerType!=1?<Radio value={2} key="2">默认</Radio>:''}
+          </Radio.Group>)}
+        </FormItem>
+        <FormItem
+          // labelCol={{ span: 5 }}
+          style={{display:'flex'}}
+          label="图片"
+          // wrapperCol={{ span: 10, offset: 0 }}
+          key="pubPic"
+        >
+          {form.getFieldDecorator('pubPic', {
+            rules: [{ required: true, message: '请设置用户权限' }],
+            initialValue:parseInt(sysDefaultPower.pubPic)
+          })(<Radio.Group>
+            <Radio value={0} key="0">否</Radio>
+            <Radio value={1} key="1">是</Radio>
+
+            {powerType!=1?<Radio value={2} key="2">默认</Radio>:''}
+          </Radio.Group>)}
+        </FormItem>
+        <FormItem
+          // labelCol={{ span: 5 }}
+          style={{display:'flex'}}
+          label="段子"
+          // wrapperCol={{ span: 10, offset: 0 }}
+          key="pubStalk"
+        >
+          {form.getFieldDecorator('pubStalk', {
+            rules: [{ required: true, message: '请设置用户权限' }],
+            initialValue:parseInt(sysDefaultPower.pubStalk)
+          })(<Radio.Group>
+            <Radio value={0} key="0">否</Radio>
+            <Radio value={1} key="1">是</Radio>
+            {powerType!=1?<Radio value={2} key="2">默认</Radio>:''}
+          </Radio.Group>)}
+        </FormItem>
+        <FormItem
+          // labelCol={{ span: 5 }}
+          style={{display:'flex'}}
+          label="视频"
+          // wrapperCol={{ span: 10, offset: 0 }}
+          key="pubVideo"
+        >
+          {form.getFieldDecorator('pubVideo', {
+            rules: [{ required: true, message: '请设置用户权限' }],
+            initialValue:parseInt(sysDefaultPower.pubVideo)
+          })(<Radio.Group>
+            <Radio value={0} key="0">否</Radio>
+            <Radio value={1} key="1">是</Radio>
+            {powerType!=1?<Radio value={2} key="2">默认</Radio>:''}
+          </Radio.Group>)}
+        </FormItem>
+      </div>
     </Modal>
   );
 });
@@ -316,7 +386,9 @@ class UserList extends PureComponent {
     selectedRows: [],
     formValues: {},
     stepFormValues: {},
-    authData:{}
+    authData:{},
+    sysDefaultPower:{},
+    powerType:1
   };
 
   columns = [
@@ -455,7 +527,37 @@ class UserList extends PureComponent {
       payload: {},
     });
   };
-
+  handleSysSetTwo=()=>{
+    let params={
+        id:0
+      }
+    this.getInitDataPower(params,2);
+  }
+  handleSysSet=()=>{
+    let params={
+      id:0
+    };
+    this.getInitDataPower(params,1);
+  }
+  getInitDataPower=(val,type)=>{
+    const {dispatch}=this.props;
+        dispatch({
+      type:'userlist/fetchauth',
+      payload:{
+        ...val
+      },
+      callback: (response) => {
+        console.log(response);
+        if(response&&response.code==0){
+            this.setState({
+              sysDefaultPower: response.data,
+              powerType:type
+            });
+        }
+      },
+    });
+    this.handleModalVisible(true);
+  }
   toggleForm = () => {
     const { expandForm } = this.state;
     this.setState({
@@ -527,6 +629,7 @@ class UserList extends PureComponent {
   handleUpdateModalVisible = (flag, record) => {
     const {dispatch}=this.props;
     if(record&&record.id){
+      console.log('系统设置');
       dispatch({
       type:'userlist/fetchauth',
       payload:{
@@ -540,8 +643,9 @@ class UserList extends PureComponent {
             });
         }
       },
-    })
-  }
+      })
+    }
+    console.log(flag);
     this.setState({
       updateModalVisible: !!flag,
       stepFormValues: record || {},
@@ -580,9 +684,9 @@ class UserList extends PureComponent {
   handleAdd = fields => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'userlist/add',
+      type: 'userlist/updatepowerall',
       payload: {
-        desc: fields.desc,
+        ...fields
       },
     });
 
@@ -590,7 +694,7 @@ class UserList extends PureComponent {
     this.handleModalVisible();
   };
 
-  handleUpdate = fields => {
+    handleUpdate = fields => {
     console.log(fields);
     const { dispatch } = this.props;
     const { formValues } = this.state;
@@ -608,13 +712,13 @@ class UserList extends PureComponent {
         }
       }
     });
-  };
+    };
 
-  renderSimpleForm() {
-    const {
-      form: { getFieldDecorator },
-    } = this.props;
-    return (
+    renderSimpleForm() {
+      const {
+        form: { getFieldDecorator },
+      } = this.props;
+      return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={6} sm={24}>
@@ -713,7 +817,7 @@ class UserList extends PureComponent {
       userlist: { data },
       loading,
     } = this.props;
-    const { selectedRows, modalVisible, updateModalVisible, stepFormValues,authData } = this.state;
+    const { selectedRows, modalVisible, updateModalVisible, stepFormValues,authData,sysDefaultPower,powerType } = this.state;
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
@@ -724,6 +828,8 @@ class UserList extends PureComponent {
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
+      sysDefaultPower:sysDefaultPower,
+      powerType:powerType
     };
     const updateMethods = {
       handleUpdateModalVisible: this.handleUpdateModalVisible,
@@ -734,6 +840,12 @@ class UserList extends PureComponent {
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
+            <Button style={{ marginLeft: 8 }} onClick={this.handleSysSet} type="primary">
+                设置系统权限
+            </Button>
+            <Button style={{ marginLeft: 8 }} onClick={this.handleSysSetTwo} type="primary">
+                设置所有用户权限
+            </Button>
             <div className={styles.tableListOperator} />
             <StandardTable
               selectedRows={selectedRows}
