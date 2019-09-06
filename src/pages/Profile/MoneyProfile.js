@@ -322,6 +322,12 @@ class Comments extends PureComponent {
       render: val => <span>{moment(parseInt(val)).format('YYYY-MM-DD HH:mm:ss')}</span>,
     },
     {
+      title: '状态',
+      dataIndex: 'stat',
+      sorter: true,
+      render: val => parseInt(val)==1?'已通过':parseInt(val)==0?'待审核':'已拒绝',
+    },
+    {
       title: '操作',
       render: (text, record) => (
         <Fragment>
@@ -339,9 +345,6 @@ class Comments extends PureComponent {
     const { dispatch } = this.props;
     dispatch({
       type: 'moneyprofile/fetch',
-      payload:{
-        stat:0
-      }
     });
   }
 

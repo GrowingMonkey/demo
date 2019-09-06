@@ -85,7 +85,7 @@ export async function queryTag(params) {
   return rep.data;
 }
 export async function queryMoney(params) {
-  const rep = await request(`/api/service/rp/order/list?${stringify(params)}`);
+  const rep = await request(`/api/service/rp/order/list?stat=0&${stringify(params)}`);
   return rep.data;
 }
 export async function  queryHistoryMoney(params) {
