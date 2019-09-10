@@ -646,6 +646,10 @@ export async function queryFakeListA(params) {
   const rep = await request(`/api/mg/user/opus/${params.id}?${stringify(params)}`);
   return rep.data.list;
 }
+export async function queryTalkList(params) {
+  const rep = await request(`/api/mg/user/opus/${params.id}?${stringify(params)}`);
+  return rep.data.list;
+}
 
 export async function removeFakeList(params) {
   const { count = 5, ...restParams } = params;

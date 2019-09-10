@@ -73,9 +73,9 @@ const CreateForm = Form.create()(props => {
 
 
 @connect(({ loading, user, project, list }) => ({
-  listLoading: loading.effects['list/fetch','list/fetchP','list/fetchA','list/fetchV','list/fetchC'],
-  currentUser: user.currentUser,
-  currentUserLoading: loading.effects['user/fetchCurrent'],
+  listLoading: loading.effects['list/fetch','list/fetchOpus'],
+  findUser: user.findUser,
+  findUserLoading: loading.effects['user/fetchInfo'],
   project,
   projectLoading: loading.effects[('project/fetchNotice', 'project/fetchLike')],
   list,
@@ -87,7 +87,8 @@ class Center extends React.Component {
     inputValue: '',
     id: '',
     modalVisible: false,
-    opusId:''
+    opusId:'',
+    initTabKey:0
   };
 
   componentDidMount() {
@@ -97,6 +98,7 @@ class Center extends React.Component {
         params: { user },
       },
     } = this.props;
+    const {initTabKey}=this.state;
     dispatch({
       type: 'user/fetchInfo',
       payload: {
@@ -104,33 +106,13 @@ class Center extends React.Component {
       },
     });
     dispatch({
-      type: 'list/fetchP',
+      type: 'list/fetchOpus',
       payload: {
         id: user,
-        type: 0,
+        type: initTabKey,
       },
     });
-    dispatch({
-      type: 'list/fetchV',
-      payload: {
-        id: user,
-        type: 2,
-      },
-    });
-    dispatch({
-      type: 'list/fetchA',
-      payload: {
-        id: user,
-        type: 1,
-      },
-    });
-    dispatch({
-      type: 'list/fetchC',
-      payload: {
-        id: user,
-        type: 3,
-      },
-    });
+
     dispatch({
       type: 'project/fetchNotice',
       payload: {
@@ -162,31 +144,10 @@ class Center extends React.Component {
         },
       });
       dispatch({
-        type: 'list/fetchP',
+        type: 'list/fetchOpus',
         payload: {
-          id: user,
+          id: currentid,
           type: 0,
-        },
-      });
-      dispatch({
-        type: 'list/fetchV',
-        payload: {
-          id: user,
-          type: 2,
-        },
-      });
-      dispatch({
-        type: 'list/fetchA',
-        payload: {
-          id: user,
-          type: 1,
-        },
-      });
-      dispatch({
-        type: 'list/fetchC',
-        payload: {
-          id: user,
-          type: 3,
         },
       });
       dispatch({
@@ -220,6 +181,7 @@ class Center extends React.Component {
         inputVisible: prevState.inputVisible,
         inputValue: prevState.inputValue,
         id: user,
+        initTabKey:0
       };
     }
     return null;
@@ -305,35 +267,39 @@ class Center extends React.Component {
       inputValue: '',
     });
   };
-  render() {
-    const itemMenu = (
-      <Menu>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="https://www.alipay.com/">
-            1st menu item
-          </a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="https://www.taobao.com/">
-            2nd menu item
-          </a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="https://www.tmall.com/">
-            3d menu item
-          </a>
-        </Menu.Item>
-      </Menu>
-    );
+  jumpGradeDetail=()=>{
+    const {dispatch,match}=this.props;
+    const {params}=match;
+    router.push(`/form/gradeinfo?id=${params.user}`);
+  }
+  handleChangeTags=(activeKey)=>{
     const {
-      list: { picturelist, videolist, articlelist, collectlist },
+      dispatch,
+      match: {
+        params: { user },
+      },
+    } = this.props;
+    dispatch({
+      type:'list/fetchOpus',
+      payload: {
+        id: user,
+        type: activeKey,
+      },
+    })
+    this.setState({
+      initTabKey:activeKey,
+    })
+  }
+  render() {
+    const {
+      list: { picturelist, videolist, articlelist, collectlist,talklist,opuslist},
     } = this.props;
     console.log(this.props);
-    const { newTags, inputVisible, inputValue } = this.state;
+    const { newTags, inputVisible, inputValue ,initTabKey} = this.state;
     const {
       listLoading,
-      currentUser,
-      currentUserLoading,
+      findUser,
+      findUserLoading,
       project: { notice, likes },
       projectLoading,
       match,
@@ -341,39 +307,6 @@ class Center extends React.Component {
       children,
     } = this.props;
     const {opusId,modalVisible}=this.state;
-    console.log(likes);
-    const operationTabList = [
-      {
-        key: 'articles',
-        tab: (
-          <span>
-            文章 <span style={{ fontSize: 14 }}>(8)</span>
-          </span>
-        ),
-      },
-      {
-        key: 'applications',
-        tab: (
-          <span>
-            应用 <span style={{ fontSize: 14 }}>(8)</span>
-          </span>
-        ),
-      },
-      {
-        key: 'projects',
-        tab: (
-          <span>
-            项目 <span style={{ fontSize: 14 }}>(8)</span>
-          </span>
-        ),
-      },
-    ];
-    const IconText = ({ type, text }) => (
-      <span>
-        <Icon type={type} style={{ marginRight: 8 }} />
-        {text}
-      </span>
-    );
     const parentProps={
       handleModalVisible:this.handleModalVisible,
       handleReward:this.handleReward,
@@ -384,26 +317,26 @@ class Center extends React.Component {
         <GridContent className={styles.userCenter}>
           <Row gutter={24}>
             <Col lg={7} md={24}>
-              <Card bordered={false} style={{ marginBottom: 24 }} loading={currentUserLoading}>
-                {currentUser && Object.keys(currentUser).length ? (
+              <Card bordered={false} style={{ marginBottom: 24 }} loading={findUserLoading}>
+                {findUser && Object.keys(findUser).length ? (
                   <div>
                     <div className={styles.avatarHolder}>
-                      <img alt="" src={`https://f-bd.imuguang.com/${currentUser.headUrl}`} style={{width:60,height:60,borderRadius:'50%'}}/>
-                      <div className={styles.name}>{currentUser.name}</div>
-                      <div>{currentUser.mail}</div>
+                      <img alt="" src={`https://f-bd.imuguang.com/${findUser.headUrl}`} style={{width:60,height:60,borderRadius:'50%'}}/>
+                      <div className={styles.name}>{findUser.name}</div>
+                      <div>{findUser.mail}</div>
                     </div>
                     <div className={styles.detail}>
                       <p>
                         <i />
-                        {currentUser.roleNames}
+                        {findUser.roleNames}
                       </p>
                       <p>
                         <i />
-                        {currentUser.phone}
+                        {findUser.phone}
                       </p>
                       <p>
                         <i />
-                        {moment(parseInt(currentUser.createTime)).format('YYYY-MM-DD HH:mm:ss')}
+                        {moment(parseInt(findUser.createTime)).format('YYYY-MM-DD HH:mm:ss')}
                       </p>
                     </div>
                     <Divider dashed />
@@ -412,15 +345,15 @@ class Center extends React.Component {
                       <div className={styles.detail}>
                         <p>
                           <i />
-                          被点赞&nbsp;&nbsp;{currentUser.likeCount}
+                          被点赞&nbsp;&nbsp;{findUser.likeCount}
                         </p>
                         <p>
                           <i />
-                          被收藏&nbsp;&nbsp;{currentUser.tuckCount}
+                          被收藏&nbsp;&nbsp;{findUser.tuckCount}
                         </p>
                         <p>
                           <i />
-                          被评论&nbsp;&nbsp;{currentUser.arguedCount}
+                          被评论&nbsp;&nbsp;{findUser.arguedCount}
                         </p>
                       </div>
                     </div>
@@ -430,16 +363,16 @@ class Center extends React.Component {
                       <div className={styles.detail}>
                         <p>
                           <i />
-                          等级&nbsp;&nbsp;{currentUser.likeCount}
+                          等级&nbsp;&nbsp;{findUser.level?findUser.level:0}
                         </p>
                         <p>
                           <i />
-                          积分&nbsp;&nbsp;{currentUser.tuckCount}
+                          积分&nbsp;&nbsp;{findUser.point?findUser.point:0}
                         </p>
                         <p>
                           <i />
-                          凝聚值&nbsp;&nbsp;{currentUser.arguedCount}
-                          <a style={{float:'right'}}>查看明细</a>
+                          凝聚值&nbsp;&nbsp;{findUser.coagulation?findUser.coagulation:0}
+                          <a style={{float:'right'}} onClick={()=>this.jumpGradeDetail()}>查看明细</a>
                         </p>
                       </div>
                     </div>
@@ -476,14 +409,14 @@ class Center extends React.Component {
               </Card>
             </Col>
             <Col lg={17} md={24}>
-              <Card className={styles.tabsCard} bordered={false} loading={listLoading}>
-                <Tabs defaultActiveKey="0">
+              <Card className={styles.tabsCard} bordered={false} >
+                <Tabs activeKey={initTabKey?initTabKey:'0'} onChange={(key)=>this.handleChangeTags(key)} loading={listLoading}>
                   <TabPane tab="图片" key="0">
                     <List
                       className={stylesProjects.coverCardList}
                       rowKey="id"
                       grid={{ gutter: 24, xxl: 3, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }}
-                      dataSource={picturelist}
+                      dataSource={opuslist}
                       renderItem={item => (
                         <List.Item>
                           <Card
@@ -511,7 +444,7 @@ class Center extends React.Component {
                       className={stylesProjects.coverCardList}
                       rowKey="id"
                       grid={{ gutter: 24, xxl: 3, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }}
-                      dataSource={articlelist}
+                      dataSource={opuslist}
                       renderItem={item => (
                         <List.Item>
                           <Card
@@ -539,7 +472,7 @@ class Center extends React.Component {
                       className={stylesProjects.coverCardList}
                       rowKey="id"
                       grid={{ gutter: 24, xxl: 3, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }}
-                      dataSource={videolist}
+                      dataSource={opuslist}
                       renderItem={item => (
                         <List.Item>
                           <Card
@@ -567,7 +500,35 @@ class Center extends React.Component {
                       className={stylesProjects.coverCardList}
                       rowKey="id"
                       grid={{ gutter: 24, xxl: 3, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }}
-                      dataSource={collectlist}
+                      dataSource={opuslist}
+                      renderItem={item => (
+                        <List.Item>
+                          <Card
+                            className={stylesProjects.card}
+                            hoverable
+                            cover={
+                              <img
+                                src={`http://file-t.imuguang.com/${item.bgpUrl}`}
+                                style={{ height: 150 }}
+                              />
+                            }
+                          >
+                            <Card.Meta description={item.detail ? item.detail : '暂无详情'} />
+                            <div className={stylesProjects.cardItemContent} style={{display:'flex',justifyContent:'space-between'}}>
+                              <span>{moment(parseInt(item.createTime)).fromNow()}</span>
+                              <span style={{textAlign:"right",color:"red"}} onClick={()=>this.handleModalVisible(true,item.id)}>打赏</span>
+                            </div>
+                          </Card>
+                        </List.Item>
+                      )}
+                    />
+                  </TabPane>
+                  <TabPane tab="段子" key="4">
+                    <List
+                      className={stylesProjects.coverCardList}
+                      rowKey="id"
+                      grid={{ gutter: 24, xxl: 3, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }}
+                      dataSource={opuslist}
                       renderItem={item => (
                         <List.Item>
                           <Card

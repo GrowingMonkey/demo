@@ -673,7 +673,7 @@ class Comments extends PureComponent {
   render() {
     console.log(this.props);
     const {
-      moneyprofile: { data },
+      moneyprofile: { hisdate },
       loading,
     } = this.props;
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
@@ -701,7 +701,7 @@ class Comments extends PureComponent {
               <StandardTable
                 // selectedRows={selectedRows}
                 loading={loading}
-                data={data}
+                data={hisdate}
                 columns={this.columns}
                 onSelectRow={this.handleSelectRows}
                 onChange={this.handleStandardTableChange}

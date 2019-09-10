@@ -6,6 +6,7 @@ export default {
   state: {
     list: [],
     currentUser: {},
+    findUser:{},
   },
 
   effects: {
@@ -29,7 +30,7 @@ export default {
       // const response = yield call(queryCurrent);
       const response = yield call(queryUser, payload);
       yield put({
-        type: 'saveCurrentUser',
+        type: 'saveFindUser',
         payload: response.data,
       });
     },
@@ -51,6 +52,13 @@ export default {
       return {
         ...state,
         currentUser: action.payload || {},
+      };
+    },
+    saveFindUser(state, action) {
+      console.log(action);
+      return {
+        ...state,
+        findUser: action.payload || {},
       };
     },
     changeNotifyCount(state, action) {

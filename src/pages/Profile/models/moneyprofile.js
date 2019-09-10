@@ -19,6 +19,10 @@ export default {
       list: [],
       pagination: {},
     },
+    hisdate:{
+      list: [],
+      pagination: {},
+    }
   },
 
   effects: {
@@ -30,11 +34,12 @@ export default {
         payload: response,
       });
     },
+    
     *fetchhistory({ payload }, { call, put }) {
       const response = yield call(queryHistoryMoney, payload);
       console.log(response);
       yield put({
-        type: 'save',
+        type: 'savehis',
         payload: response,
       });
     },
@@ -112,6 +117,13 @@ export default {
       return {
         ...state,
         data: action.payload,
+      };
+    },
+    savehis(state, action) {
+      console.log(action.payload);
+      return {
+        ...state,
+        hisdate: action.payload,
       };
     },
     delete(state, action) {

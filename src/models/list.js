@@ -4,6 +4,7 @@ import {
   queryFakeListV,
   queryFakeListA,
   removeFakeList,
+  queryTalkList,
   addFakeList,
   updateFakeList,
 } from '@/services/api';
@@ -16,9 +17,25 @@ export default {
     videolist: [],
     articlelist: [],
     collectlist: [],
+    talklist:[],
+    opuslist:[]
   },
 
   effects: {
+    *fetchOpus({ payload }, { call, put }) {
+      const response = yield call(queryTalkList, payload);
+      yield put({
+        type: 'opusList',
+        payload: Array.isArray(response) ? response : [],
+      });
+    },
+    *fetchT({ payload }, { call, put }) {
+      const response = yield call(queryTalkList, payload);
+      yield put({
+        type: 'queryTList',
+        payload: Array.isArray(response) ? response : [],
+      });
+    },
     *fetchP({ payload }, { call, put }) {
       const response = yield call(queryFakeList, payload);
       yield put({
@@ -70,7 +87,7 @@ export default {
   },
 
   reducers: {
-    querVList(state, action) {
+    queryVList(state, action) {
       console.log(action.payload);
       return {
         ...state,
@@ -89,10 +106,22 @@ export default {
         articlelist: action.payload,
       };
     },
+    opusList(state, action) {
+      return {
+        ...state,
+        opuslist: action.payload,
+      };
+    },
     queryCList(state, action) {
       return {
         ...state,
         collectlist: action.payload,
+      };
+    },
+    queryTList(state, action) {
+      return {
+        ...state,
+        talklist: action.payload,
       };
     },
     appendList(state, action) {

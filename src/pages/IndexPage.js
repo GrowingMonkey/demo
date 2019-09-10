@@ -132,6 +132,8 @@ class IndexPage extends Component {
       adLoginTotal,
       actOpusTotal,
       actOpusCount,
+      stalkOpusCount,
+      stalkOpusTotal,
       vdOpusCount,
       vdOpusTotal,
       picOpusCount,
@@ -181,6 +183,7 @@ class IndexPage extends Component {
         obj.y = item.count;
         salesPieData.push(obj);
       });
+    const  newSalesData=salesPieData.filter(item=>item.x!='视频'&&item.x!='文章'&&item.x!='图片'&&item.x!='段子'&&item.x!='推荐');
     const menu = (
       <Menu>
         <Menu.Item>操作一</Menu.Item>
@@ -197,7 +200,6 @@ class IndexPage extends Component {
     );
 
     const activeKey = currentTabKey || (offlineData[0] && offlineData[0].name);
-    const rankingListData=[{title:'公专路',total:3323},{title:'公专路',total:3323},{title:'公专路',total:3323},{title:'公专路',total:3323},]
     let arrlist=[];
     // const {pointVo}=chart;
     if(pointVo){
@@ -236,7 +238,7 @@ class IndexPage extends Component {
                   dropdownGroup={dropdownGroup}
                   salesType={salesType}
                   loading={loading}
-                  salesPieData={salesPieData}
+                  salesPieData={newSalesData}
                   handleChangeSalesType={this.handleChangeSalesType}
                 />
               </Suspense>
@@ -250,8 +252,9 @@ class IndexPage extends Component {
                       <div>当日发布量:{opusCount}&nbsp;&nbsp;总量:{opusTotal}</div>
                       <div style={{display:'flex',alignItems:'center'}}>
                         图片&nbsp;<i style={{width:2,height:12,background:'#3DD8A6',display:'inline-block'}}></i>&nbsp;
-                        视频&nbsp;<i style={{width:2,height:12,background:'#816DF5 ',display:'inline-block'}}></i>&nbsp;
-                        文章&nbsp;<i style={{width:2,height:12,background:'#E47387',display:'inline-block'}}></i>&nbsp;
+                        视频&nbsp;<i style={{width:2,height:12,background:'#816DF5',display:'inline-block'}}></i>&nbsp;
+                        文章&nbsp;<i style={{width:2,height:12,background:'#F9C702',display:'inline-block'}}></i>&nbsp;
+                        段子&nbsp;<i style={{width:2,height:12,background:'#E47387',display:'inline-block'}}></i>&nbsp;
                       </div>
                     </div>
                   </div>
@@ -269,11 +272,17 @@ class IndexPage extends Component {
                     <p style={{textAlign:'right',marginBottom:0,color:'#fff'}}>历史发布量</p>
                     <p style={{marginBottom:0,textAlign:'right',color:'#fff'}}>{vdOpusTotal}</p>
                     </div>
-                    <div style={{background:'#E47387 ',borderRadius:5,border:'1px solid #ddd',width:'30%',padding:8,height:100}}>
+                    <div style={{background:'#F9C702 ',borderRadius:5,border:'1px solid #ddd',width:'30%',padding:8,height:100}}>
                     <p style={{textAlign:'right',marginBottom:0,color:'#fff'}}>今日发布量</p>
                     <p style={{textAlign:'right',marginBottom:0,color:'#fff'}}>{actOpusCount}</p>
                     <p style={{textAlign:'right',marginBottom:0,color:'#fff'}}>历史发布量</p>
                     <p style={{marginBottom:0,textAlign:'right',color:'#fff'}}>{actOpusTotal}</p>
+                    </div>
+                    <div style={{background:'#E47387 ',borderRadius:5,border:'1px solid #ddd',width:'30%',padding:8,height:100}}>
+                    <p style={{textAlign:'right',marginBottom:0,color:'#fff'}}>今日发布量</p>
+                    <p style={{textAlign:'right',marginBottom:0,color:'#fff'}}>{stalkOpusCount}</p>
+                    <p style={{textAlign:'right',marginBottom:0,color:'#fff'}}>历史发布量</p>
+                    <p style={{marginBottom:0,textAlign:'right',color:'#fff'}}>{stalkOpusTotal}</p>
                     </div>
                   </div>
                 </div>

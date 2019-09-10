@@ -480,7 +480,23 @@ class Comments extends PureComponent {
   handleUpdateModalVisible = record => {
     console.log(record);
     const { match } = this.props;
-    router.push(`/dashboard/commondetail/${record.id}?type=comments`);
+    let typeOpus='';
+    switch(record.type){
+      case '0':
+        typeOpus='picture';
+        break;
+        case '1':
+        typeOpus='article';
+        break;
+        case '2':
+        typeOpus='videos';
+        break;
+        case '3':
+        typeOpus='article';
+        break;
+    }
+    router.push(`/dashboard/commondetail/${record.opusId}?type=${typeOpus}`);
+    // router.push(`/dashboard/commondetail/${record.id}?type=comments`);
   };
 
   handleDelete = record => {

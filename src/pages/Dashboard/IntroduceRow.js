@@ -111,9 +111,9 @@ const IntroduceRow = memo(({ loading, visitData }) => (
         bordered={false}
         title="邀请注册人数(当日):"
         loading={loading}
-        total={() => <h6>{visitData.pointVo?visitData.pointVo.inviteCount:0}</h6>}
+        total={() => <h6>{visitData?visitData.inviteCount:0}</h6>}
         footer={
-          <Field label="总邀请注册人数" value={`${numeral(visitData.pointVo?visitData.pointVo.inviteTotal:0).format('0,0')}`} />
+          <Field label="总邀请注册人数" value={`${numeral(visitData?visitData.inviteTotal:0).format('0,0')}`} />
         }
         contentHeight={46}
       />

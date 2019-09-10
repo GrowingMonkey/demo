@@ -335,23 +335,24 @@ class Articles extends PureComponent {
     console.log(this.props);
     const { params } = match;
     dispatch({
-      type: 'details/fetch',
-      payload: {
-        id:params.detailid,
-      },
-    });
-    dispatch({
       type: 'details/commentfetch',
       payload: {
         id:params.detailid,
         idType:'opus'
       },
     })
+    dispatch({
+      type: 'details/fetch',
+      payload: {
+        id:params.detailid,
+      },
+    });
   }
 
   // 修改分页
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch } = this.props;
+    const { dispatch ,match} = this.props;
+    const { params } = match;
     const { formValues } = this.state;
 
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
@@ -360,19 +361,24 @@ class Articles extends PureComponent {
       return newObj;
     }, {});
 
-    const params = {
+    const paramss = {
       current: pagination.current,
       pageSize: pagination.pageSize,
       ...formValues,
       ...filters,
     };
     if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
+      paramss.sorter = `${sorter.field}_${sorter.order}`;
     }
     console.log(params);
     dispatch({
-      type: 'details/fetch',
-      payload: params,
+      type: 'details/commentfetch',
+      payload: {
+        id:params.detailid,
+        idType:'opus',
+        current:pagination.current,
+        pageSize: pagination.pageSize,
+      },
     });
   };
 
