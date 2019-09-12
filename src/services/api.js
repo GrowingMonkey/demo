@@ -84,6 +84,10 @@ export async function queryTag(params) {
   const rep = await request(`/api/service/tag/list?${stringify(params)}`);
   return rep.data;
 }
+export async function queryButton(params) {
+  const rep = await request(`/api/service/app/button?${stringify(params)}`);
+  return rep.data;
+}
 export async function queryMoney(params) {
   const rep = await request(`/api/service/rp/order/list?stat=0&${stringify(params)}`);
   return rep.data;
@@ -107,6 +111,15 @@ export async function queryStopMoney(params) {
 }
 export async function addActivity(params){
   return request('/api/service/add/activity', {
+    method: 'POST',
+    data: stringify(params),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+export async function updateButton(params){
+  return request('/api/service/app/button/setting', {
     method: 'POST',
     data: stringify(params),
     headers: {

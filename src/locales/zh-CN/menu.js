@@ -47,6 +47,7 @@ export default {
   'menu.list.searchlist.projects': '搜索列表（项目）',
   'menu.list.searchlist.applications': '搜索列表（应用）',
   'menu.profile': '业务管理',
+  'menu.profile.buttonset': '按钮配置',
   'menu.profile.basic': '配置页面',
   'menu.profile.serviceset': '配置页面',
   'menu.profile.advanced': '推送管理',

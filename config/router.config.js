@@ -336,6 +336,11 @@ export default [
             component: './Profile/AddGame',
           },
           {
+            path: '/profile/buttonset',
+            name: 'buttonset',
+            component: './Profile/ButtonSet',
+          },
+          {
             path: '/profile/listgame',
             name: 'listgame',
             component: './Profile/ListGame',
