@@ -88,6 +88,7 @@ class InputForm extends PureComponent {
         super(props);
         this.state={
            imgUrl:'',
+           oldImgUrl:''
         };
       }
     componentDidMount(){
@@ -118,7 +119,6 @@ class InputForm extends PureComponent {
         }
       };
       beforeUpload = file => {
-          alert(111);
         const isJPG = file.type === 'image/jpeg';
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isLt2M) {
@@ -128,7 +128,7 @@ class InputForm extends PureComponent {
         reader.readAsDataURL(file);
         reader.onloadend = () => {
           // 使用ossupload覆盖默认的上传方法
-          UploadToOss(this, 'admin/contract', file).then(data => {
+          UploadToOss(this, 'icon/app', file).then(data => {
             if (data.res.status == 200) {
             //   console.log(this.state);
             //   this.setState(prevState => ({
@@ -147,6 +147,20 @@ class InputForm extends PureComponent {
         };
         return false; // 不调用默认的上传方法
       };
+      handleUpdate=(val)=>{
+        this.setState({
+          oldImgUrl:val
+        })
+      }
+      handleSubmit=()=>{
+        const {imgUrl,oldImgUrl}=this.state;
+        const {code}=this.props;
+        if(imgUrl==oldImgUrl){
+          this.props.setValue(imgUrl,code);
+        }else{
+          message.error('请先上传图标，然后修改，再提交');
+        }
+      }
     render(){
         const fileProps = {
             name: 'file',
@@ -167,6 +181,7 @@ class InputForm extends PureComponent {
           },
         };
         const {title,sourceValue,msg,setValue}=this.props;
+        const {imgUrl,oldImgUrl}=this.state;
         return(
             <div style={{display:'flex'}}>
             <FormItem {...formItemLayout} label={title?title:''}>
@@ -187,8 +202,8 @@ class InputForm extends PureComponent {
               )}
             </FormItem>
             <div style={{display:'flex',flexDirection:'column'}}>
-                <div style={{width:24,height:24,overflow:'hidden',marginLeft:24,marginTop:8}}>
-                    <img src={sourceValue}/>
+                <div style={{width:24,height:24,overflow:'hidden',marginLeft:24,marginTop:8,background:'#ddd'}}>
+                    <img src={oldImgUrl}/>
                 </div>
                 <span style={{textAlign:'right',fontSize:12,color:'red'}}>原</span>
             </div>
@@ -198,10 +213,10 @@ class InputForm extends PureComponent {
                 </div>
                 <span style={{textAlign:'right',fontSize:12,color:'red'}}>新</span>
             </div>
-            <Button onClick={()=>this.props.setValue()} type="primary"  style={{marginLeft:24,marginTop:4}}>
+            <Button onClick={()=>this.handleUpdate(imgUrl)} type="primary"  style={{marginLeft:24,marginTop:4}}>
                 修改
             </Button>
-            <Button onClick={()=>this.props.setValue()} type="primary"  style={{marginLeft:24,marginTop:4}}>
+            <Button onClick={()=>this.handleSubmit()} type="primary"  style={{marginLeft:24,marginTop:4}}>
                 提交
             </Button>
           </div>

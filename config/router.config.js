@@ -346,6 +346,11 @@ export default [
             component: './Profile/ListGame',
           },
           {
+            path: '/profile/member',
+            name: 'member',
+            component: './Profile/Member',
+          },
+          {
             path: '/profile/activitymanager',
             name: 'activitymanager',
             component: './Profile/ActivityManager',
@@ -376,6 +381,11 @@ export default [
             path: '/profile/moneyprofile',
             name: 'moneyprofile',
             component: './Profile/MoneyProfile',
+          },
+          {
+            path: '/profile/keyword',
+            name: 'keyword',
+            component: './Profile/KeyWord',
           },
           {
             path: '/profile/historymoney',

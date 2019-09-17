@@ -33,11 +33,20 @@ String.prototype.startWith = function(compareStr){
 @Form.create()
 class ButtonSet extends PureComponent {
     state={
-        sourceValue:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1568196678892&di=dd5aab972d165a2a75144dc4d3b679e1&imgtype=0&src=http%3A%2F%2Fs8.sinaimg.cn%2Fmw690%2F005xLn6tgy70na6QBsHc7%26690',
+        sourceValue:'',
     }
-    setValue=()=> {
-        this.setState({
-            sourceValue:'http://img2.imgtn.bdimg.com/it/u=4226708370,2084641758&fm=26&gp=0.jpg'
+    setValue=(val,code)=> {
+        const {dispatch}=this.props;
+        console.log(val)
+        let urlStr=val+'';
+        urlStr=urlStr.split('icon/app')[1]
+        console.log(urlStr)
+        dispatch({
+            type:'buttonset/update',
+            payload:{
+              code:code,
+              detail:`/icon/app${urlStr}`
+            }
         })
     }
     componentDidMount(){

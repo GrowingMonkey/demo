@@ -127,6 +127,18 @@ export async function updateButton(params){
     },
   });
 }
+export async function updateKeyWord(params){
+  console.log(params.file);
+  let formData = new FormData();
+  formData.append("file",params.file);
+  return request('http://www.imuguang.com/api/upload/keywords/modifyWord', {
+    method: 'POST',
+    data: stringify(params),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
 export async function queryProjectNotice(params) {
   const rep = await request(`/api/mg/user/follow/${params.id}`);
   return rep.data.list;
