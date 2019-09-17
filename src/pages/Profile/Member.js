@@ -439,40 +439,8 @@ class UserList extends PureComponent {
         const textStr = record.stat == 0 ? '停用' : '启用';
         const textMsg=`你确认重${textStr}置这个账号吗？`;
         return (
-          <Fragment>
-            <a onClick={() => this.handleUpdateModalVisibleRouter(true, record)}>查看</a>
-            <Divider type="vertical" />
-            <a onClick={() => this.handleUpdateModalVisible(true, record)}>权限</a>
-            <Divider type="vertical" />
-            {/* <a onClick={() => this.handleStopStatus(record)}>{textStr}</a> */}
-            <Popconfirm
-            title={textMsg}
-            onConfirm={() => this.handleStopStatus(record)}
-            okText="确认"
-            cancelText="取消"
-            >
-            <a href="#">{textStr}</a>
-          </Popconfirm>
-            <Divider type="vertical" />
-            <Popconfirm
-            title="你确认重置这个账号吗？"
-            onConfirm={() => this.handleDeleteReset(0, record)}
-            okText="确认"
-            cancelText="取消"
-            >
+          <Fragment>  
             <a href="#">重置</a>
-          </Popconfirm>
-            <Divider type="vertical" />
-            <Popconfirm
-            title="你确认注销这个账号吗？"
-            onConfirm={() => this.handleDeleteReset(1, record)}
-            okText="确认"
-            cancelText="取消"
-            >
-            <a href="#">注销</a>
-          </Popconfirm>
-          <Divider type="vertical" />
-          <a onClick={() => this.handleJumpDetail(record)}>积分明细</a>
           </Fragment>
         );
       },
@@ -836,15 +804,11 @@ class UserList extends PureComponent {
       handleUpdate: this.handleUpdate,
     };
     return (
-      <PageHeaderWrapper title="用户列表">
+      <PageHeaderWrapper title="特殊用户">
         <Card bordered={false}>
           <div className={styles.tableList}>
-            <div className={styles.tableListForm}>{this.renderForm()}</div>
             <Button style={{ marginLeft: 8 }} onClick={this.handleSysSet} type="primary">
-                设置系统权限
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.handleSysSetTwo} type="primary">
-                设置所有用户权限
+                新增
             </Button>
             <div className={styles.tableListOperator} />
             <StandardTable

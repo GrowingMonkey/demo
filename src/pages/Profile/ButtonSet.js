@@ -41,11 +41,12 @@ class ButtonSet extends PureComponent {
         let urlStr=val+'';
         urlStr=urlStr.split('icon/app')[1]
         console.log(urlStr)
+        let size=code.indexOf('nav')>-1&&code!='navCenterIcon'?'?x-oss-process=image/resize,w_24,h_24':'?x-oss-process=image/resize,w_60,h_60'
         dispatch({
             type:'buttonset/update',
             payload:{
               code:code,
-              detail:`/icon/app${urlStr}`
+              detail:`/icon/app${urlStr}${size}`,
             }
         })
     }
@@ -91,7 +92,7 @@ class ButtonSet extends PureComponent {
                             {
                                 list&&list.filter(item=>item.code.startWith('nav1')).map((i,k)=>{
                                     if(i.code=='nav1'){
-                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='文章' key={i.code} code={i.code}></InputForm>
+                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='' key={i.code} code={i.code}></InputForm>
                                     }else{
                                       return <IconForm title="图标-选中" msg='上传图标' sourceValue={sourceValue} setValue={this.setValue} key={i.code} code={i.code}></IconForm> 
                                     }
@@ -111,7 +112,7 @@ class ButtonSet extends PureComponent {
                         {
                                 list&&list.filter(item=>item.code.startWith('nav2')).map((i,k)=>{
                                     if(i.code=='nav2'){
-                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='文章' key={i.code} code={i.code}></InputForm>
+                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='' key={i.code} code={i.code}></InputForm>
                                     }else if(i.code!='nav2Title'){
                                       return <IconForm title="图标-选中" msg='上传图标' sourceValue={sourceValue} setValue={this.setValue} key={i.code} code={i.code}></IconForm> 
                                     }
@@ -131,7 +132,7 @@ class ButtonSet extends PureComponent {
                         {
                                 list&&list.filter(item=>item.code.startWith('nav3')).map((i,k)=>{
                                     if(i.code=='nav3'){
-                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='文章' key={i.code} code={i.code}></InputForm>
+                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='' key={i.code} code={i.code}></InputForm>
                                     }else  if(i.code!='nav3Title'){
                                       return <IconForm title="图标-选中" msg='上传图标' sourceValue={sourceValue} setValue={this.setValue} key={i.code} code={i.code}></IconForm> 
                                     }
@@ -151,7 +152,7 @@ class ButtonSet extends PureComponent {
                         {
                                 list&&list.filter(item=>item.code.startWith('nav4')).map((i,k)=>{
                                     if(i.code=='nav4'){
-                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='文章' key={i.code} code={i.code}></InputForm>
+                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='' key={i.code} code={i.code}></InputForm>
                                     }else{
                                       return <IconForm title="图标-选中" msg='上传图标' sourceValue={sourceValue} setValue={this.setValue} key={i.code} code={i.code}></IconForm> 
                                     }
@@ -171,7 +172,7 @@ class ButtonSet extends PureComponent {
                         {
                                 list&&list.filter(item=>item.code.startWith('nav')).map((i,k)=>{
                                     if(i.code=='navCenterIcon'){
-                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='文章' key={i.code} code={i.code}></InputForm>
+                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='' key={i.code} code={i.code}></InputForm>
                                     }
                                 })
                             }
@@ -191,7 +192,7 @@ class ButtonSet extends PureComponent {
                         {
                                 list&&list.filter(item=>item.code.startWith('pub1')).map((i,k)=>{
                                     if(i.code=='pub1'){
-                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='文章' key={i.code} code={i.code}></InputForm>
+                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='' key={i.code} code={i.code}></InputForm>
                                     }else{
                                       return <IconForm title="图标-选中" msg='上传图标' sourceValue={sourceValue} setValue={this.setValue} key={i.code} code={i.code}></IconForm> 
                                     }
@@ -211,7 +212,7 @@ class ButtonSet extends PureComponent {
                         {
                                 list&&list.filter(item=>item.code.startWith('pub2')).map((i,k)=>{
                                     if(i.code=='pub2'){
-                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='文章' key={i.code} code={i.code}></InputForm>
+                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='' key={i.code} code={i.code}></InputForm>
                                     }else{
                                       return <IconForm title="图标-选中" msg='上传图标' sourceValue={sourceValue} setValue={this.setValue} key={i.code} code={i.code}></IconForm> 
                                     }
@@ -223,7 +224,7 @@ class ButtonSet extends PureComponent {
             </Row>
             <Row gutter={24}>
                 <Col xl={2} lg={24} md={24} sm={24} xs={24}>
-                  <h1 style={{textAlign:'right'}}>文章:</h1>
+                  <h1 style={{textAlign:'right'}}>:</h1>
                 </Col>
                 <Col xl={22} lg={24} md={24} sm={24} xs={24}>
                     <Row gutter={24} style={{border:'1px solid #ddd'}}>
@@ -231,7 +232,7 @@ class ButtonSet extends PureComponent {
                         {
                                 list&&list.filter(item=>item.code.startWith('pub3')).map((i,k)=>{
                                     if(i.code=='pub3'){
-                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='文章' key={i.code} code={i.code}></InputForm>
+                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='' key={i.code} code={i.code}></InputForm>
                                     }else{
                                       return <IconForm title="图标-选中" msg='上传图标' sourceValue={sourceValue} setValue={this.setValue} key={i.code} code={i.code}></IconForm> 
                                     }
@@ -251,7 +252,7 @@ class ButtonSet extends PureComponent {
                         {
                                 list&&list.filter(item=>item.code.startWith('pub4')).map((i,k)=>{
                                     if(i.code=='pub4'){
-                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='文章' key={i.code} code={i.code}></InputForm>
+                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='' key={i.code} code={i.code}></InputForm>
                                     }else{
                                       return <IconForm title="图标-选中" msg='上传图标' sourceValue={sourceValue} setValue={this.setValue} key={i.code} code={i.code}></IconForm> 
                                     }
@@ -367,7 +368,7 @@ class ButtonSet extends PureComponent {
                              {
                                 list&&list.filter(item=>item.code.startWith('nav')).map((i,k)=>{
                                     if(i.code=='nav2Title'){
-                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='文章' key={i.code} code={i.code}></InputForm>
+                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='' key={i.code} code={i.code}></InputForm>
                                     }
                                 })
                             }
@@ -381,7 +382,7 @@ class ButtonSet extends PureComponent {
                     {
                                 list&&list.filter(item=>item.code.startWith('nav')).map((i,k)=>{
                                     if(i.code=='nav3Title'){
-                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='文章' key={i.code} code={i.code}></InputForm>
+                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='' key={i.code} code={i.code}></InputForm>
                                     }
                                 })
                             }
