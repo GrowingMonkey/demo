@@ -118,6 +118,24 @@ export async function addActivity(params){
     },
   });
 }
+export async function addMember(params){
+  return request('/api/mg/user/phone/filter/add', {
+    method: 'POST',
+    data: stringify(params),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+export async function removeMember(params){
+  return request('/api/mg/user/phone/filter/del', {
+    method: 'POST',
+    data: stringify(params),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
 export async function updateButton(params){
   return request('/api/service/app/button/setting', {
     method: 'POST',
@@ -241,6 +259,9 @@ export async function queryArticle(params) {
 }
 export async function queryUserList(params) {
   return request(`/api/mg/user/list?${stringify(params)}`);
+}
+export async function queryMemberList(params) {
+  return request(`/api/mg/user/phone/filter/list?${stringify(params)}`);
 }
 export async function queryUserListAuth(params) {
   return request(`/api/mg/user/grant?${stringify(params)}`);

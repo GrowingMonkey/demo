@@ -1,18 +1,11 @@
 import {
-    queryRule,
-    queryUserList,
-    removeRule,
-    addRule,
-    updateRule,
-    changeStatus,
-    resetDeleteUser,
-    queryUserListAuth,
-    updateUserPower,
-    updateAllPower
+    queryMemberList,
+    addMember,
+    removeMember
   } from '@/services/api';
   
   export default {
-    namespace: 'userlist',
+    namespace: 'member',
   
     state: {
       data: {
@@ -23,71 +16,35 @@ import {
   
     effects: {
       *fetch({ payload }, { call, put }) {
-        const response = yield call(queryUserList, payload);
+        const response = yield call(queryMemberList, payload);
         yield put({
           type: 'save',
           payload: response.data,
         });
       },
-      *fetchauth({ payload,callback }, { call, put }){
-        const response = yield call(queryUserListAuth, payload);
-        if (callback) callback(response);
-      },
-      *add({ payload, callback }, { call, put }) {
-        const response = yield call(addRule, payload);
-        yield put({
-          type: 'save',
-          payload: response,
-        });
-        if (callback) callback();
-      },
       *remove({ payload, callback }, { call, put }) {
-        const response = yield call(removeRule, payload);
-        yield put({
-          type: 'save',
-          payload: response,
-        });
-        if (callback) callback();
-      },
-      *update({ payload, callback }, { call, put }) {
-        const response = yield call(updateRule, payload);
-        yield put({
-          type: 'save',
-          payload: response,
-        });
-        if (callback) callback();
-      },
-      *updatepower({ payload, callback }, { call, put }) {
-        const response=yield call(updateUserPower,payload)
-        if (callback) callback(response);
-      },
-      *updatepowerall({ payload, callback }, { call, put }) {
-        const response=yield call(updateAllPower,payload)
-        if (callback) callback(response);
-      },
-      *status({ payload, callback }, { call, put }) {
-        const response = yield call(changeStatus, payload);
-        console.log(response);
-        if(response.code==0){
-          const req = yield call(queryUserList);
+        const response = yield call(removeMember, payload);
+        if(response&&response.code==0){
+          const resp= yield call(queryMemberList, payload);
           yield put({
             type: 'save',
-            payload: req.data,
+            payload: resp.data,
           });
         }
         if (callback) callback();
       },
-      *reset({ payload, callback }, { call, put }) {
-        const response = yield call(resetDeleteUser, payload);
-        if(response.code==0){
-          const req = yield call(queryUserList);
+      *adduser({ payload, callback }, { call, put }) {
+        const response = yield call(addMember, payload);
+        console.log(response)
+        if(response&&response.code==0){
+          const resp= yield call(queryMemberList, payload);
           yield put({
             type: 'save',
-            payload: req.data,
+            payload: resp.data,
           });
         }
         if (callback) callback();
-      },
+      }
     },
   
     reducers: {
@@ -97,6 +54,14 @@ import {
           data: action.payload,
         };
       },
+      add(state,action){
+        let {data:{list}}=state;
+        list.push(action.payload);
+        return{
+          ...state,
+          data:list
+        }
+      }
     },
   };
   
