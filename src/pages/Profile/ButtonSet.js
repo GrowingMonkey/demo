@@ -172,7 +172,7 @@ class ButtonSet extends PureComponent {
                         {
                                 list&&list.filter(item=>item.code.startWith('nav')).map((i,k)=>{
                                     if(i.code=='navCenterIcon'){
-                                        return    <InputForm title="按钮-名称" msg='请输入文字' sourceValue='' key={i.code} code={i.code}></InputForm>
+                                        return    <IconForm title="图标-中部" msg='上传图标' sourceValue={sourceValue} setValue={this.setValue} key={i.code} code={i.code}></IconForm> 
                                     }
                                 })
                             }
