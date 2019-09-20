@@ -73,24 +73,30 @@ export default [
             component: './Dashboard/CommentModeration',
           },
           {
-            path: '/dashboard/picturemoderation',
-            name: 'picturemoderation',
-            component: './Dashboard/PictureModeration',
-          },
-          {
-            path: '/dashboard/videomoderation',
-            name: 'videomoderation',
-            component: './Dashboard/VideoModeration',
-          },
-          {
-            path: '/dashboard/articlemoderation',
-            name: 'articlemoderation',
-            component: './Dashboard/ArticleModeration',
-          },
-          {
-            path: '/dashboard/talkmoderation',
-            name: 'talkmoderation',
-            component: './Dashboard/TalkModeration',
+            path: '/dashboard/opus',
+            name: 'opus',
+            routes: [
+              {
+                path: '/dashboard/opus/picturemoderation',
+                name: 'picturemoderation',
+                component: './Dashboard/PictureModeration',
+              },
+              {
+                path: '/dashboard/opus/videomoderation',
+                name: 'videomoderation',
+                component: './Dashboard/VideoModeration',
+              },
+              {
+                path: '/dashboard/opus/articlemoderation',
+                name: 'articlemoderation',
+                component: './Dashboard/ArticleModeration',
+              },
+              {
+                path: '/dashboard/opus/talkmoderation',
+                name: 'talkmoderation',
+                component: './Dashboard/TalkModeration',
+              },
+            ]
           },
           // {
           //   path: '/dashboard/analysis',
@@ -144,14 +150,31 @@ export default [
             component: './Forms/UserList',
           },
           {
-            path: '/form/pointset',
-            name: 'pointset',
-            component: './Forms/PointSet',
+            path: '/form/userauth',
+            name: 'userauth',
+            routes:[
+              {
+                path: '/form/userauth/pointset',
+                name: 'pointset',
+                component: './Forms/PointSet',
+              },
+              {
+                path: '/form/userauth/gradeset',
+                name: 'gradeset',
+                component: './Forms/GradeSet',
+              },
+            ]
+          },
+          //红包提现
+          {
+            path: '/form/moneyprofile',
+            name: 'moneyprofile',
+            component: './Profile/MoneyProfile',
           },
           {
-            path: '/form/gradeset',
-            name: 'gradeset',
-            component: './Forms/GradeSet',
+            path: '/form/member',
+            name: 'member',
+            component: './Profile/Member',
           },
           {
             path: '/form/gradeinfo',
@@ -330,25 +353,36 @@ export default [
         routes: [
           // profile
           {
+            path: '/profile/otherset',
+            name: 'otherset',
+            routes:[
+              {
+                path: '/profile/otherset/buttonset',
+                name: 'buttonset',
+                component: './Profile/ButtonSet',
+              },
+              {
+                path: '/profile/otherset/serviceset',
+                name: 'serviceset',
+                component: './Profile/ServiceSet',
+              },
+              {
+                path: '/profile/otherset/keyword',
+                name: 'keyword',
+                component: './Profile/KeyWord',
+              },
+            ]
+          },
+          {
             path: '/profile/addgame',
             name: 'addgame',
             hideInMenu: true,
             component: './Profile/AddGame',
           },
           {
-            path: '/profile/buttonset',
-            name: 'buttonset',
-            component: './Profile/ButtonSet',
-          },
-          {
             path: '/profile/listgame',
             name: 'listgame',
             component: './Profile/ListGame',
-          },
-          {
-            path: '/profile/member',
-            name: 'member',
-            component: './Profile/Member',
           },
           {
             path: '/profile/activitymanager',
@@ -361,11 +395,7 @@ export default [
             hideInMenu:true,
             component: './Profile/ActivitySend',
           },
-          {
-            path: '/profile/serviceset',
-            name: 'serviceset',
-            component: './Profile/ServiceSet',
-          },
+          
           {
             path: '/profile/pullsend',
             name: 'pullsend',
@@ -376,16 +406,6 @@ export default [
             name: 'addtag',
             hideInMenu: true,
             component: './Profile/AddTag',
-          },
-          {
-            path: '/profile/moneyprofile',
-            name: 'moneyprofile',
-            component: './Profile/MoneyProfile',
-          },
-          {
-            path: '/profile/keyword',
-            name: 'keyword',
-            component: './Profile/KeyWord',
           },
           {
             path: '/profile/historymoney',
