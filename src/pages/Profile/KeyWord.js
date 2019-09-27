@@ -98,7 +98,7 @@ class KeyWord extends PureComponent {
     }
     componentDidMount(){
         let that=this;
-        this.Ajax('http://f-bd.imuguang.com/wh/keyword.txt',function(str){
+        this.Ajax('http://imuguang-file.oss-cn-shenzhen.aliyuncs.com/wh/keyword.txt',function(str){
            that.setState({
             keywords:str
            })
