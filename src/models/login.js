@@ -16,10 +16,9 @@ export default {
   // 登录接口
   effects: {
     *token({ payload }, { call, put }) {
-      console.log(1);
       const response = yield call(getToken, payload);
-      console.log(response);
       if (response.code == 0) {
+        console.log(response.data.token);
         window.localStorage.setItem('token', response.data.token);
       }
       yield put({
@@ -68,7 +67,9 @@ export default {
     *logout(_, { put }) {
       // let response = yield call(postLoginOut, payload);
       // if(response.code ==0){
+        // let token=window.localStorage.getItem('token');
       window.localStorage.clear();
+      // window.localStorage.setItem('token',token);
       yield put({
         type: 'changeLoginStatus',
         payload: {

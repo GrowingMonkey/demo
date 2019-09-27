@@ -351,6 +351,40 @@ export default [
         name: 'profile',
         icon: 'profile',
         routes: [
+          {
+            path: '/profile/pullset',
+            name: 'pullset',
+            component: './Profile/PullSet/PullSet',
+            routes: [
+              {
+                path: '/profile/pullset',
+                redirect: '/profile/pullset/pullopus',
+              },
+              {
+                path: '/profile/pullset/pullopus',
+                component: './Profile/PullSet/PullOpus',
+              },
+              {
+                path: '/profile/pullset/pullbanner',
+                component: './Profile/PullSet/PullBanner',
+              },
+              {
+                path: '/profile/pullset/pullactivity',
+                component: './Profile/PullSet/PullActivity',
+              },
+              {
+                path: '/profile/pullset/pullbutton',
+                component: './Profile/PullSet/PullButton',
+              },
+              {
+                path: '/profile/pullset/pullsettings',
+                component: './Profile/PullSet/PullSettings',
+              },
+              {
+                path: '/profile/pullset/pulllogin',
+                component: './Profile/PullSet/PullLogin',
+              },
+            ]},
           // profile
           {
             path: '/profile/otherset',

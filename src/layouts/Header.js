@@ -28,17 +28,19 @@ class HeaderView extends Component {
     const {dispatch}=this.props;
     let that=this;
     document.addEventListener('scroll', this.handScroll, { passive: true });
-    this.Ajax(`${originUrl}/api/service/app/button?`,function(res){
+    setTimeout(function(){
+    that.Ajax(`${originUrl}/api/service/app/button?`,function(res){
       let response=JSON.parse(res);
       if(response.code==-3){
         window.localStorage.clear();
-        dispatch({
-          type: 'login/logout',
-        });
+          dispatch({
+            type: 'login/logout',
+          });
       }
     },function(res){
       router.push('/exception/500');
     })
+  },1000)
   }
 
   componentWillUnmount() {

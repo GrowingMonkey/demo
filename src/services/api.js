@@ -332,7 +332,7 @@ export async function setPoint(params) {
   });
 }
 export async function addBasicProfile(params) {
-  return request(`/api/service/push/${params.pushType}`, {
+  return request(`/api/service/push/${params.pushWay}`, {
     method: 'POST',
     data: stringify({
       ...params,
@@ -660,6 +660,12 @@ export async function queryTags() {
 
 export async function queryBasicProfile(id) {
   return request(`/api/service/rp/list/${id}`);
+}
+export async function queryPullOpus(params) {
+  return request(`/api/opus/report/${params.type}?${stringify(params)}`);
+}
+export async function queryAllUser(params) {
+  return request(`/api/mg/user/list?${stringify(params)}`);
 }
 export async function queryHostoryPush(params) {
   return request(`/api/service/push/list`, {
