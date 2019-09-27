@@ -430,11 +430,11 @@ export default [
             component: './Profile/ActivitySend',
           },
           
-          {
-            path: '/profile/pullsend',
-            name: 'pullsend',
-            component: './Profile/PullSend',
-          },
+          // {
+          //   path: '/profile/pullsend',
+          //   name: 'pullsend',
+          //   component: './Profile/PullSend',
+          // },
           {
             path: '/profile/addtag',
             name: 'addtag',

@@ -158,50 +158,57 @@ const CreateOpusForm = Form.create()(props => {
   }
   let columns = [
     {
-      title: '作者',
-      dataIndex: 'name',
-      render: text => <span>{text}</span>,
+      title: '类型',
+      dataIndex: 'type',
+      render: text => <span>{text == 1 ? '自用' : '非自用'}</span>,
     },
     {
-      title: '手机号',
-      dataIndex: 'phone',
-    },
-    {
-      title: '作品说明',
-      dataIndex: 'detail',
-      sorter: true,
-      render: val => (
-        <span
-          style={{
-            maxWidth: 500,
-            overflow: 'hidden',
-            display: 'block',
-            textOverflow: 'ellipsis',
-            display: '-webkit-box',
-            boxOrient: 'vertical',
-            whiteSpace: 'nowrap',
-            boxOrient: 'vertical',
-            lineClamp: 1,
-          }}
-        >
-          {val}
+      title: '位置',
+      dataIndex: 'location',
+      render: text => (
+        <span>
+          {text == 1
+            ? 'banner'
+            : text == 2
+            ? '轮播'
+            : text == 3
+            ? '瀑布图'
+            : text == 4
+            ? '分享页底部广告'
+            : '载入画面'}
         </span>
       ),
-      // mark to display a total number
-      needTotal: true,
     },
     {
-      title: '发布时间',
-      dataIndex: 'createTime',
+      title: '公司名',
+      dataIndex: 'comName',
+    },
+    {
+      title: '广告名',
+      dataIndex: 'name',
+    },
+    {
+      title: '生效周期',
+      dataIndex: 'updatedAt',
       sorter: true,
-      render: val => <span>{moment(parseInt(val)).format('YYYY-MM-DD HH:mm:ss')}</span>,
+      render: (val, record) => (
+        <span>
+          {moment(parseInt(record.startDate)).format('YYYY/MM/DD HH:mm:ss')}-
+          {moment(parseInt(record.endDate)).format('YYYY/MM/DD HH:mm:ss')}
+        </span>
+      ),
+    },
+    {
+      title: '状态',
+      dataIndex: 'stat',
+      render: val => val==1?<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'red'}}></span>:<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'green'}}></span>,
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => handleScan(record)}>查看</a>
-          <Divider type="vertical" />
+          {/* <a onClick={() => handleScan(record)}>查看</a>
+          <Divider type="vertical" /> */}
           <a onClick={()=>handleSelect(record)}>选定</a>
         </Fragment>
       ),
@@ -221,7 +228,8 @@ const CreateOpusForm = Form.create()(props => {
         ...formValues,
         ...filters,
         ...fieldsValue,
-        result:'normal'
+        startDate: fieldsValue.startDate && fieldsValue.startDate[0].format('YYYY-MM-DD'),
+        endDate: fieldsValue.startDate && fieldsValue.startDate[1].format('YYYY-MM-DD'),
       };
       console.log(params);
       if (sorter.field) {
@@ -238,6 +246,8 @@ const CreateOpusForm = Form.create()(props => {
       // form.resetFields();
       let params={
         ...fieldsValue,
+        startDate: fieldsValue.startDate && fieldsValue.startDate[0].format('YYYY-MM-DD'),
+        endDate: fieldsValue.startDate && fieldsValue.startDate[1].format('YYYY-MM-DD'),
         result:'normal'//设置作品类别是非举报的
       }
       formValues=params;
@@ -256,7 +266,7 @@ const CreateOpusForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="选择用户"
+      title="选择广告"
       width={1200}
       visible={modalOpusVisible}
       onOk={okHandle}
@@ -265,42 +275,29 @@ const CreateOpusForm = Form.create()(props => {
       <Form gutter={{xs: 8, sm: 16, md: 24, lg: 32}} >
         <Row style={{width:'100%'}}>
             <Col span={4}>
-              <FormItem  labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} width={'25%'} label="作者">
+              <FormItem  labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} width={'25%'} label="广告名">
                 {form.getFieldDecorator('name', {
-                rules: [{ message: '请输入用户名', min: 1 }],
+                rules: [{ message: 'name', min: 1 }],
                  })(<Input placeholder="请输入" />)}
-              </FormItem>
-            </Col>
-            <Col span={4}>
-              <FormItem labelCol={{ span: 6}} wrapperCol={{ span: 18 }} width={'25%'} label="手机">
-                {form.getFieldDecorator('phone', {
-                rules: [{message: '请输入11位手机号', min: 11 }],
-                })(<Input placeholder="请输入" />)}
-              </FormItem>
-            </Col>
-            <Col span={5}>
-              <FormItem labelCol={{ span: 6}} wrapperCol={{ span: 18 }} width={'25%'} label="标题">
-                {form.getFieldDecorator('title')(<Input placeholder="请输入" />)}
               </FormItem>
             </Col>
             <Col span={3}>
               <FormItem labelCol={{ span: 6}} wrapperCol={{ span: 18 }} width={'25%'} label="类型">
-              {form.getFieldDecorator('type',{
-                initialValue:'article'
-              })(<Select placeholder="请选择" style={{ width: '60%' }}>
-                  {opusTypeList&&opusTypeList.map((intem, i) => {
-                    return (
-                      <Option value={intem.id} key={i}>
-                        {intem.name}
-                      </Option>
-                    );
-                  })}
+              {form.getFieldDecorator('type')(<Select placeholder="请选择" style={{ width: '100%' }}>
+                  <Option value="1">自用</Option>
+                  <Option value="2">非自用</Option>
                 </Select>)}
               </FormItem>
             </Col>
             <Col span={6}>
               <FormItem labelCol={{ span: 6}} wrapperCol={{ span: 18 }} width={'25%'} label="发布日期">
-                {form.getFieldDecorator('startTime')(<Input placeholder="请输入" />)}
+              {form.getFieldDecorator('startDate')(<RangePicker
+                  style={{ width: '100%' }}
+                  placeholder={[
+                    formatMessage({ id: 'form.date.placeholder.start' }),
+                    formatMessage({ id: 'form.date.placeholder.end' }),
+                  ]}
+                />)}
               </FormItem>
             </Col>
             {/* <Col span={6}>
@@ -328,14 +325,14 @@ const CreateOpusForm = Form.create()(props => {
     </Modal>
   );
 });
-@connect(({ pullopus, loading }) => ({
-  pullopus,
-  loading: loading.models.pullopus,
+@connect(({ pullbanner, loading }) => ({
+  pullbanner,
+  loading: loading.models.pullbanner,
 }))
 @Form.create()
 class PullOpus extends PureComponent {
     state={
-      pushType:0,
+      pushType:2,
       alias:false,
       modalVisible:false,
       modalOpusVisible:false,
@@ -372,7 +369,7 @@ class PullOpus extends PureComponent {
         }
         console.log(ids,currentOpus.id);//用户字符串 作品Id
         dispatch({
-          type: 'pullopus/submitRegularForm',
+          type: 'pullbanner/submitRegularForm',
           payload: {
             title: values.title,
             sys: values.sys,
@@ -389,7 +386,7 @@ class PullOpus extends PureComponent {
   handleModalVisible = (flag) => {
     const {dispatch}=this.props;
     flag&&dispatch({
-      type:'pullopus/fetchUser'
+      type:'pullbanner/fetchUser'
     })
     this.setState({
       modalVisible: !!flag,
@@ -404,7 +401,7 @@ class PullOpus extends PureComponent {
     console.log(this.props);
     const { dispatch } = this.props;
     dispatch({
-      type: 'pullopus/pushfetch',
+      type: 'pullbanner/pushfetch',
     });
   }
   handleScan=(record)=>{
@@ -444,7 +441,7 @@ class PullOpus extends PureComponent {
     console.log(val)
     const {dispatch}=this.props;
     dispatch({
-      type:'pullopus/fetchUser',
+      type:'pullbanner/fetchUser',
       payload:{
         ...val
       }
@@ -454,7 +451,7 @@ class PullOpus extends PureComponent {
     console.log(val)
     const {dispatch}=this.props;
     dispatch({
-      type:'pullopus/fetchOpus',
+      type:'pullbanner/fetchOpus',
       payload:{
         ...val
       }
@@ -495,7 +492,7 @@ class PullOpus extends PureComponent {
   }
   render() {
     console.log(this.props);
-    const {submitting,form: { getFieldDecorator, getFieldValue },pullopus: { pullopus ,datass,opusData,userData},loading,} = this.props;
+    const {submitting,form: { getFieldDecorator, getFieldValue },pullbanner: { pullbanner ,datass,opusData,userData},loading,} = this.props;
     const {alias,modalVisible,modalOpusVisible,clickShow,userList,currentOpus,disabled,selectType}=this.state;
     const formItemLayout = {
       labelCol: {
@@ -554,7 +551,7 @@ class PullOpus extends PureComponent {
     return (
           <GridContent>
             <Suspense fallback={<PageLoading />}>
-              <Card bordered={false} title="作品推送">
+              <Card bordered={false} title="广告推送">
                 <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
                   <FormItem label="标题" {...formItemLayout}>
                     {getFieldDecorator('title')(<Input placeholder="请输入" />)}
@@ -570,9 +567,9 @@ class PullOpus extends PureComponent {
                       </Select>
                     )}
                   </FormItem>
-                  <FormItem label="推送作品" {...formItemLayout}>
+                  <FormItem label="推送广告" {...formItemLayout}>
                     {getFieldDecorator('opus',{
-                      initialValue:currentOpus&&currentOpus.name?`作者：${currentOpus.name}      标题：${currentOpus.title}`:''
+                      initialValue:currentOpus&&currentOpus.name?`广告名称：${currentOpus.name}     公司名称:${currentOpus.comName}`:''
                     })(<Input onChange={this.handleSelectChange} disabled/>)}
                     <Button onClick={this.handleModalOpusVisible.bind(this,true,clickShow)}>请选择</Button>
                   </FormItem>
@@ -620,7 +617,7 @@ class PullOpus extends PureComponent {
                     />
                     )}
                   </FormItem>
-                  <FormItem {...formItemLayout} label="内容">
+                  {/* <FormItem {...formItemLayout} label="内容">
                     {getFieldDecorator('content', {
                       rules: [
                         {
@@ -635,7 +632,7 @@ class PullOpus extends PureComponent {
                         rows={4}
                       />
                     )}
-                  </FormItem>
+                  </FormItem> */}
 
                   <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
                     <Button type="primary" htmlType="submit" loading={submitting}>
@@ -645,7 +642,7 @@ class PullOpus extends PureComponent {
                 </Form>
               </Card>
             </Suspense>
-            <Suspense fallback={null}>
+            {/* <Suspense fallback={null}>
               <Card bordered={false} style={{ marginTop: 8 }}>
               <h1>历史推送</h1>
                 <StandardTable
@@ -657,7 +654,7 @@ class PullOpus extends PureComponent {
                   // onChange={this.handleStandardTableChange}
                 />
               </Card>
-            </Suspense>
+            </Suspense> */}
             <CreateOpusForm {...parentOpusMethods} modalOpusVisible={modalOpusVisible} />
             <CreateForm {...parentMethods} modalVisible={modalVisible} />
           </GridContent>

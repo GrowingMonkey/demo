@@ -582,6 +582,10 @@ class PullOpus extends PureComponent {
                   </FormItem>
                   <FormItem label="推送作品" {...formItemLayout}>
                     {getFieldDecorator('opus',{
+                      rules:[ {
+                        required: true,
+                        message: '请选择作品',
+                      },],
                       initialValue:currentOpus&&currentOpus.name?`作者：${currentOpus.name}      标题：${currentOpus.title}`:''
                     })(<Input onChange={this.handleSelectChange} disabled/>)}
                     <Button onClick={this.handleModalOpusVisible.bind(this,true,clickShow)}>请选择</Button>
@@ -630,7 +634,7 @@ class PullOpus extends PureComponent {
                     />
                     )}
                   </FormItem>
-                  <FormItem {...formItemLayout} label="内容">
+                  {/* <FormItem {...formItemLayout} label="内容">
                     {getFieldDecorator('content', {
                       rules: [
                         {
@@ -645,7 +649,7 @@ class PullOpus extends PureComponent {
                         rows={4}
                       />
                     )}
-                  </FormItem>
+                  </FormItem> */}
 
                   <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
                     <Button type="primary" htmlType="submit" loading={submitting}>
@@ -655,7 +659,7 @@ class PullOpus extends PureComponent {
                 </Form>
               </Card>
             </Suspense>
-            <Suspense fallback={null}>
+            {/* <Suspense fallback={null}>
               <Card bordered={false} style={{ marginTop: 8 }}>
               <h1>历史推送</h1>
                 <StandardTable
@@ -667,7 +671,7 @@ class PullOpus extends PureComponent {
                   // onChange={this.handleStandardTableChange}
                 />
               </Card>
-            </Suspense>
+            </Suspense> */}
             <CreateOpusForm {...parentOpusMethods} modalOpusVisible={modalOpusVisible} />
             <CreateForm {...parentMethods} modalVisible={modalVisible} />
           </GridContent>

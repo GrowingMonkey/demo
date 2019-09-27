@@ -93,7 +93,7 @@ const CreateForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="选择作品"
+      title="选择活动"
       width={800}
       visible={modalVisible}
       onOk={okHandle}
@@ -158,37 +158,19 @@ const CreateOpusForm = Form.create()(props => {
   }
   let columns = [
     {
-      title: '作者',
-      dataIndex: 'name',
-      render: text => <span>{text}</span>,
+      title: '活动标题',
+      dataIndex: 'title',
     },
     {
-      title: '手机号',
-      dataIndex: 'phone',
-    },
-    {
-      title: '作品说明',
+      title: '活动内容简述',
       dataIndex: 'detail',
+    },
+    {
+      title: '当前状态',
+      dataIndex: 'stat',
       sorter: true,
-      render: val => (
-        <span
-          style={{
-            maxWidth: 500,
-            overflow: 'hidden',
-            display: 'block',
-            textOverflow: 'ellipsis',
-            display: '-webkit-box',
-            boxOrient: 'vertical',
-            whiteSpace: 'nowrap',
-            boxOrient: 'vertical',
-            lineClamp: 1,
-          }}
-        >
-          {val}
-        </span>
-      ),
+      render: val => val==1?<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'red'}}></span>:<span style={{display:'flex',width:8,height:8,borderRadius:50,background:'green'}}></span>,
       // mark to display a total number
-      needTotal: true,
     },
     {
       title: '发布时间',
@@ -328,14 +310,14 @@ const CreateOpusForm = Form.create()(props => {
     </Modal>
   );
 });
-@connect(({ pullopus, loading }) => ({
-  pullopus,
-  loading: loading.models.pullopus,
+@connect(({ pullactivity, loading }) => ({
+  pullactivity,
+  loading: loading.models.pullactivity,
 }))
 @Form.create()
 class PullOpus extends PureComponent {
     state={
-      pushType:0,
+      pushType:1,
       alias:false,
       modalVisible:false,
       modalOpusVisible:false,
@@ -372,7 +354,7 @@ class PullOpus extends PureComponent {
         }
         console.log(ids,currentOpus.id);//用户字符串 作品Id
         dispatch({
-          type: 'pullopus/submitRegularForm',
+          type: 'pullactivity/submitRegularForm',
           payload: {
             title: values.title,
             sys: values.sys,
@@ -389,7 +371,7 @@ class PullOpus extends PureComponent {
   handleModalVisible = (flag) => {
     const {dispatch}=this.props;
     flag&&dispatch({
-      type:'pullopus/fetchUser'
+      type:'pullactivity/fetchUser'
     })
     this.setState({
       modalVisible: !!flag,
@@ -404,7 +386,7 @@ class PullOpus extends PureComponent {
     console.log(this.props);
     const { dispatch } = this.props;
     dispatch({
-      type: 'pullopus/pushfetch',
+      type: 'pullactivity/pushfetch',
     });
   }
   handleScan=(record)=>{
@@ -444,7 +426,7 @@ class PullOpus extends PureComponent {
     console.log(val)
     const {dispatch}=this.props;
     dispatch({
-      type:'pullopus/fetchUser',
+      type:'pullactivity/fetchUser',
       payload:{
         ...val
       }
@@ -454,7 +436,7 @@ class PullOpus extends PureComponent {
     console.log(val)
     const {dispatch}=this.props;
     dispatch({
-      type:'pullopus/fetchOpus',
+      type:'pullactivity/fetchOpus',
       payload:{
         ...val
       }
@@ -495,7 +477,7 @@ class PullOpus extends PureComponent {
   }
   render() {
     console.log(this.props);
-    const {submitting,form: { getFieldDecorator, getFieldValue },pullopus: { pullopus ,datass,opusData,userData},loading,} = this.props;
+    const {submitting,form: { getFieldDecorator, getFieldValue },pullactivity: { pullactivity ,datass,opusData,userData},loading,} = this.props;
     const {alias,modalVisible,modalOpusVisible,clickShow,userList,currentOpus,disabled,selectType}=this.state;
     const formItemLayout = {
       labelCol: {
@@ -570,7 +552,7 @@ class PullOpus extends PureComponent {
                       </Select>
                     )}
                   </FormItem>
-                  <FormItem label="推送作品" {...formItemLayout}>
+                  <FormItem label="推送广告" {...formItemLayout}>
                     {getFieldDecorator('opus',{
                       initialValue:currentOpus&&currentOpus.name?`作者：${currentOpus.name}      标题：${currentOpus.title}`:''
                     })(<Input onChange={this.handleSelectChange} disabled/>)}
@@ -620,7 +602,7 @@ class PullOpus extends PureComponent {
                     />
                     )}
                   </FormItem>
-                  <FormItem {...formItemLayout} label="内容">
+                  {/* <FormItem {...formItemLayout} label="内容">
                     {getFieldDecorator('content', {
                       rules: [
                         {
@@ -635,7 +617,7 @@ class PullOpus extends PureComponent {
                         rows={4}
                       />
                     )}
-                  </FormItem>
+                  </FormItem> */}
 
                   <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
                     <Button type="primary" htmlType="submit" loading={submitting}>
@@ -645,7 +627,7 @@ class PullOpus extends PureComponent {
                 </Form>
               </Card>
             </Suspense>
-            <Suspense fallback={null}>
+            {/* <Suspense fallback={null}>
               <Card bordered={false} style={{ marginTop: 8 }}>
               <h1>历史推送</h1>
                 <StandardTable
@@ -657,7 +639,7 @@ class PullOpus extends PureComponent {
                   // onChange={this.handleStandardTableChange}
                 />
               </Card>
-            </Suspense>
+            </Suspense> */}
             <CreateOpusForm {...parentOpusMethods} modalOpusVisible={modalOpusVisible} />
             <CreateForm {...parentMethods} modalVisible={modalVisible} />
           </GridContent>
