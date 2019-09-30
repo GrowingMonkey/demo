@@ -580,12 +580,6 @@ class PullOpus extends PureComponent {
                       </Select>
                     )}
                   </FormItem>
-                  <FormItem label="推送作品" {...formItemLayout}>
-                    {getFieldDecorator('opus',{
-                      initialValue:currentOpus&&currentOpus.name?`作者：${currentOpus.name}      标题：${currentOpus.title}`:''
-                    })(<Input onChange={this.handleSelectChange} disabled/>)}
-                    <Button onClick={this.handleModalOpusVisible.bind(this,true,clickShow)}>请选择</Button>
-                  </FormItem>
                   <FormItem {...formItemLayout} label="推送类型">
                     {getFieldDecorator('pushType', {
                       rules: [

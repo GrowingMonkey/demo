@@ -1,9 +1,10 @@
 import {
     addActivity,
     queryButton,
-    updateButton
+    updateButton,
+    addBasicProfile
   } from '@/services/api';
-  
+  import { message } from 'antd';
   export default {
     namespace: 'buttonset',
   
@@ -26,6 +27,14 @@ import {
       *update({ payload ,callback}, { call, put }) {
         const response = yield call(updateButton, payload);
         if(callback) callback(response)
+      },
+      *buttonpull({ payload }, { call, put,select }) {
+        const response = yield call(addBasicProfile, payload);
+        if(response.code!=0){
+          message.error(response.message);
+        }else{
+          message.success('推送成功');
+        }
       }
     },
   

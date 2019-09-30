@@ -10,6 +10,7 @@ import {
   Input,
   Button,
   message,
+  Popconfirm,
   Collapse,
   Icon,
   Col,
@@ -23,6 +24,7 @@ import InputForm from '@/components/myComponents/InputForm';
 import IconForm from '@/components/myComponents/IconUpload';
 import styles from '../Forms/style.less';
 import { router } from 'umi';
+import Center from '../Account/Center/Center';
 String.prototype.startWith = function(compareStr){
     return this.indexOf(compareStr) == 0;
     }
@@ -47,6 +49,18 @@ class ButtonSet extends PureComponent {
             payload:{
               code:code,
               detail:`/icon/app${urlStr}${size}`,
+            }
+        })
+    }
+    
+    pullSendButton=()=>{
+        console.log("1111");
+        const {dispatch}=this.props;
+        dispatch({
+            type:'buttonset/buttonpull',
+            payload:{
+              pushType:4,
+              pushWay:'broadcast'
             }
         })
     }
@@ -390,6 +404,15 @@ class ButtonSet extends PureComponent {
                 </Row>
             </Panel>
             </Collapse>
+            <Popconfirm
+            title="你确认现在推送按钮配置吗"
+            onConfirm={this.pullSendButton.bind(this)}
+            okText="确认"
+            cancelText="取消"
+            >
+            {/* <a href="#">Delete</a> */}
+            <Button type="primary" style={{marginTop:24,textAlign:Center}}>推送</Button>
+          </Popconfirm>
             </Card>
         </PageHeaderWrapper>)
     }

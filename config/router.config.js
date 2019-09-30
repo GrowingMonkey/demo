@@ -405,6 +405,11 @@ export default [
                 name: 'keyword',
                 component: './Profile/KeyWord',
               },
+              {
+                path: '/profile/otherset/loginset',
+                name: 'loginset',
+                component: './Profile/LoginSet',
+              },
             ]
           },
           {

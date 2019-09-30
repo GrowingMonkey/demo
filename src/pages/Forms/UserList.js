@@ -187,6 +187,7 @@ class UpdateForm extends PureComponent {
               let params={
                 id:authData.id,
                 point:formVals.powerShare&&formVals.powerShare.length>0?1:0,
+                // share:formVals.powerShare,
                 pubPic:formVals.pubPic,
                 pubArticle:formVals.pubArticle,
                 pubVideo:formVals.pubVideo,
@@ -232,6 +233,10 @@ class UpdateForm extends PureComponent {
     }
     const options = [
       { label: '是否显示积分', value:'1'},
+      { label: '娱乐活动', value:'2'},
+      { label: 'qq分享', value:'3'},
+      { label: '微信分享', value:'4'},
+      { label: '链接分享', value:'5'},
     ];
     return (
       <div>
@@ -243,7 +248,7 @@ class UpdateForm extends PureComponent {
           {form.getFieldDecorator('powerShare', {
             initialValue:checkNum
           })(<CheckboxGroup options={options} />)}
-        </FormItem>,
+        </FormItem>
         <h3>发布权限</h3>
         <FormItem
           // labelCol={{ span: 5 }}

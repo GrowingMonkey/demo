@@ -93,7 +93,7 @@ const CreateForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="选择活动"
+      title="选择用户"
       width={800}
       visible={modalVisible}
       onOk={okHandle}
@@ -238,7 +238,7 @@ const CreateOpusForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="选择用户"
+      title="选择活动"
       width={1200}
       visible={modalOpusVisible}
       onOk={okHandle}
@@ -247,37 +247,17 @@ const CreateOpusForm = Form.create()(props => {
       <Form gutter={{xs: 8, sm: 16, md: 24, lg: 32}} >
         <Row style={{width:'100%'}}>
             <Col span={4}>
-              <FormItem  labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} width={'25%'} label="作者">
+              <FormItem  labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} width={'25%'} label="活动标题">
                 {form.getFieldDecorator('name', {
                 rules: [{ message: '请输入用户名', min: 1 }],
                  })(<Input placeholder="请输入" />)}
               </FormItem>
             </Col>
             <Col span={4}>
-              <FormItem labelCol={{ span: 6}} wrapperCol={{ span: 18 }} width={'25%'} label="手机">
+              <FormItem labelCol={{ span: 6}} wrapperCol={{ span: 18 }} width={'25%'} label="活动内容简介">
                 {form.getFieldDecorator('phone', {
                 rules: [{message: '请输入11位手机号', min: 11 }],
                 })(<Input placeholder="请输入" />)}
-              </FormItem>
-            </Col>
-            <Col span={5}>
-              <FormItem labelCol={{ span: 6}} wrapperCol={{ span: 18 }} width={'25%'} label="标题">
-                {form.getFieldDecorator('title')(<Input placeholder="请输入" />)}
-              </FormItem>
-            </Col>
-            <Col span={3}>
-              <FormItem labelCol={{ span: 6}} wrapperCol={{ span: 18 }} width={'25%'} label="类型">
-              {form.getFieldDecorator('type',{
-                initialValue:'article'
-              })(<Select placeholder="请选择" style={{ width: '60%' }}>
-                  {opusTypeList&&opusTypeList.map((intem, i) => {
-                    return (
-                      <Option value={intem.id} key={i}>
-                        {intem.name}
-                      </Option>
-                    );
-                  })}
-                </Select>)}
               </FormItem>
             </Col>
             <Col span={6}>
@@ -334,10 +314,7 @@ class PullOpus extends PureComponent {
     console.log(userList);
 
     form.validateFieldsAndScroll((err, values) => {
-      console.log(values);
-      console.log(new Date(parseInt(values.pushTime.valueOf())+2*60*1000).Format("yyyy-MM-dd hh:mm:ss"));
       if (!err) {
-        console.log(111);
         let ids='';
         if(values.pushType!='broadcast'){
           values.alias.map((val,key)=>{
@@ -358,11 +335,11 @@ class PullOpus extends PureComponent {
           payload: {
             title: values.title,
             sys: values.sys,
-            pushType:'0',
+            pushType:'1',
             alias:ids,
             pushWay:values.pushType,
             pushTime: new Date(parseInt(values.pushTime.valueOf())+2*60*1000).Format("yyyy-MM-dd hh:mm:ss"),
-            content: JSON.stringify({id:currentOpus.id,type:currentOpus.type}),
+            content: currentOpus.id,
           },
         });
       }
@@ -511,6 +488,7 @@ class PullOpus extends PureComponent {
         sm: { span: 10, offset: 7 },
       },
     };
+    console.log(currentOpus);
     const disabledDate=(current)=> {
       // Can not select days before today and today
       console.log(moment().endOf('day'));
@@ -554,7 +532,7 @@ class PullOpus extends PureComponent {
                   </FormItem>
                   <FormItem label="推送广告" {...formItemLayout}>
                     {getFieldDecorator('opus',{
-                      initialValue:currentOpus&&currentOpus.name?`作者：${currentOpus.name}      标题：${currentOpus.title}`:''
+                      initialValue:currentOpus&&currentOpus.title?`标题：${currentOpus.title}      详情：${currentOpus.detail}`:''
                     })(<Input onChange={this.handleSelectChange} disabled/>)}
                     <Button onClick={this.handleModalOpusVisible.bind(this,true,clickShow)}>请选择</Button>
                   </FormItem>

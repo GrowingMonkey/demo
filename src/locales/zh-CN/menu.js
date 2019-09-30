@@ -52,6 +52,7 @@ export default {
   'menu.profile.pullset':'推送管理',
   'menu.profile.otherset':'其他配置',
   'menu.profile.otherset.buttonset': '按钮配置',
+  'menu.profile.otherset.loginset': '登录配置',
   'menu.profile.otherset.keyword': '屏蔽配置',
   'menu.profile.basic': '配置页面',
   'menu.profile.otherset.serviceset': '配置页面',

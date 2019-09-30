@@ -390,7 +390,7 @@ class PullOpus extends PureComponent {
             alias:ids,
             pushWay:values.pushType,
             pushTime: new Date(parseInt(values.pushTime.valueOf())+2*60*1000).Format("yyyy-MM-dd hh:mm:ss"),
-            content: JSON.stringify({id:currentOpus.id,type:currentOpus.type}),
+            content:currentOpus.id,
           },
         });
       }
