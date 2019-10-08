@@ -30,6 +30,7 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 import styles from '../List/TableList.less';
 import { isForStatement } from '@babel/types';
+import { func } from 'prop-types';
 
 const FormItem = Form.Item;
 const { Step } = Steps;
@@ -178,6 +179,7 @@ class UpdateForm extends PureComponent {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       const formVals = { ...oldValue, ...fieldsValue };
+      console.log(formVals);
       this.setState(
         {
           formVals,
@@ -186,8 +188,12 @@ class UpdateForm extends PureComponent {
             if(authData&&authData.userId!=0){
               let params={
                 id:authData.id,
-                point:formVals.powerShare&&formVals.powerShare.length>0?1:0,
-                // share:formVals.powerShare,
+                point:formVals.powerShare&&formVals.powerShare[0]=='0'?1:0,
+                shareLink:formVals.powerShare&&formVals.powerShare[0]!='0'?formVals.powerShare.join(','):(function(){
+                  let newShare=formVals.powerShare||[];
+                  newShare.length!=0&&newShare.shift();
+                  return newShare.join(',');
+                })(),
                 pubPic:formVals.pubPic,
                 pubArticle:formVals.pubArticle,
                 pubVideo:formVals.pubVideo,
@@ -197,7 +203,7 @@ class UpdateForm extends PureComponent {
             }else{
               let params={
                 userId:formVals.userId,
-                point:formVals.powerShare&&formVals.powerShare.length>0?1:0,
+                point:formVals.powerShare&&formVals.powerShare[0]=='0'?1:0,
                 pubPic:formVals.pubPic,
                 pubArticle:formVals.pubArticle,
                 pubVideo:formVals.pubVideo,
@@ -229,14 +235,18 @@ class UpdateForm extends PureComponent {
     console.log(this.props);
     let checkNum=[];
     if(authData.point==1){
-      checkNum.push('1');
+      checkNum.push('0');
+    }
+    console.log(authData);
+    if(authData.shareLink){
+      let listshare=authData.shareLink.split(",");
+      listshare.map((v,i)=>checkNum.push(v));
     }
     const options = [
-      { label: '是否显示积分', value:'1'},
-      { label: '娱乐活动', value:'2'},
-      { label: 'qq分享', value:'3'},
-      { label: '微信分享', value:'4'},
-      { label: '链接分享', value:'5'},
+      { label: '是否显示积分', value:'0'},
+      { label: '复制', value:'1'},
+      { label: 'qq分享', value:'2'},
+      { label: '微信分享', value:'3'},
     ];
     return (
       <div>
