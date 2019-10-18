@@ -9,6 +9,7 @@ import numeral from 'numeral';
 import styles from './Dashboard/Analysis.less';
 import PageLoading from '@/components/PageLoading';
 import { ChartCard, MiniArea, MiniBar, MiniProgress, Field } from '@/components/Charts';
+import sysConfig from '../../config/config'
 console.log(APP_TYPE);
 const IntroduceRow = React.lazy(() => import('./Dashboard/IntroduceRow'));
 const SalesCard = React.lazy(() => import('./Dashboard/SalesCard'));
@@ -101,6 +102,8 @@ class IndexPage extends Component {
   };
 
   render() {
+    console.log(APP_TYPE);
+    console.log(sysConfig);
     const { rangePickerValue, salesType, currentTabKey } = this.state;
     const { chart, loading } = this.props;
     console.log(this.props);

@@ -1,3 +1,4 @@
+const { APP_TYPE } = process.env;
 const configs = {
 	// 正式环境
 	production: {
