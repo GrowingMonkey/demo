@@ -3,7 +3,9 @@ import os from 'os';
 import pageRoutes from './router.config';
 import webpackPlugin from './plugin.config';
 import defaultSettings from '../src/defaultSettings';
+import sysConfig from '../sysConfig';
 import slash from 'slash2';
+import { sys } from 'typescript';
 
 const { pwa, primaryColor } = defaultSettings;
 const { APP_TYPE, TEST } = process.env;
@@ -63,6 +65,11 @@ export default {
   plugins,
   define: {
     APP_TYPE: APP_TYPE || '',
+    // 'process.env': {
+    // //  NODE_ENV,
+    // //   ...(NODE_ENV==='development'?sysConfig.development:sysConfig.production)
+    //   // API_ENV: process.env.API_ENV,    // 这里是重点吧，获取配置
+    //   },
   },
   treeShaking: true,
   targets: {

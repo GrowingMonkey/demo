@@ -9,7 +9,7 @@ import numeral from 'numeral';
 import styles from './Dashboard/Analysis.less';
 import PageLoading from '@/components/PageLoading';
 import { ChartCard, MiniArea, MiniBar, MiniProgress, Field } from '@/components/Charts';
-
+console.log(APP_TYPE);
 const IntroduceRow = React.lazy(() => import('./Dashboard/IntroduceRow'));
 const SalesCard = React.lazy(() => import('./Dashboard/SalesCard'));
 const TopSearch = React.lazy(() => import('./Dashboard/TopSearch'));
