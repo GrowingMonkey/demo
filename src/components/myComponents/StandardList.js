@@ -1,5 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import {Card, List, Alert } from 'antd';
+const {CDN_ADDRESS}=process.env;
 
 import styles from '../../pages/Forms/ScanDetail/ScanDetail.less';
 // import styles from './index.less';
@@ -107,7 +108,7 @@ class StandardList extends PureComponent {
                 <Card
                     className={stylesProjects.card}
                     hoverable
-                    cover={<img src={`http://file-t.imuguang.com/${item.bgpUrl}`} style={{ height: 150 }}/>}>
+                    cover={<img src={`${CDN_ADDRESS?CDN_ADDRESS:'http://file-t.imuguang.com'}/${item.bgpUrl}`} style={{ height: 150 }}/>}>
                     <Card.Meta description={item.detail ? item.detail : '暂无资料'} />
                         <div className={stylesProjects.cardItemContent} style={{display:'flex',justifyContent:'space-between'}}>
                             <span>{moment(parseInt(item.createTime)).fromNow()}</span>

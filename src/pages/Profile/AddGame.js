@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
+const {OSS_BURKET,OSS_END_POINT,API_ADDRESS}=process.env;
 import oss from 'ali-oss';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import request from '@/utils/request';
@@ -57,8 +58,8 @@ const UploadToOss = (self, path, file) => {
         accessKeyId: obj.accessKeyId,
         accessKeySecret: obj.accessKeySecret,
         stsToken: obj.securityToken,
-        endpoint: 'http://oss-cn-shenzhen.aliyuncs.com',
-        bucket: 'imuguang-file',
+        endpoint: OSS_END_POINT?OSS_END_POINT:'http://oss-cn-shenzhen.aliyuncs.com',
+        bucket: OSS_BURKET?OSS_BURKET:'imuguang-file',
       })
         .multipartUpload(url, file)
         .then(data => {

@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
+const {CDN_ADDRESS}=process.env;
 import {
   Row,
   Col,
@@ -185,7 +186,7 @@ class UpdateForm extends PureComponent {
     if (currentStep === 1) {
       return [
         <div key='header' {...this.formLayout} style={{display:'flex',alignItems:'center',flexDirection:'column'}}>
-          <img  style={{borderRadius:'50%',overflow:'hidden',background:'#ddd',width:50,height:50}} src={`https://f-bd.imuguang.com/${value.headUrl}`}/>
+          <img  style={{borderRadius:'50%',overflow:'hidden',background:'#ddd',width:50,height:50}} src={`${CDN_ADDRESS?CDN_ADDRESS:'https://f-bd.imuguang.com'}/${value.headUrl}`}/>
           <h4>{value.name}</h4>
         </div>,
         <div key="detail">

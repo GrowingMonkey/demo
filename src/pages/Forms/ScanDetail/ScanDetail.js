@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import AvatarList from '@/components/AvatarList';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
+const {CDN_ADDRESS}=process.env;
 import Link from 'umi/link';
 import router from 'umi/router';
 import {
@@ -321,7 +322,7 @@ class Center extends React.Component {
                 {findUser && Object.keys(findUser).length ? (
                   <div>
                     <div className={styles.avatarHolder}>
-                      <img alt="" src={`https://f-bd.imuguang.com/${findUser.headUrl}`} style={{width:60,height:60,borderRadius:'50%'}}/>
+                      <img alt="" src={`${CDN_ADDRESS?CDN_ADDRESS:'https://f-bd.imuguang.com'}/${findUser.headUrl}`} style={{width:60,height:60,borderRadius:'50%'}}/>
                       <div className={styles.name}>{findUser.name}</div>
                       <div>{findUser.mail}</div>
                     </div>
@@ -424,7 +425,7 @@ class Center extends React.Component {
                             hoverable
                             cover={
                               <img
-                                src={`http://file-t.imuguang.com/${item.bgpUrl}`}
+                                src={`${CDN_ADDRESS?CDN_ADDRESS:'https://f-bd.imuguang.com'}/${item.bgpUrl}`}
                                 style={{ height: 150 }}
                               />
                             }
@@ -452,7 +453,7 @@ class Center extends React.Component {
                             hoverable
                             cover={
                               <img
-                                src={`http://file-t.imuguang.com/${item.bgpUrl}`}
+                                src={`${CDN_ADDRESS?CDN_ADDRESS:'https://f-bd.imuguang.com'}/${item.bgpUrl}`}
                                 style={{ height: 150 }}
                               />
                             }
@@ -480,7 +481,7 @@ class Center extends React.Component {
                             hoverable
                             cover={
                               <img
-                                src={`http://file-t.imuguang.com/${item.bgpUrl}`}
+                                src={`${CDN_ADDRESS?CDN_ADDRESS:'https://f-bd.imuguang.com'}/${item.bgpUrl}`}
                                 style={{ height: 150 }}
                               />
                             }
@@ -508,7 +509,7 @@ class Center extends React.Component {
                             hoverable
                             cover={
                               <img
-                                src={`http://file-t.imuguang.com/${item.bgpUrl}`}
+                                src={`${CDN_ADDRESS?CDN_ADDRESS:'https://f-bd.imuguang.com'}/${item.bgpUrl}`}
                                 style={{ height: 150 }}
                               />
                             }
@@ -536,7 +537,7 @@ class Center extends React.Component {
                             hoverable
                             cover={
                               <img
-                                src={`http://file-t.imuguang.com/${item.bgpUrl}`}
+                                src={`${CDN_ADDRESS?CDN_ADDRESS:'https://f-bd.imuguang.com'}/${item.bgpUrl}`}
                                 style={{ height: 150 }}
                               />
                             }

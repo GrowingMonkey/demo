@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
+const {CDN_ADDRESS}=process.env;
 import router from 'umi/router';
 import {
   Row,
@@ -352,7 +353,7 @@ class Pictures extends PureComponent {
                 }}
               >
                 <img
-                  src={`http://file-t.imuguang.com/${item.displayUrl}`}
+                  src={`${CDN_ADDRESS?CDN_ADDRESS:'http://file-t.imuguang.com'}/${item.displayUrl}`}
                   style={{ width: '100%' }}
                 />
               </div>

@@ -7,9 +7,10 @@ import router from 'umi/router';
 import GlobalHeader from '@/components/GlobalHeader';
 import TopNavHeader from '@/components/TopNavHeader';
 import styles from './Header.less';
+const {CDN_ADDRESS,API_ADDRESS}=process.env;
 
 const { Header } = Layout;
-const originUrl=window.location.href.indexOf('www')>-1?'http://www.imuguang.com':'http://test-admin.imuguang.com';
+const originUrl=API_ADDRESS?API_ADDRESS:'http://test-admin.imuguang.com';
 class HeaderView extends Component {
   state = {
     visible: true,

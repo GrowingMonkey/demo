@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
+const {CDN_ADDRESS}=process.env;
 import {
   Row,
   Col,
@@ -313,7 +314,7 @@ class Articles extends PureComponent {
       title: '内容',
       render(record) {
         return <div style={{maxWidth:300}}>
-                {record.bgpUrl.split(',').map((v,i)=><img src={`https://f-bd.imuguang.com/${v}`} style={{width:100,height:100}}/>)}
+                {record.bgpUrl.split(',').map((v,i)=><img src={`${CDN_ADDRESS?CDN_ADDRESS:'https://f-bd.imuguang.com'}/${v}`} style={{width:100,height:100}}/>)}
                 <span style={{maxWidth:300,display:'block'}}>{record.detail}</span></div>;
       },
     },

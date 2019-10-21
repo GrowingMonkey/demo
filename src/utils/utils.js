@@ -2,6 +2,7 @@ import moment from 'moment';
 import React from 'react';
 import nzh from 'nzh/cn';
 import { parse, stringify } from 'qs';
+const {OSS_BURKET,OSS_END_POINT,API_ADDRESS,CDN_ADDRESS,API_ENV}=process.env;
 import request from '@/utils/request';
 
 export function fixedZero(val) {
@@ -198,8 +199,8 @@ export const getToken = () => {
   console.log(token);
   return token;
 };
-export const originUrl = 'http://www.imuguang.com';
-export const imgUrl = 'https://f-bd.imuguang.com';
+export const originUrl = `${API_ADDRESS?API_ADDRESS:'http://www.imuguang.com'}`;
+export const imgUrl = `${CDN_ADDRESS?CDN_ADDRESS:'https://f-bd.imuguang.com'}`;
 export const deleteArray=(sourceArray,id)=>{
   let {data}=sourceArray;
   let {list}=data;

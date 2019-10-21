@@ -4,14 +4,8 @@ import pageRoutes from './router.config';
 import webpackPlugin from './plugin.config';
 import defaultSettings from '../src/defaultSettings';
 import slash from 'slash2';
-// import sysConfig from '../sysConfig'
 const { pwa, primaryColor } = defaultSettings;
 const { APP_TYPE,NODE_ENV,TEST,API_ENV} = process.env;
-// console.log(process.env);
-// console.log(APP_TYPE);
-// console.log(API_ENV==='aiyu');
-// console.log(API_ENV=='aiyu');
-// console.log(sysConfig);
 const sysConfig={
   aiyu:{
    API_ADDRESS:'http://www.aiyu2019.com',
@@ -22,7 +16,9 @@ const sysConfig={
    APP_NAME:'艾鱼',
    OSS_ADDRESS:'https://aiyu-out.oss-cn-hongkong.aliyuncs.com',
    OSS_IN_ADDRESS:'https://aiyu-in.oss-cn-hongkong.aliyuncs.com',
-   CDN_ADDRESS:'https://aiyu-out.oss-cn-hongkong.aliyuncs.com'
+   CDN_ADDRESS:'https://aiyu-out.oss-cn-hongkong.aliyuncs.com',
+   OSS_BURKET:'aiyu-out',
+   OSS_END_POINT:'oss-cn-hongkong.aliyuncs.com'
   },
   muguang:{
     API_ADDRESS:'http://www.imuguang.com',
@@ -34,10 +30,12 @@ const sysConfig={
     OSS_ADDRESS:'http://imuguang-file.oss-cn-shenzhen.aliyuncs.com',
     OSS_IN_ADDRESS:'http://imuguang-in.oss-cn-shenzhen.aliyuncs.com',
     CDN_ADDRESS:'https://f-bd.imuguang.com',
-    DOVE_NAME:'四川鸽子科技'
+    DOVE_NAME:'四川鸽子科技',
+    OSS_BURKET:'imuguang-file',
+    OSS_END_POINT:'http://oss-cn-shenzhen.aliyuncs.com',
   }
 }
-console.log(sysConfig.aiyu);
+console.log(sysConfig);
 const plugins = [
   [
     'umi-plugin-react',

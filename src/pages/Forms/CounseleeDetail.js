@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import style2 from "./counseleedetail.less";
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
+const {CDN_ADDRESS}=process.env;
 import router from 'umi/router';
 import {
   Row,
@@ -96,7 +97,7 @@ class UserList extends PureComponent {
     const cascaderItems = list.map((item ,index)=> {
       const { aname ,aheadUrl,aid} = item;
       return (<p onClick={() => event(item, nowIndex)} key={index} style={{display:'flex',alignItems:'center'}}>
-        <img src={`https://f-bd.imuguang.com/${aheadUrl?aheadUrl:'bg/userHead.png'}`} style={{width:32,height:32,overflow:'hidden',borderRadius:50,background:'#ddd',marginRight:18}}/>
+        <img src={`${CDN_ADDRESS?CDN_ADDRESS:'https://f-bd.imuguang.com'}/${aheadUrl?aheadUrl:'bg/userHead.png'}`} style={{width:32,height:32,overflow:'hidden',borderRadius:50,background:'#ddd',marginRight:18}}/>
           {aname}
       </p>);
     });
@@ -171,7 +172,7 @@ class UserList extends PureComponent {
         <section className={style2.cascaderCol}>
           <p className={style2.cascaderColTitle}>师傅</p>
           <p style={{display:'flex',alignItems:'center'}}>
-            <img src={`https://f-bd.imuguang.com/${query.headerUrl}`} style={{width:32,height:32,overflow:'hidden',borderRadius:50,background:'#ddd',marginRight:18}}/>
+            <img src={`${CDN_ADDRESS?CDN_ADDRESS:'https://f-bd.imuguang.com'}/${query.headerUrl}`} style={{width:32,height:32,overflow:'hidden',borderRadius:50,background:'#ddd',marginRight:18}}/>
           {query.name}<Icon type="right" />
       </p>
         </section>

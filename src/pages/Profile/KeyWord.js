@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
+const {OSS_BURKET,OSS_END_POINT,API_ADDRESS,CDN_ADDRESS,API_ENV}=process.env;
 import oss from 'ali-oss';
 import 'braft-editor/dist/index.css';
 import request from '@/utils/request';
@@ -56,8 +57,8 @@ const UploadToOss = (self, path, file) => {
           accessKeyId: obj.accessKeyId,
           accessKeySecret: obj.accessKeySecret,
           stsToken: obj.securityToken,
-          endpoint: 'http://oss-cn-shenzhen.aliyuncs.com',
-          bucket: 'imuguang-file',
+          endpoint: OSS_END_POINT?OSS_END_POINT:'http://oss-cn-shenzhen.aliyuncs.com',
+          bucket: OSS_BURKET?OSS_BURKET:'imuguang-file',
         })
           .multipartUpload(url, file)
           .then(data => {
@@ -98,7 +99,7 @@ class KeyWord extends PureComponent {
     }
     componentDidMount(){
         let that=this;
-        this.Ajax('http://imuguang-file.oss-cn-shenzhen.aliyuncs.com/wh/keyword.txt',function(str){
+        this.Ajax(`${CDN_ADDRESS?CDN_ADDRESS:'http://imuguang-file.oss-cn-shenzhen.aliyuncs.com'}/wh/keyword.txt`,function(str){
            that.setState({
             keywords:str
            })
@@ -148,7 +149,7 @@ class KeyWord extends PureComponent {
       // xhr.open('GET', '/xhr_ajax?p=123');
       // xhr.send();
       // POST请求
-      xhr.open('POST', 'http://test.imuguang.com/api/upload/keywords/modifyWord'); 
+      xhr.open('POST', `${CDN_ADDRESS?CDN_ADDRESS:'http://test.imuguang.com'}/${API_ENV=='aiyu'?'adminapi':'api'}/upload/keywords/modifyWord`); 
       // ajax.setRequestHeader("content-type","application/x-www-form-urlencoded")
       // 发送请求
       xhr.send(`Words=${fieldsValue}`);
