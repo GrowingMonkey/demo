@@ -117,6 +117,13 @@ export default {
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
+    '/adminapi/': {
+      // target: 'http://www.imuguang.com/admin',//正式服
+      target: 'http://www.aiyu2019.com',
+      // target: 'http://192.168.1.107:11111',
+      changeOrigin: true,
+      pathRewrite: { '^/adminapi': '' },
+    },
   },
   ignoreMomentLocale: true,
   lessLoaderOptions: {
