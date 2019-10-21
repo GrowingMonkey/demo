@@ -16,10 +16,10 @@
 // console.log(API_ENV);
 // export const env = configs[API_ENV]; 
 module.export={
-    development:{
-        API_ADDRESS:'cs'
+    aiyu:{
+        API_ADDRESS:'cs环境'
     },
-    test:{
-        API_ADDRESS:'xs'
+    muguang:{
+        API_ADDRESS:'xs环境'
     }
 }

@@ -100,7 +100,7 @@ class IndexPage extends Component {
 
   render() {
     console.log(process.env);
-    console.log(API_ENV);
+    console.log(APP_TYPE);
     const { rangePickerValue, salesType, currentTabKey } = this.state;
     const { chart, loading } = this.props;
 

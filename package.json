@@ -30,8 +30,8 @@
     "test:component": "umi test ./src/components",
     "tslint": "npm run tslint:fix",
     "tslint:fix": "tslint --fix 'src/**/*.ts*'",
-    "build:muguang":"cross-env API_ENV=development umi build",
-    "build:aiyu":"cross-env API_ENV=test umi build"
+    "build:muguang":"cross-env API_ENV=muguang umi build",
+    "build:aiyu":"cross-env API_ENV=aiyu umi build"
   },
   "lint-staged": {
     "**/*.less": "stylelint --syntax less",
