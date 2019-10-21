@@ -65,8 +65,10 @@ export default {
   plugins,
   define: {
     APP_TYPE: APP_TYPE || '',
+    APP_ENV:'1',
      'process.env': {
      NODE_ENV,
+     API_ENV,
       ...(API_ENV==='aiyu'?sysConfig.aiyu:sysConfig.muguang)
       },
   },
