@@ -4,12 +4,23 @@ import pageRoutes from './router.config';
 import webpackPlugin from './plugin.config';
 import defaultSettings from '../src/defaultSettings';
 import slash from 'slash2';
-import sysConfig from '../sysConfig'
+// import sysConfig from '../sysConfig'
 const { pwa, primaryColor } = defaultSettings;
 const { APP_TYPE,NODE_ENV,TEST,API_ENV} = process.env;
 // console.log(process.env);
 // console.log(APP_TYPE);
-console.log(API_ENV);
+// console.log(API_ENV==='aiyu');
+// console.log(API_ENV=='aiyu');
+// console.log(sysConfig);
+const sysConfig={
+  aiyu:{
+    API_ADDRESS:'cs环境'
+  },
+  muguang:{
+      API_ADDRESS:'xs环境'
+  }
+}
+console.log(sysConfig.aiyu);
 const plugins = [
   [
     'umi-plugin-react',
@@ -69,7 +80,7 @@ export default {
      'process.env': {
      NODE_ENV,
      API_ENV,
-      ...(API_ENV==='aiyu'?sysConfig.aiyu:sysConfig.muguang)
+        ...(API_ENV=='aiyu'?sysConfig.aiyu:sysConfig.muguang)
       },
   },
   treeShaking: true,
