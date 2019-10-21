@@ -6,8 +6,10 @@ import defaultSettings from '../src/defaultSettings';
 import slash from 'slash2';
 import sysConfig from '../sysConfig'
 const { pwa, primaryColor } = defaultSettings;
-const { APP_TYPE,NODE_ENV, TEST } = process.env;
-console.log(APP_TYPE);
+const { APP_TYPE,NODE_ENV,TEST,API_ENV} = process.env;
+// console.log(process.env);
+// console.log(APP_TYPE);
+console.log(API_ENV);
 const plugins = [
   [
     'umi-plugin-react',
@@ -65,9 +67,7 @@ export default {
     APP_TYPE: APP_TYPE || '',
      'process.env': {
      NODE_ENV,
-     APP_TYPE,
-      ...(APP_TYPE==='aiyu'?sysConfig.aiyu:sysConfig.muguang)
-      // API_ENV: process.env.API_ENV,    // 这里是重点吧，获取配置
+      ...(API_ENV==='aiyu'?sysConfig.aiyu:sysConfig.muguang)
       },
   },
   treeShaking: true,
