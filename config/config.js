@@ -14,10 +14,27 @@ const { APP_TYPE,NODE_ENV,TEST,API_ENV} = process.env;
 // console.log(sysConfig);
 const sysConfig={
   aiyu:{
-    API_ADDRESS:'cs环境'
+   API_ADDRESS:'http://www.aiyu2019.com',
+   OPEN_ADDRESS_IOS:'https://aiyu-out.oss-cn-hongkong.aliyuncs.com/a/aiyu_v1.0.0.apk',
+   OPEN_ADDRESS_ANDROID:'https://aiyu-out.oss-cn-hongkong.aliyuncs.com/a/aiyu_v1.0.0.apk',
+   DOWN_ADDRESS_IOS:'https://aiyu-out.oss-cn-hongkong.aliyuncs.com/a/aiyu_v1.0.0.apk',
+   DOWN_ADDRESS_ANDROID:'https://aiyu-out.oss-cn-hongkong.aliyuncs.com/a/aiyu_v1.0.0.apk',
+   APP_NAME:'艾鱼',
+   OSS_ADDRESS:'https://aiyu-out.oss-cn-hongkong.aliyuncs.com',
+   OSS_IN_ADDRESS:'https://aiyu-in.oss-cn-hongkong.aliyuncs.com',
+   CDN_ADDRESS:'https://aiyu-out.oss-cn-hongkong.aliyuncs.com'
   },
   muguang:{
-      API_ADDRESS:'xs环境'
+    API_ADDRESS:'http://www.imuguang.com',
+    OPEN_ADDRESS_IOS:'muGuang://com.dove.muGuang',
+    OPEN_ADDRESS_ANDROID:'dove://com.imuguang',
+    DOWN_ADDRESS_IOS:'https://apps.apple.com/cn/app/id1469181052?l=zh&ls=1',
+    DOWN_ADDRESS_ANDROID:'https://sj.qq.com/myapp/detail.htm?apkName=com.dove.imuguang',
+    APP_NAME:'目光',
+    OSS_ADDRESS:'http://imuguang-file.oss-cn-shenzhen.aliyuncs.com',
+    OSS_IN_ADDRESS:'http://imuguang-in.oss-cn-shenzhen.aliyuncs.com',
+    CDN_ADDRESS:'https://f-bd.imuguang.com',
+    DOVE_NAME:'四川鸽子科技'
   }
 }
 console.log(sysConfig.aiyu);
