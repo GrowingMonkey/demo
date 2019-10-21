@@ -2,6 +2,7 @@ import { stringify } from 'qs';
 import request from '@/utils/request';
 import { async } from 'q';
 import { func } from 'prop-types';
+const {OSS_BURKET,OSS_END_POINT,API_ADDRESS,CDN_ADDRESS,API_ENV}=process.env;
 export async function queryUserAccount(params) {
   const rep = await request(`/api/system/admin/list?${stringify(params)}`);
   return rep.data;
@@ -149,7 +150,7 @@ export async function updateKeyWord(params){
   console.log(params.file);
   let formData = new FormData();
   formData.append("file",params.file);
-  return request('http://www.imuguang.com/api/upload/keywords/modifyWord', {
+  return request(`${API_ADDRESS?API_ADDRESS:'http://www.imuguang.com'}/${API_ENV=='aiyu'?'adminapi':'api'}/upload/keywords/modifyWord`, {
     method: 'POST',
     data: stringify(params),
     headers: {
@@ -172,7 +173,7 @@ export async function getToken() {
 }
 export async function fakeSTStoken(params) {
   console.log(params);
-  return request('http://www.imuguang.com/api/upload/pic/getSTSToken', {
+  return request(`${API_ADDRESS?API_ADDRESS:'http://www.imuguang.com'}/${API_ENV=='aiyu'?'adminapi':'api'}/upload/pic/getSTSToken`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',

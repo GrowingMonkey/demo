@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
 const {OSS_BURKET,OSS_END_POINT,API_ADDRESS}=process.env;
+
 import oss from 'ali-oss';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import request from '@/utils/request';

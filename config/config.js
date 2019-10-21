@@ -115,7 +115,7 @@ export default {
       target: 'http://test-admin.imuguang.com',
       // target: 'http://192.168.1.107:11111',
       changeOrigin: true,
-      // pathRewrite: { '^/api': '' },
+      pathRewrite: { '^/api': '' },
     },
   },
   ignoreMomentLocale: true,

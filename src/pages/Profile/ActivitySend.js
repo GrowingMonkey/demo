@@ -2,7 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-const {OSS_BURKET,OSS_END_POINT}=process.env;
+const {OSS_BURKET,OSS_END_POINT,API_ADDRESS}=process.env;
 import 'braft-editor/dist/index.css';
 import BraftEditor from 'braft-editor';
 import { ContentUtils } from 'braft-utils'
@@ -401,7 +401,7 @@ handleSubmit = e =>{
                 required: true,
                 message: '请输入路径',
               }],
-              initialValue:`${window.location.href.indexOf('www')>-1?'http://www.imuguang.com':'http://test.imuguang.com'}/g/activity.html`
+              initialValue:`${API_ADDRESS?API_ADDRESS:'http://test.imuguang.com'}/g/activity.html`
             })(
               <Input size="large" placeholder="请输入路径"/>
             )}
